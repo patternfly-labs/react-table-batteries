@@ -1,20 +1,24 @@
 module.exports = {
-  '/design-guidelines': {
+  '/extensions/patternfly-react-table-batteries-extension/design-guidelines': {
     id: "PatternFly React table batteries extension",
     title: "PatternFly React table batteries extension",
     toc: [{"text":"Header"},[{"text":"Sub-header"}]],
     section: "extensions",
+    subsection: "",
     source: "design-guidelines",
-    Component: () => import(/* webpackChunkName: "design-guidelines/index" */ './design-guidelines')
+    tabName: null,
+    Component: () => import(/* webpackChunkName: "extensions/patternfly-react-table-batteries-extension/design-guidelines/index" */ './extensions/patternfly-react-table-batteries-extension/design-guidelines')
   },
-  '/react': {
+  '/extensions/patternfly-react-table-batteries-extension/react': {
     id: "PatternFly React table batteries extension",
     title: "PatternFly React table batteries extension",
     toc: [{"text":"Basic usage"},[{"text":"Example"},{"text":"Fullscreen example"}]],
     examples: ["Example"],
     fullscreenExamples: ["Fullscreen example"],
     section: "extensions",
+    subsection: "",
     source: "react",
-    Component: () => import(/* webpackChunkName: "react/index" */ './react')
+    tabName: null,
+    Component: () => import(/* webpackChunkName: "extensions/patternfly-react-table-batteries-extension/react/index" */ './extensions/patternfly-react-table-batteries-extension/react')
   }
 };

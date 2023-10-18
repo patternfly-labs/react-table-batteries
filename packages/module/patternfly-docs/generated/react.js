@@ -1,12 +1,12 @@
 import React from 'react';
 import { AutoLinkHeader, Example, Link as PatternflyThemeLink } from '@patternfly/documentation-framework/components';
-import { ExtendedButton } from "@patternfly/pattern-fly-react-table-batteries-extension";
+import { ExtendedButton } from "@patternfly-labs/react-table-batteries";
 const pageData = {
   "id": "PatternFly React table batteries extension",
   "section": "extensions",
   "source": "react",
-  "slug": "/extensions/pattern-fly-react-table-batteries-extension/react",
-  "sourceLink": "https://github.com/patternfly/patternfly-react/blob/main/packages/module/patternfly-docs/content/extensions/pattern-fly-react-table-batteries-extension/examples/basic.md",
+  "slug": "/extensions/patternfly-react-table-batteries-extension/react",
+  "sourceLink": "https://github.com/patternfly/patternfly-react/blob/main/packages/module/patternfly-docs/content/extensions/patternfly-react-table-batteries-extension/examples/basic.md",
   "propComponents": [
     {
       "name": "ExtendedButton",
@@ -35,11 +35,11 @@ pageData.relativeImports = {
 };
 pageData.examples = {
   'Example': props => 
-    <Example {...pageData} {...props} {...{"code":"import React from 'react';\nimport { ExtendedButton } from '@patternfly/pattern-fly-react-table-batteries-extension';\n\nexport const BasicExample: React.FunctionComponent = () => <ExtendedButton>My custom extension button</ExtendedButton>;\n","title":"Example","lang":"js"}}>
+    <Example {...pageData} {...props} {...{"code":"import React from 'react';\nimport { ExtendedButton } from '@patternfly-labs/react-table-batteries';\n\nexport const BasicExample: React.FunctionComponent = () => <ExtendedButton>My custom extension button</ExtendedButton>;\n","title":"Example","lang":"js"}}>
       
     </Example>,
   'Fullscreen example': props => 
-    <Example {...pageData} {...props} {...{"code":"import React from 'react';\nimport { ExtendedButton } from '@patternfly/pattern-fly-react-table-batteries-extension';\n\nexport const BasicExample: React.FunctionComponent = () => <ExtendedButton>My custom extension button</ExtendedButton>;\n","title":"Fullscreen example","lang":"js","isFullscreen":true}}>
+    <Example {...pageData} {...props} {...{"code":"import React from 'react';\nimport { ExtendedButton } from '@patternfly-labs/react-table-batteries';\n\nexport const BasicExample: React.FunctionComponent = () => <ExtendedButton>My custom extension button</ExtendedButton>;\n","title":"Fullscreen example","lang":"js","isFullscreen":true}}>
       
     </Example>
 };

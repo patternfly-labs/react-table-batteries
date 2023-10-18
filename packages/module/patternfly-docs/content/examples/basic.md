@@ -12,7 +12,7 @@ source: react
 propComponents: ['ExtendedButton']
 ---
 
-import { ExtendedButton } from "@patternfly/pattern-fly-react-table-batteries-extension";
+import { ExtendedButton } from "@patternfly-labs/react-table-batteries";
 
 ## Basic usage
 

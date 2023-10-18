@@ -1,3 +1,7 @@
+packages/module/patternfly-docs/generated
+
+####
+
 # Javascript builds
 node_modules
 dist

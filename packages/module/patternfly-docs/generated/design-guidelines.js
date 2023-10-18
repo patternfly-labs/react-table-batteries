@@ -5,8 +5,8 @@ const pageData = {
   "id": "PatternFly React table batteries extension",
   "section": "extensions",
   "source": "design-guidelines",
-  "slug": "/extensions/pattern-fly-react-table-batteries-extension/design-guidelines",
-  "sourceLink": "https://github.com/patternfly/patternfly-org/blob/main/packages/module/patternfly-docs/content/extensions/pattern-fly-react-table-batteries-extension/design-guidelines/design-guidelines.md"
+  "slug": "/extensions/patternfly-react-table-batteries-extension/design-guidelines",
+  "sourceLink": "https://github.com/patternfly/patternfly-org/blob/main/packages/module/patternfly-docs/content/extensions/patternfly-react-table-batteries-extension/design-guidelines/design-guidelines.md"
 };
 pageData.relativeImports = {
   
