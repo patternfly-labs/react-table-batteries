@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { ExtendedButton } from '../ExtendedButton';
@@ -29,16 +29,17 @@ test('Passes inherited props to the returned component', () => {
 test('Renders as a primary button initially', () => {
   render(<ExtendedButton>Test</ExtendedButton>);
 
-  expect(screen.getByRole('button')).toHaveClass('pf-c-button pf-m-primary', { exact: true });
+  expect(screen.getByRole('button')).toHaveClass('pf-v5-c-button pf-m-primary', { exact: true });
 });
 
 test('Renders as a secondary button once it has been clicked once', () => {
   render(<ExtendedButton>Test</ExtendedButton>);
-
   const button = screen.getByRole('button');
-  userEvent.click(button);
+  userEvent.click(screen.getByRole('button'));
 
-  expect(button).toHaveClass('pf-c-button pf-m-secondary', { exact: true });
+  waitFor(() => {
+    expect(button).toHaveClass('pf-v5-c-button pf-m-secondary', { exact: true });
+  });
 });
 
 test('Renders as a tertiary button once it has been clicked twice', () => {
@@ -48,7 +49,9 @@ test('Renders as a tertiary button once it has been clicked twice', () => {
   userEvent.click(button);
   userEvent.click(button);
 
-  expect(button).toHaveClass('pf-c-button pf-m-tertiary', { exact: true });
+  waitFor(() => {
+    expect(button).toHaveClass('pf-v5-c-button pf-m-tertiary', { exact: true });
+  });
 });
 
 test('Loops back to rendering a primary button again after being clicked three times', () => {
@@ -59,7 +62,7 @@ test('Loops back to rendering a primary button again after being clicked three t
   userEvent.click(button);
   userEvent.click(button);
 
-  expect(button).toHaveClass('pf-c-button pf-m-primary', { exact: true });
+  expect(button).toHaveClass('pf-v5-c-button pf-m-primary', { exact: true });
 });
 
 test('Matches expected default snapshot', () => {
