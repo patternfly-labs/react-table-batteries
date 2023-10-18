@@ -1,0 +1,47 @@
+{
+  "name": "@patternfly/pattern-fly-react-table-batteries-extension",
+  "version": "1.0.0",
+  "description": "Make it easier to build and maintain composable PatternFly tables",
+  "main": "dist/esm/index.js",
+  "module": "dist/esm/index.js",
+  "scripts": {
+    "build": "tsc --build --verbose ./tsconfig.json",
+    "build:fed:packages": "node generate-fed-package-json.js",
+    "clean": "rimraf dist",
+    "docs:develop": "pf-docs-framework start",
+    "docs:build": "pf-docs-framework build all --output public",
+    "docs:serve": "pf-docs-framework serve public --port 5000",
+    "docs:screenshots": "pf-docs-framework screenshots --urlPrefix http://localhost:5000",
+    "test:a11y": "patternfly-a11y --config patternfly-a11y.config",
+    "serve:a11y": "yarn serve coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mturley/react-table-batteries.git"
+  },
+  "author": "Red Hat",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mturley/react-table-batteries.git/issues"
+  },
+  "homepage": "https://github.com/mturley/react-table-batteries.git#readme",
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@patternfly/react-core": "^4.276.6"
+  },
+  "peerDependencies": {
+    "react": "^16.8 || ^17 || ^18",
+    "react-dom": "^16.8 || ^17 || ^18"
+  },
+  "devDependencies": {
+    "@patternfly/documentation-framework": "^1.10.1",
+    "@patternfly/patternfly": "^4.224.2",
+    "@patternfly/react-table": "^4.112.39",
+    "@patternfly/react-code-editor": "^4.82.113",
+    "rimraf": "^2.6.2",
+    "@patternfly/patternfly-a11y": "^4.3.1",
+    "react-monaco-editor": "^0.51.0"
+  }
+}
