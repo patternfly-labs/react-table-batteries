@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { useTranslation } from 'react-i18next';
 import { ToolbarFilter } from '@patternfly/react-core';
 import {
   Select,
@@ -7,7 +6,7 @@ import {
   SelectOptionObject,
   SelectVariant,
   SelectProps
-} from '@patternfly/react-core/deprecated';
+} from '@patternfly/react-core/deprecated'; // TODO upgrade to new PF5 Select stuff
 import { IFilterControlProps } from './FilterControl';
 import { IMultiselectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
 import { css } from '@patternfly/react-styles';
@@ -28,8 +27,6 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
   isDisabled = false,
   isScrollable = false
 }: React.PropsWithChildren<IMultiselectFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
-  const { t } = useTranslation();
-
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = React.useState(false);
 
   const getOptionKeyFromOptionValue = (optionValue: string | SelectOptionObject) =>
@@ -88,11 +85,8 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
       })
     );
 
-  const placeholderText =
-    category.placeholderText ||
-    `${t('actions.filterBy', {
-      what: category.title
-    })}...`;
+  // TODO support i18n / custom text here?
+  const placeholderText = category.placeholderText || `Filter by ${category.title}...`;
 
   return (
     <ToolbarFilter

@@ -5,10 +5,10 @@ import {
   DropdownGroup,
   DropdownList,
   MenuToggle,
-  SelectOptionProps,
   ToolbarToggleGroup,
   ToolbarItem
 } from '@patternfly/react-core';
+import { SelectOptionProps } from '@patternfly/react-core/deprecated';
 import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 
 import { FilterControl } from './FilterControl';
@@ -90,7 +90,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
   isDisabled = false
 }: React.PropsWithChildren<IFilterToolbarProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = React.useState(false);
-  const [currentFilterCategoryKey, setCurrentFilterCategoryKey] = React.useState(filterCategories[0].key);
+  const [currentFilterCategoryKey, setCurrentFilterCategoryKey] = React.useState(filterCategories[0]?.key);
 
   const onCategorySelect = (category: FilterCategory<TItem, TFilterCategoryKey>) => {
     setCurrentFilterCategoryKey(category.key);

@@ -1,7 +1,6 @@
 import { FilterCategory, IFilterToolbarProps } from 'src/tackle2-ui-legacy/components/FilterToolbar';
 import { IFilterState } from './useFilterState';
 import { ToolbarProps } from '@patternfly/react-core';
-import { useTranslation } from 'react-i18next';
 
 /**
  * Args for useFilterPropHelpers that come from outside useTableControlProps
@@ -30,8 +29,6 @@ export interface IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extend
 export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
   args: IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>
 ) => {
-  const { t } = useTranslation();
-
   const {
     filterState: { filterValues, setFilterValues },
     filterCategories = []
@@ -43,7 +40,7 @@ export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
   const filterPropsForToolbar: ToolbarProps = {
     collapseListedFiltersBreakpoint: 'xl',
     clearAllFilters: () => setFilterValues({}),
-    clearFiltersButtonText: t('actions.clearAllFilters')
+    clearFiltersButtonText: 'Clear all filters' // TODO support i18n / custom text here
   };
 
   /**
