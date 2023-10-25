@@ -1,4 +1,3 @@
-import { useTranslation } from 'react-i18next';
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 
 import { objectKeys } from 'src/utils';
@@ -37,8 +36,6 @@ export const useTableControlProps = <
     TFilterCategoryKey,
     TPersistenceKeyPrefix
   >['propHelpers'];
-
-  const { t } = useTranslation();
 
   // Note: To avoid repetition, not all args are destructured here since the entire
   //       args object is passed to other other helpers which require other parts of it.

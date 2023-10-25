@@ -3,7 +3,6 @@ import { ToolbarFilter, InputGroup, TextInput, Button, ButtonVariant } from '@pa
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import { IFilterControlProps } from './FilterControl';
 import { ISearchFilterCategory } from './FilterToolbar';
-import { inflateSync } from 'zlib';
 
 export interface ISearchFilterControlProps<TItem, TFilterCategoryKey extends string>
   extends IFilterControlProps<TItem, TFilterCategoryKey> {

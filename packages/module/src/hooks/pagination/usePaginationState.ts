@@ -98,8 +98,8 @@ export const usePaginationState = <TPersistenceKeyPrefix extends string = string
             const { pageNumber, itemsPerPage } = urlParams || {};
             return pageNumber && itemsPerPage
               ? {
-                  pageNumber: parseInt(pageNumber, 10),
-                  itemsPerPage: parseInt(itemsPerPage, 10)
+                  pageNumber: parseInt(pageNumber),
+                  itemsPerPage: parseInt(itemsPerPage)
                 }
               : defaultValue;
           }

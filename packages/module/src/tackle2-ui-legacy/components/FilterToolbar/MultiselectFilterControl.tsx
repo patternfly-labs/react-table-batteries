@@ -110,7 +110,7 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
         selections={selections || []}
         onSelect={(_, value) => onFilterSelect(value)}
         isOpen={isFilterDropdownOpen}
-        placeholderText={category.placeholderText}
+        placeholderText={placeholderText}
         isDisabled={isDisabled || category.selectOptions.length === 0}
         variant={SelectVariant.checkbox}
         hasInlineFilter

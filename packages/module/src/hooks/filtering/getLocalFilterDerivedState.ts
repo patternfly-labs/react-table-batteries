@@ -41,6 +41,8 @@ export const getLocalFilterDerivedState = <TItem, TFilterCategoryKey extends str
         return true;
       }
       const filterCategory = filterCategories.find((category) => category.key === categoryKey);
+      // TODO resolve this issue with `any`
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let itemValue = (item as any)[categoryKey];
       if (filterCategory?.getItemValue) {
         itemValue = filterCategory.getItemValue(item);
