@@ -100,7 +100,9 @@ export const useUrlParams = <TDeserializedParams, TKeyPrefix extends string, TUR
   }
 
   React.useEffect(() => {
-    if (allParamsEmpty) {setParams(defaultValue);}
+    if (allParamsEmpty) {
+      setParams(defaultValue);
+    }
     // Leaving this rule enabled results in a cascade of unnecessary useCallbacks:
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [allParamsEmpty]);

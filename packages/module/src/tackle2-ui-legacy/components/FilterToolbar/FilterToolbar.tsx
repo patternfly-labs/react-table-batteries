@@ -116,14 +116,14 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
             {filterCategories
               .filter((filterCategory) => filterCategory.filterGroup === filterGroup)
               .map((filterCategory) => (
-                  <DropdownItem
-                    id={`filter-category-${filterCategory.key}`}
-                    key={filterCategory.key}
-                    onClick={() => onCategorySelect(filterCategory)}
-                  >
-                    {filterCategory.title}
-                  </DropdownItem>
-                ))}
+                <DropdownItem
+                  id={`filter-category-${filterCategory.key}`}
+                  key={filterCategory.key}
+                  onClick={() => onCategorySelect(filterCategory)}
+                >
+                  {filterCategory.title}
+                </DropdownItem>
+              ))}
           </DropdownList>
         </DropdownGroup>
       ));
