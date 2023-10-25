@@ -1,5 +1,5 @@
 import { DiscriminatedArgs } from 'src/type-utils';
-import { IFeaturePersistenceArgs } from '..';
+import { IFeaturePersistenceArgs } from 'src/types';
 import { usePersistentState } from 'src/hooks/generic/usePersistentState';
 
 /**

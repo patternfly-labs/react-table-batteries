@@ -57,7 +57,7 @@ export const useSortPropHelpers = <TColumnKey extends string, TSortableColumnKey
               index: activeSort ? columnKeys.indexOf(activeSort.columnKey) : undefined,
               direction: activeSort?.direction
             },
-            onSort: (event, index, direction) => {
+            onSort: (_event, index, direction) => {
               setActiveSort({
                 columnKey: columnKeys[index] as TSortableColumnKey,
                 direction
