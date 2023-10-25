@@ -47,11 +47,11 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
   const onFilterSelect = (value: string | SelectOptionObject) => {
     const optionKey = getOptionKeyFromOptionValue(value);
     if (optionKey && filterValue?.includes(optionKey)) {
-      let updatedValues = filterValue.filter((item: string) => item !== optionKey);
+      const updatedValues = filterValue.filter((item: string) => item !== optionKey);
       setFilterValue(updatedValues);
     } else {
       if (filterValue) {
-        let updatedValues = [...filterValue, optionKey];
+        const updatedValues = [...filterValue, optionKey];
         setFilterValue(updatedValues as string[]);
       } else {
         setFilterValue([optionKey || '']);
@@ -77,7 +77,7 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
     renderSelectOptions(
       category.selectOptions.filter((optionProps) => {
         // Note: The in-dropdown filter can match the option's key or value. This may not be desirable?
-        if (!textInput) return false;
+        if (!textInput) {return false;}
         const optionValue = optionProps?.value?.toString();
         return (
           optionProps?.key?.toLowerCase().includes(textInput.toLowerCase()) ||

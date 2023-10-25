@@ -48,7 +48,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
           value={inputValue}
           placeholder={category.placeholderText}
           onKeyDown={(event: React.KeyboardEvent) => {
-            if (event.key && event.key !== 'Enter') return;
+            if (event.key && event.key !== 'Enter') {return;}
             onFilterSubmit();
           }}
           isDisabled={isDisabled}

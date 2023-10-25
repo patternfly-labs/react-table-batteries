@@ -115,8 +115,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
           <DropdownList>
             {filterCategories
               .filter((filterCategory) => filterCategory.filterGroup === filterGroup)
-              .map((filterCategory) => {
-                return (
+              .map((filterCategory) => (
                   <DropdownItem
                     id={`filter-category-${filterCategory.key}`}
                     key={filterCategory.key}
@@ -124,8 +123,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
                   >
                     {filterCategory.title}
                   </DropdownItem>
-                );
-              })}
+                ))}
           </DropdownList>
         </DropdownGroup>
       ));

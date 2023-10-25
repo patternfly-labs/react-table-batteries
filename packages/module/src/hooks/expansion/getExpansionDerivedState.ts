@@ -51,11 +51,9 @@ export const getExpansionDerivedState = <TItem, TColumnKey extends string>({
   idProperty,
   expansionState: { expandedCells, setExpandedCells }
 }: IExpansionDerivedStateArgs<TItem, TColumnKey>): IExpansionDerivedState<TItem, TColumnKey> => {
-  const isCellExpanded = (item: TItem, columnKey?: TColumnKey) => {
-    return columnKey
+  const isCellExpanded = (item: TItem, columnKey?: TColumnKey) => columnKey
       ? expandedCells[String(item[idProperty])] === columnKey
       : !!expandedCells[String(item[idProperty])];
-  };
 
   const setCellExpanded = ({
     item,

@@ -30,7 +30,7 @@ export const handlePropagatedRowClick = <E extends React.KeyboardEvent | React.M
 export const objectKeys = <T extends object>(obj: T) => Object.keys(obj) as (keyof T)[];
 
 export const parseMaybeNumericString = (numOrStr: string | undefined | null): string | number | null => {
-  if (numOrStr === undefined || numOrStr === null) return null;
+  if (numOrStr === undefined || numOrStr === null) {return null;}
   const num = Number(numOrStr);
   return isNaN(num) ? numOrStr : num;
 };

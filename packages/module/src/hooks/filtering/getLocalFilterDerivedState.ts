@@ -37,7 +37,7 @@ export const getLocalFilterDerivedState = <TItem, TFilterCategoryKey extends str
   const filteredItems = items.filter((item) =>
     objectKeys(filterValues).every((categoryKey) => {
       const values = filterValues[categoryKey];
-      if (!values || values.length === 0) return true;
+      if (!values || values.length === 0) {return true;}
       const filterCategory = filterCategories.find((category) => category.key === categoryKey);
       let itemValue = (item as any)[categoryKey];
       if (filterCategory?.getItemValue) {
@@ -45,7 +45,7 @@ export const getLocalFilterDerivedState = <TItem, TFilterCategoryKey extends str
       }
       const logicOperator = getFilterLogicOperator(filterCategory);
       return values[logicOperator === 'AND' ? 'every' : 'some']((filterValue) => {
-        if (!itemValue) return false;
+        if (!itemValue) {return false;}
         const lowerCaseItemValue = String(itemValue).toLowerCase();
         const lowerCaseFilterValue = String(filterValue).toLowerCase();
         return lowerCaseItemValue.indexOf(lowerCaseFilterValue) !== -1;

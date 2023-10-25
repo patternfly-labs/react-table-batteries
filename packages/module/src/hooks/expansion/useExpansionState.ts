@@ -83,7 +83,7 @@ export const useExpansionState = <TColumnKey extends string, TPersistenceKeyPref
           persistTo,
           keys: ['expandedCells'],
           serialize: (expandedCellsObj) => {
-            if (!expandedCellsObj || objectKeys(expandedCellsObj).length === 0) return { expandedCells: null };
+            if (!expandedCellsObj || objectKeys(expandedCellsObj).length === 0) {return { expandedCells: null };}
             return { expandedCells: JSON.stringify(expandedCellsObj) };
           },
           deserialize: ({ expandedCells: expandedCellsStr }) => {

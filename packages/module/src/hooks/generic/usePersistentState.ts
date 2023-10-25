@@ -3,7 +3,7 @@ import { IUseUrlParamsArgs, useUrlParams } from './useUrlParams';
 import { UseStorageTypeOptions, useLocalStorage, useSessionStorage } from '@migtools/lib-ui';
 import { DisallowCharacters } from 'src/type-utils';
 
-type PersistToStateOptions = { persistTo?: 'state' };
+interface PersistToStateOptions { persistTo?: 'state' }
 
 type PersistToUrlParamsOptions<TValue, TPersistenceKeyPrefix extends string, TURLParamKey extends string> = {
   persistTo: 'urlParams';

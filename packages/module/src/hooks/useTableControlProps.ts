@@ -63,9 +63,9 @@ export const useTableControlProps = <
   // We need to account for those when dealing with props based on column index and colSpan.
   let numColumnsBeforeData = 0;
   let numColumnsAfterData = 0;
-  if (isSelectionEnabled) numColumnsBeforeData++;
-  if (isExpansionEnabled && args.expandableVariant === 'single') numColumnsBeforeData++;
-  if (hasActionsColumn) numColumnsAfterData++;
+  if (isSelectionEnabled) {numColumnsBeforeData++;}
+  if (isExpansionEnabled && args.expandableVariant === 'single') {numColumnsBeforeData++;}
+  if (hasActionsColumn) {numColumnsAfterData++;}
   const numRenderedColumns = forceNumRenderedColumns || columnKeys.length + numColumnsBeforeData + numColumnsAfterData;
 
   const { filterPropsForToolbar, propsForFilterToolbar } = useFilterPropHelpers(args);

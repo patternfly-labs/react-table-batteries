@@ -55,8 +55,8 @@ export const getLocalSortDerivedState = <TItem, TSortableColumnKey extends strin
     } else if (typeof aValue === 'number' && typeof bValue === 'number') {
       return activeSort.direction === 'asc' ? aValue - bValue : bValue - aValue;
     } else {
-      if (aValue > bValue) return activeSort.direction === 'asc' ? -1 : 1;
-      if (aValue < bValue) return activeSort.direction === 'asc' ? -1 : 1;
+      if (aValue > bValue) {return activeSort.direction === 'asc' ? -1 : 1;}
+      if (aValue < bValue) {return activeSort.direction === 'asc' ? -1 : 1;}
     }
 
     return 0;

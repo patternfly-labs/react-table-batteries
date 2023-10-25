@@ -54,7 +54,7 @@ export type PersistTarget = 'state' | 'urlParams' | 'localStorage' | 'sessionSto
  * - Extra args needed for persisting state both at the table level and in each use[Feature]State hook.
  * - Not required if using the default "state" PersistTarget
  */
-export type ICommonPersistenceArgs<TPersistenceKeyPrefix extends string = string> = {
+export interface ICommonPersistenceArgs<TPersistenceKeyPrefix extends string = string> {
   /**
    * A short string uniquely identifying a specific table. Automatically prepended to any key used in state persistence (e.g. in a URL parameter or localStorage).
    * - Optional: Only omit if this table will not be rendered at the same time as any other tables.
@@ -63,7 +63,7 @@ export type ICommonPersistenceArgs<TPersistenceKeyPrefix extends string = string
    * - Should be short, especially when using the "urlParams" PersistTarget.
    */
   persistenceKeyPrefix?: DisallowCharacters<TPersistenceKeyPrefix, ':'>;
-};
+}
 /**
  * Feature-level persistence-specific args
  * - Extra args needed for persisting state in each use[Feature]State hook.
@@ -190,7 +190,7 @@ export type ITableControlLocalDerivedStateArgs<
  * - Properties here are included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
  * @see ITableControls
  */
-export type ITableControlDerivedState<TItem> = {
+export interface ITableControlDerivedState<TItem> {
   /**
    * The items to be rendered on the current page of the table. These items have already been filtered, sorted and paginated.
    */
@@ -199,7 +199,7 @@ export type ITableControlDerivedState<TItem> = {
    * The total number of items in the entire un-filtered, un-paginated table (the size of the entire API collection being tabulated).
    */
   totalItemCount: number;
-};
+}
 
 /**
  * Rendering configuration arguments

@@ -27,13 +27,13 @@ export interface IActiveItemState {
  * @see IUseTableControlStateArgs
  * @see ITableControls
  */
-export type IActiveItemStateArgs = {
+export interface IActiveItemStateArgs {
   /**
    * The only arg for this feature is the enabled flag.
    * - This does not use DiscriminatedArgs because there are no additional args when the active item feature is enabled.
    */
   isActiveItemEnabled?: boolean;
-};
+}
 
 /**
  * Provides the "source of truth" state for the active item feature.
