@@ -171,49 +171,48 @@ Because our state is persisted in the page URL, we can reload the browser or pre
 
 ```tsx
 const tableControlState = useTableControlState({
-  persistTo: "urlParams",
-  persistenceKeyPrefix: "t",
+  persistTo: 'urlParams',
+  persistenceKeyPrefix: 't',
   columnNames: {
-    name: "Name",
-    description: "Description",
+    name: 'Name',
+    description: 'Description'
   },
   isFilterEnabled: true,
   isSortEnabled: true,
   isPaginationEnabled: true,
   filterCategories: [
     {
-      key: "name",
-      title: "Name",
+      key: 'name',
+      title: 'Name',
       type: FilterType.search,
-      placeholderText: "Filter by name...",
-    },
+      placeholderText: 'Filter by name...'
+    }
   ],
-  sortableColumns: ["name", "description"],
-  initialSort: { columnKey: "name", direction: "asc" },
+  sortableColumns: ['name', 'description'],
+  initialSort: { columnKey: 'name', direction: 'asc' }
 });
 
 const hubRequestParams = getHubRequestParams({
   ...tableControlState, // Includes filterState, sortState and paginationState
   hubSortFieldKeys: {
     // The keys required for sorting on the server, in case they aren't the same as our columns here
-    name: "name",
-    description: "description",
-  },
+    name: 'name',
+    description: 'description'
+  }
 });
 
 // `useFetchThings` is an example of a custom hook that calls a react-query `useQuery`
 // and the `serializeRequestParamsForHub` helper.
 // Any API fetch implementation could be used here as long as it will re-fetch when `hubRequestParams` changes.
 // The `data` returned here has been paginated, filtered and sorted on the server.
-const { data, totalItemCount, isLoading, isError } =
-  useFetchThings(hubRequestParams);
+const { data, totalItemCount, isLoading, isError } = useFetchThings(hubRequestParams);
 
 const tableControls = useTableControlProps({
   ...tableControlState, // Includes filterState, sortState and paginationState
-  idProperty: "id",
+  idProperty: 'id',
   currentPageItems: data,
   totalItemCount,
-  isLoading,
+  isLoading
 });
 
 // Everything else (destructuring `tableControls` and returning JSX) is the same as the client-side example!

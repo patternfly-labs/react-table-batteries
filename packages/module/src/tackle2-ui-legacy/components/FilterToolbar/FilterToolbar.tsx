@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 import {
   Dropdown,
   DropdownItem,
@@ -7,17 +7,17 @@ import {
   MenuToggle,
   SelectOptionProps,
   ToolbarToggleGroup,
-  ToolbarItem,
-} from "@patternfly/react-core";
-import FilterIcon from "@patternfly/react-icons/dist/esm/icons/filter-icon";
+  ToolbarItem
+} from '@patternfly/react-core';
+import FilterIcon from '@patternfly/react-icons/dist/esm/icons/filter-icon';
 
-import { FilterControl } from "./FilterControl";
+import { FilterControl } from './FilterControl';
 
 export enum FilterType {
-  select = "select",
-  multiselect = "multiselect",
-  search = "search",
-  numsearch = "numsearch",
+  select = 'select',
+  multiselect = 'multiselect',
+  search = 'search',
+  numsearch = 'numsearch'
 }
 
 export type FilterValue = string[] | undefined | null;
@@ -28,7 +28,7 @@ export interface OptionPropsWithKey extends SelectOptionProps {
 
 export interface IBasicFilterCategory<
   TItem, // The actual API objects we're filtering
-  TFilterCategoryKey extends string, // Unique identifiers for each filter category (inferred from key properties if possible)
+  TFilterCategoryKey extends string // Unique identifiers for each filter category (inferred from key properties if possible)
 > {
   key: TFilterCategoryKey; // For use in the filterValues state object. Must be unique per category.
   title: string;
@@ -39,13 +39,11 @@ export interface IBasicFilterCategory<
   getServerFilterValue?: (filterValue: FilterValue) => FilterValue; // For server-side filtering. Defaults to using the UI state's value if omitted.
 }
 
-export interface IMultiselectFilterCategory<
-  TItem,
-  TFilterCategoryKey extends string,
-> extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
+export interface IMultiselectFilterCategory<TItem, TFilterCategoryKey extends string>
+  extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
   selectOptions: OptionPropsWithKey[];
   placeholderText?: string;
-  logicOperator?: "AND" | "OR";
+  logicOperator?: 'AND' | 'OR';
 }
 
 export interface ISelectFilterCategory<TItem, TFilterCategoryKey extends string>
@@ -63,20 +61,13 @@ export type FilterCategory<TItem, TFilterCategoryKey extends string> =
   | ISelectFilterCategory<TItem, TFilterCategoryKey>
   | ISearchFilterCategory<TItem, TFilterCategoryKey>;
 
-export type IFilterValues<TFilterCategoryKey extends string> = Partial<
-  Record<TFilterCategoryKey, FilterValue>
->;
+export type IFilterValues<TFilterCategoryKey extends string> = Partial<Record<TFilterCategoryKey, FilterValue>>;
 
-export const getFilterLogicOperator = <
-  TItem,
-  TFilterCategoryKey extends string,
->(
+export const getFilterLogicOperator = <TItem, TFilterCategoryKey extends string>(
   filterCategory?: FilterCategory<TItem, TFilterCategoryKey>,
-  defaultOperator: "AND" | "OR" = "OR"
+  defaultOperator: 'AND' | 'OR' = 'OR'
 ) =>
-  (filterCategory &&
-    (filterCategory as IMultiselectFilterCategory<TItem, TFilterCategoryKey>)
-      .logicOperator) ||
+  (filterCategory && (filterCategory as IMultiselectFilterCategory<TItem, TFilterCategoryKey>).logicOperator) ||
   defaultOperator;
 
 export interface IFilterToolbarProps<TItem, TFilterCategoryKey extends string> {
@@ -96,36 +87,24 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
   setFilterValues,
   pagination,
   showFiltersSideBySide = false,
-  isDisabled = false,
-}: React.PropsWithChildren<
-  IFilterToolbarProps<TItem, TFilterCategoryKey>
->): JSX.Element | null => {
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] =
-    React.useState(false);
-  const [currentFilterCategoryKey, setCurrentFilterCategoryKey] =
-    React.useState(filterCategories[0].key);
+  isDisabled = false
+}: React.PropsWithChildren<IFilterToolbarProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = React.useState(false);
+  const [currentFilterCategoryKey, setCurrentFilterCategoryKey] = React.useState(filterCategories[0].key);
 
-  const onCategorySelect = (
-    category: FilterCategory<TItem, TFilterCategoryKey>
-  ) => {
+  const onCategorySelect = (category: FilterCategory<TItem, TFilterCategoryKey>) => {
     setCurrentFilterCategoryKey(category.key);
     setIsCategoryDropdownOpen(false);
   };
 
-  const setFilterValue = (
-    category: FilterCategory<TItem, TFilterCategoryKey>,
-    newValue: FilterValue
-  ) => setFilterValues({ ...filterValues, [category.key]: newValue });
+  const setFilterValue = (category: FilterCategory<TItem, TFilterCategoryKey>, newValue: FilterValue) =>
+    setFilterValues({ ...filterValues, [category.key]: newValue });
 
-  const currentFilterCategory = filterCategories.find(
-    (category) => category.key === currentFilterCategoryKey
-  );
+  const currentFilterCategory = filterCategories.find((category) => category.key === currentFilterCategoryKey);
 
   const filterGroups = filterCategories.reduce(
     (groups, category) =>
-      !category.filterGroup || groups.includes(category.filterGroup)
-        ? groups
-        : [...groups, category.filterGroup],
+      !category.filterGroup || groups.includes(category.filterGroup) ? groups : [...groups, category.filterGroup],
     [] as string[]
   );
 
@@ -135,9 +114,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
         <DropdownGroup label={filterGroup} key={filterGroup}>
           <DropdownList>
             {filterCategories
-              .filter(
-                (filterCategory) => filterCategory.filterGroup === filterGroup
-              )
+              .filter((filterCategory) => filterCategory.filterGroup === filterGroup)
               .map((filterCategory) => {
                 return (
                   <DropdownItem
@@ -171,9 +148,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
         variant="filter-group"
         toggleIcon={<FilterIcon />}
         breakpoint="2xl"
-        spaceItems={
-          showFiltersSideBySide ? { default: "spaceItemsMd" } : undefined
-        }
+        spaceItems={showFiltersSideBySide ? { default: 'spaceItemsMd' } : undefined}
       >
         {!showFiltersSideBySide && (
           <ToolbarItem>
@@ -182,9 +157,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
                 <MenuToggle
                   id="filtered-by"
                   ref={toggleRef}
-                  onClick={() =>
-                    setIsCategoryDropdownOpen(!isCategoryDropdownOpen)
-                  }
+                  onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
                   isDisabled={isDisabled}
                 >
                   <FilterIcon /> {currentFilterCategory?.title}
@@ -203,17 +176,12 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
             category={category}
             filterValue={filterValues[category.key]}
             setFilterValue={(newValue) => setFilterValue(category, newValue)}
-            showToolbarItem={
-              showFiltersSideBySide ||
-              currentFilterCategory?.key === category.key
-            }
+            showToolbarItem={showFiltersSideBySide || currentFilterCategory?.key === category.key}
             isDisabled={isDisabled}
           />
         ))}
       </ToolbarToggleGroup>
-      {pagination ? (
-        <ToolbarItem variant="pagination">{pagination}</ToolbarItem>
-      ) : null}
+      {pagination ? <ToolbarItem variant="pagination">{pagination}</ToolbarItem> : null}
     </>
   );
 };

@@ -1,5 +1,5 @@
-import { ThProps } from "@patternfly/react-table";
-import { ISortState } from "./useSortState";
+import { ThProps } from '@patternfly/react-table';
+import { ISortState } from './useSortState';
 
 /**
  * Args for useSortPropHelpers that come from outside useTableControlProps
@@ -8,10 +8,7 @@ import { ISortState } from "./useSortState";
  * @see ITableControlState
  * @see IUseTableControlPropsArgs
  */
-export interface ISortPropHelpersExternalArgs<
-  TColumnKey extends string,
-  TSortableColumnKey extends TColumnKey,
-> {
+export interface ISortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
   /**
    * The "source of truth" state for the sort feature (returned by useSortState)
    */
@@ -39,44 +36,34 @@ export interface ISortPropHelpersInternalArgs<TColumnKey extends string> {
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const useSortPropHelpers = <
-  TColumnKey extends string,
-  TSortableColumnKey extends TColumnKey,
->(
-  args: ISortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> &
-    ISortPropHelpersInternalArgs<TColumnKey>
+export const useSortPropHelpers = <TColumnKey extends string, TSortableColumnKey extends TColumnKey>(
+  args: ISortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> & ISortPropHelpersInternalArgs<TColumnKey>
 ) => {
   const {
     sortState: { activeSort, setActiveSort },
     sortableColumns = [],
-    columnKeys,
+    columnKeys
   } = args;
 
   /**
    * Returns props for the Th component for a column with sorting enabled.
    */
-  const getSortThProps = ({
-    columnKey,
-  }: {
-    columnKey: TSortableColumnKey;
-  }): Pick<ThProps, "sort"> =>
+  const getSortThProps = ({ columnKey }: { columnKey: TSortableColumnKey }): Pick<ThProps, 'sort'> =>
     sortableColumns.includes(columnKey)
       ? {
           sort: {
             columnIndex: columnKeys.indexOf(columnKey),
             sortBy: {
-              index: activeSort
-                ? columnKeys.indexOf(activeSort.columnKey)
-                : undefined,
-              direction: activeSort?.direction,
+              index: activeSort ? columnKeys.indexOf(activeSort.columnKey) : undefined,
+              direction: activeSort?.direction
             },
             onSort: (event, index, direction) => {
               setActiveSort({
                 columnKey: columnKeys[index] as TSortableColumnKey,
-                direction,
+                direction
               });
-            },
-          },
+            }
+          }
         }
       : {};
 

@@ -1,5 +1,5 @@
-import React from "react";
-import { Th } from "@patternfly/react-table";
+import React from 'react';
+import { Th } from '@patternfly/react-table';
 
 export interface ITableHeaderContentWithControlsProps {
   numColumnsBeforeData: number;
@@ -7,9 +7,11 @@ export interface ITableHeaderContentWithControlsProps {
   children: React.ReactNode;
 }
 
-export const TableHeaderContentWithControls: React.FC<
-  ITableHeaderContentWithControlsProps
-> = ({ numColumnsBeforeData, numColumnsAfterData, children }) => (
+export const TableHeaderContentWithControls: React.FC<ITableHeaderContentWithControlsProps> = ({
+  numColumnsBeforeData,
+  numColumnsAfterData,
+  children
+}) => (
   <>
     {Array(numColumnsBeforeData)
       .fill(null)

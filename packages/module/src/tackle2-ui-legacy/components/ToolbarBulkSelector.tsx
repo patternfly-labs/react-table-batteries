@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useTranslation } from "react-i18next";
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import {
   Button,
   Dropdown,
@@ -8,11 +8,11 @@ import {
   MenuToggle,
   MenuToggleCheckbox,
   PaginationProps,
-  ToolbarItem,
-} from "@patternfly/react-core";
+  ToolbarItem
+} from '@patternfly/react-core';
 
-import AngleDownIcon from "@patternfly/react-icons/dist/esm/icons/angle-down-icon";
-import AngleRightIcon from "@patternfly/react-icons/dist/esm/icons/angle-right-icon";
+import AngleDownIcon from '@patternfly/react-icons/dist/esm/icons/angle-down-icon';
+import AngleRightIcon from '@patternfly/react-icons/dist/esm/icons/angle-right-icon';
 
 export interface IToolbarBulkSelectorProps<T> {
   areAllSelected: boolean;
@@ -35,10 +35,8 @@ export const ToolbarBulkSelector = <T,>({
   selectedRows,
   onSelectMultiple,
   paginationProps,
-  isExpandable,
-}: React.PropsWithChildren<
-  IToolbarBulkSelectorProps<T>
->): JSX.Element | null => {
+  isExpandable
+}: React.PropsWithChildren<IToolbarBulkSelectorProps<T>>): JSX.Element | null => {
   // i18
   const { t } = useTranslation();
 
@@ -50,7 +48,7 @@ export const ToolbarBulkSelector = <T,>({
   const collapseAllBtn = () => (
     <Button
       variant="control"
-      title={`${!areAllExpanded ? "Expand" : "Collapse"} all`}
+      title={`${!areAllExpanded ? 'Expand' : 'Collapse'} all`}
       onClick={() => {
         areAllExpanded !== undefined && toggleCollapseAll(areAllExpanded);
       }}
@@ -83,7 +81,7 @@ export const ToolbarBulkSelector = <T,>({
       key="select-none"
       component="button"
     >
-      {t("actions.selectNone")} (0 items)
+      {t('actions.selectNone')} (0 items)
     </DropdownItem>,
     <DropdownItem
       onClick={() => {
@@ -96,7 +94,7 @@ export const ToolbarBulkSelector = <T,>({
       key="select-page"
       component="button"
     >
-      {t("actions.selectPage")} ({currentPageItems.length} items)
+      {t('actions.selectPage')} ({currentPageItems.length} items)
     </DropdownItem>,
     <DropdownItem
       onClick={() => {
@@ -106,8 +104,8 @@ export const ToolbarBulkSelector = <T,>({
       key="select-all"
       component="button"
     >
-      {t("actions.selectAll")} ({paginationProps.itemCount})
-    </DropdownItem>,
+      {t('actions.selectAll')} ({paginationProps.itemCount})
+    </DropdownItem>
   ];
 
   return (
@@ -134,8 +132,8 @@ export const ToolbarBulkSelector = <T,>({
                       }
                     }}
                     isChecked={getBulkSelectState()}
-                  />,
-                ],
+                  />
+                ]
               }}
             />
           )}

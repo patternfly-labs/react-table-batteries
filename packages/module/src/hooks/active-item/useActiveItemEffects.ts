@@ -1,6 +1,6 @@
-import * as React from "react";
-import { IActiveItemDerivedState } from "./getActiveItemDerivedState";
-import { IActiveItemState } from "./useActiveItemState";
+import * as React from 'react';
+import { IActiveItemDerivedState } from './getActiveItemDerivedState';
+import { IActiveItemState } from './useActiveItemState';
 
 /**
  * Args for useActiveItemEffects
@@ -31,7 +31,7 @@ export interface IUseActiveItemEffectsArgs<TItem> {
 export const useActiveItemEffects = <TItem>({
   isLoading,
   activeItemState: { activeItemId },
-  activeItemDerivedState: { activeItem, clearActiveItem },
+  activeItemDerivedState: { activeItem, clearActiveItem }
 }: IUseActiveItemEffectsArgs<TItem>) => {
   React.useEffect(() => {
     if (!isLoading && activeItemId && !activeItem) {

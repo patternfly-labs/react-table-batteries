@@ -1,4 +1,4 @@
-import * as React from "react";
+import * as React from 'react';
 
 import {
   FilterCategory,
@@ -6,11 +6,11 @@ import {
   FilterType,
   ISelectFilterCategory,
   ISearchFilterCategory,
-  IMultiselectFilterCategory,
-} from "./FilterToolbar";
-import { SelectFilterControl } from "./SelectFilterControl";
-import { SearchFilterControl } from "./SearchFilterControl";
-import { MultiselectFilterControl } from "./MultiselectFilterControl";
+  IMultiselectFilterCategory
+} from './FilterToolbar';
+import { SelectFilterControl } from './SelectFilterControl';
+import { SearchFilterControl } from './SearchFilterControl';
+import { MultiselectFilterControl } from './MultiselectFilterControl';
 
 export interface IFilterControlProps<TItem, TFilterCategoryKey extends string> {
   category: FilterCategory<TItem, TFilterCategoryKey>;
@@ -23,9 +23,7 @@ export interface IFilterControlProps<TItem, TFilterCategoryKey extends string> {
 export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   category,
   ...props
-}: React.PropsWithChildren<
-  IFilterControlProps<TItem, TFilterCategoryKey>
->): JSX.Element | null => {
+}: React.PropsWithChildren<IFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   if (category.type === FilterType.select) {
     return (
       <SelectFilterControl
@@ -35,10 +33,7 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
       />
     );
   }
-  if (
-    category.type === FilterType.search ||
-    category.type === FilterType.numsearch
-  ) {
+  if (category.type === FilterType.search || category.type === FilterType.numsearch) {
     return (
       <SearchFilterControl
         category={category as ISearchFilterCategory<TItem, TFilterCategoryKey>}
@@ -51,9 +46,7 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
     return (
       <MultiselectFilterControl
         isScrollable
-        category={
-          category as IMultiselectFilterCategory<TItem, TFilterCategoryKey>
-        }
+        category={category as IMultiselectFilterCategory<TItem, TFilterCategoryKey>}
         {...props}
       />
     );

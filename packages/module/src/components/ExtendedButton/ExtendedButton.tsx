@@ -12,11 +12,7 @@ export const ExtendedButton: React.FunctionComponent<ExtendedButtonProps> = ({
 }: ExtendedButtonProps) => {
   const [currentVariantIndex, setCurrentVariantIndex] = React.useState(0);
 
-  const buttonVariants: ButtonProps['variant'][] = [
-    'primary',
-    'secondary',
-    'tertiary'
-  ];
+  const buttonVariants: ButtonProps['variant'][] = ['primary', 'secondary', 'tertiary'];
 
   const handleClick = () => {
     setCurrentVariantIndex((previousVariantIndex) => (previousVariantIndex + 1) % buttonVariants.length);

@@ -1,9 +1,6 @@
-import { PaginationProps, ToolbarItemProps } from "@patternfly/react-core";
-import { IPaginationState } from "./usePaginationState";
-import {
-  IUsePaginationEffectsArgs,
-  usePaginationEffects,
-} from "./usePaginationEffects";
+import { PaginationProps, ToolbarItemProps } from '@patternfly/react-core';
+import { IPaginationState } from './usePaginationState';
+import { IUsePaginationEffectsArgs, usePaginationEffects } from './usePaginationEffects';
 
 /**
  * Args for usePaginationPropHelpers that come from outside useTableControlProps
@@ -29,17 +26,10 @@ export type IPaginationPropHelpersExternalArgs = IUsePaginationEffectsArgs & {
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const usePaginationPropHelpers = (
-  args: IPaginationPropHelpersExternalArgs
-) => {
+export const usePaginationPropHelpers = (args: IPaginationPropHelpersExternalArgs) => {
   const {
     totalItemCount,
-    paginationState: {
-      itemsPerPage,
-      pageNumber,
-      setPageNumber,
-      setItemsPerPage,
-    },
+    paginationState: { itemsPerPage, pageNumber, setPageNumber, setItemsPerPage }
   } = args;
 
   usePaginationEffects(args);
@@ -55,15 +45,15 @@ export const usePaginationPropHelpers = (
     onPerPageSelect: (event, perPage) => {
       setPageNumber(1);
       setItemsPerPage(perPage);
-    },
+    }
   };
 
   /**
    * Props for the PF ToolbarItem component which contains the Pagination component
    */
   const paginationToolbarItemProps: ToolbarItemProps = {
-    variant: "pagination",
-    align: { default: "alignRight" },
+    variant: 'pagination',
+    align: { default: 'alignRight' }
   };
 
   return { paginationProps, paginationToolbarItemProps };

@@ -1,20 +1,12 @@
-import * as React from "react";
-import {
-  ToolbarFilter,
-  InputGroup,
-  TextInput,
-  Button,
-  ButtonVariant,
-} from "@patternfly/react-core";
-import SearchIcon from "@patternfly/react-icons/dist/esm/icons/search-icon";
-import { IFilterControlProps } from "./FilterControl";
-import { ISearchFilterCategory } from "./FilterToolbar";
-import { inflateSync } from "zlib";
+import * as React from 'react';
+import { ToolbarFilter, InputGroup, TextInput, Button, ButtonVariant } from '@patternfly/react-core';
+import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
+import { IFilterControlProps } from './FilterControl';
+import { ISearchFilterCategory } from './FilterToolbar';
+import { inflateSync } from 'zlib';
 
-export interface ISearchFilterControlProps<
-  TItem,
-  TFilterCategoryKey extends string
-> extends IFilterControlProps<TItem, TFilterCategoryKey> {
+export interface ISearchFilterControlProps<TItem, TFilterCategoryKey extends string>
+  extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: ISearchFilterCategory<TItem, TFilterCategoryKey>;
   isNumeric: boolean;
 }
@@ -25,20 +17,18 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
   setFilterValue,
   showToolbarItem,
   isNumeric,
-  isDisabled = false,
-}: React.PropsWithChildren<
-  ISearchFilterControlProps<TItem, TFilterCategoryKey>
->): JSX.Element | null => {
+  isDisabled = false
+}: React.PropsWithChildren<ISearchFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   // Keep internal copy of value until submitted by user
-  const [inputValue, setInputValue] = React.useState(filterValue?.[0] || "");
+  const [inputValue, setInputValue] = React.useState(filterValue?.[0] || '');
   // Update it if it changes externally
   React.useEffect(() => {
-    setInputValue(filterValue?.[0] || "");
+    setInputValue(filterValue?.[0] || '');
   }, [filterValue]);
 
   const onFilterSubmit = () =>
     // Ignore value with multiple spaces
-    setFilterValue(inputValue ? [inputValue.replace(/\s+/g, " ")] : []);
+    setFilterValue(inputValue ? [inputValue.replace(/\s+/g, ' ')] : []);
 
   const id = `${category.key}-input`;
   return (
@@ -52,13 +42,13 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
         <TextInput
           name={id}
           id={id}
-          type={isNumeric ? "number" : "search"}
+          type={isNumeric ? 'number' : 'search'}
           onChange={(_, value) => setInputValue(value)}
           aria-label={`${category.title} filter`}
           value={inputValue}
           placeholder={category.placeholderText}
           onKeyDown={(event: React.KeyboardEvent) => {
-            if (event.key && event.key !== "Enter") return;
+            if (event.key && event.key !== 'Enter') return;
             onFilterSubmit();
           }}
           isDisabled={isDisabled}

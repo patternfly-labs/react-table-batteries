@@ -1,4 +1,4 @@
-import { IPaginationState } from "./usePaginationState";
+import { IPaginationState } from './usePaginationState';
 
 /**
  * Args for getLocalPaginationDerivedState
@@ -25,12 +25,9 @@ export interface ILocalPaginationDerivedStateArgs<TItem> {
  */
 export const getLocalPaginationDerivedState = <TItem>({
   items,
-  paginationState: { pageNumber, itemsPerPage },
+  paginationState: { pageNumber, itemsPerPage }
 }: ILocalPaginationDerivedStateArgs<TItem>) => {
   const pageStartIndex = (pageNumber - 1) * itemsPerPage;
-  const currentPageItems = items.slice(
-    pageStartIndex,
-    pageStartIndex + itemsPerPage
-  );
+  const currentPageItems = items.slice(pageStartIndex, pageStartIndex + itemsPerPage);
   return { currentPageItems };
 };

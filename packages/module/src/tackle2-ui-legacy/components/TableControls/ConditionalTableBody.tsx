@@ -1,8 +1,8 @@
-import React from "react";
-import { Bullseye, Spinner } from "@patternfly/react-core";
-import { Tbody, Tr, Td } from "@patternfly/react-table";
-import { StateError } from "../StateError";
-import { StateNoData } from "../StateNoData";
+import React from 'react';
+import { Bullseye, Spinner } from '@patternfly/react-core';
+import { Tbody, Tr, Td } from '@patternfly/react-table';
+import { StateError } from '../StateError';
+import { StateNoData } from '../StateNoData';
 
 export interface IConditionalTableBodyProps {
   numRenderedColumns: number;
@@ -21,7 +21,7 @@ export const ConditionalTableBody: React.FC<IConditionalTableBodyProps> = ({
   isNoData = false,
   errorEmptyState = null,
   noDataEmptyState = null,
-  children,
+  children
 }) => (
   <>
     {isLoading ? (
