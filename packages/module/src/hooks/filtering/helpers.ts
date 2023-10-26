@@ -1,5 +1,5 @@
-import { FilterValue, IFilterValues } from 'src/tackle2-ui-legacy/components/FilterToolbar';
-import { objectKeys } from 'src/utils';
+import { FilterValue, IFilterValues } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { objectKeys } from '../../utils';
 
 /**
  * Helper function for useFilterState

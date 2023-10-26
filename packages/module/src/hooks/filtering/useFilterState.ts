@@ -1,9 +1,9 @@
-import { FilterCategory, IFilterValues } from 'src/tackle2-ui-legacy/components/FilterToolbar';
+import { IFilterValues, FilterCategory } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { DiscriminatedArgs } from '../../type-utils';
 import { IFeaturePersistenceArgs } from '../../types';
-import { usePersistentState } from 'src/hooks/generic/usePersistentState';
+import { usePersistentState } from '../generic/usePersistentState';
 import { serializeFilterUrlParams } from './helpers';
 import { deserializeFilterUrlParams } from './helpers';
-import { DiscriminatedArgs } from 'src/type-utils';
 
 /**
  * The "source of truth" state for the filter feature.

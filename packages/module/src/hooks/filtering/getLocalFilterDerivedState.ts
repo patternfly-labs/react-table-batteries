@@ -1,5 +1,5 @@
-import { FilterCategory, getFilterLogicOperator } from 'src/tackle2-ui-legacy/components/FilterToolbar';
-import { objectKeys } from 'src/utils';
+import { FilterCategory, getFilterLogicOperator } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { objectKeys } from '../../utils';
 import { IFilterState } from './useFilterState';
 
 /**

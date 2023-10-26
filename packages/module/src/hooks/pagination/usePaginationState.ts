@@ -1,6 +1,6 @@
-import { usePersistentState } from 'src/hooks/generic/usePersistentState';
+import { DiscriminatedArgs } from '../../type-utils';
 import { IFeaturePersistenceArgs } from '../../types';
-import { DiscriminatedArgs } from 'src/type-utils';
+import { usePersistentState } from '../generic/usePersistentState';
 
 /**
  * The currently applied pagination parameters

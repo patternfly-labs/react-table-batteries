@@ -1,6 +1,6 @@
-import { DiscriminatedArgs } from 'src/type-utils';
-import { IFeaturePersistenceArgs } from 'src/types';
-import { usePersistentState } from 'src/hooks/generic/usePersistentState';
+import { DiscriminatedArgs } from '../../type-utils';
+import { IFeaturePersistenceArgs } from '../../types';
+import { usePersistentState } from '../generic/usePersistentState';
 
 /**
  * The currently applied sort parameters

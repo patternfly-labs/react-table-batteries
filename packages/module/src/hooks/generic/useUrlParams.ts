@@ -1,6 +1,6 @@
-import { DisallowCharacters } from 'src/type-utils';
-import { objectKeys } from 'src/utils';
 import React from 'react';
+import { DisallowCharacters } from '../../type-utils';
+import { objectKeys } from '../../utils';
 
 // TODO remove dependency on react-router-dom?
 import { useLocation, useHistory } from 'react-router-dom';

@@ -1,6 +1,6 @@
-import { parseMaybeNumericString } from 'src/utils';
 import { IFeaturePersistenceArgs } from '../../types';
-import { usePersistentState } from 'src/hooks/generic/usePersistentState';
+import { parseMaybeNumericString } from '../../utils';
+import { usePersistentState } from '../generic/usePersistentState';
 
 /**
  * The "source of truth" state for the active item feature.

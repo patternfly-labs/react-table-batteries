@@ -1,4 +1,4 @@
-import { KeyWithValueType } from 'src/type-utils';
+import { KeyWithValueType } from '../../type-utils';
 import { IExpansionState } from './useExpansionState';
 
 /**

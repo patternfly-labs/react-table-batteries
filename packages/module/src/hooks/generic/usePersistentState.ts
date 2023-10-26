@@ -1,7 +1,7 @@
 import React from 'react';
 import { IUseUrlParamsArgs, useUrlParams } from './useUrlParams';
 import { UseStorageTypeOptions, useLocalStorage, useSessionStorage } from '@migtools/lib-ui';
-import { DisallowCharacters } from 'src/type-utils';
+import { DisallowCharacters } from '../../type-utils';
 
 interface PersistToStateOptions {
   persistTo?: 'state';

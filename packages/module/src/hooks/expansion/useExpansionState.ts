@@ -1,7 +1,7 @@
-import { usePersistentState } from 'src/hooks/generic/usePersistentState';
-import { objectKeys } from 'src/utils';
+import { DiscriminatedArgs } from '../../type-utils';
 import { IFeaturePersistenceArgs } from '../../types';
-import { DiscriminatedArgs } from 'src/type-utils';
+import { objectKeys } from '../../utils';
+import { usePersistentState } from '../generic/usePersistentState';
 
 /**
  * A map of item ids (strings resolved from `item[idProperty]`) to either:

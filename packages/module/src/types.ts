@@ -1,6 +1,5 @@
 import { TableProps, TdProps, ThProps, TrProps } from '@patternfly/react-table';
 import { ISelectionStateArgs, useSelectionState } from '@migtools/lib-ui';
-import { DisallowCharacters, DiscriminatedArgs } from 'src/type-utils';
 import {
   IFilterStateArgs,
   ILocalFilterDerivedStateArgs,
@@ -22,9 +21,10 @@ import {
   IActiveItemStateArgs
 } from './hooks/active-item';
 import { PaginationProps, ToolbarItemProps, ToolbarProps } from '@patternfly/react-core';
-import { IFilterToolbarProps } from 'src/tackle2-ui-legacy/components/FilterToolbar';
-import { IToolbarBulkSelectorProps } from 'src/tackle2-ui-legacy/components/ToolbarBulkSelector';
 import { IExpansionPropHelpersExternalArgs } from './hooks/expansion/useExpansionPropHelpers';
+import { DisallowCharacters, DiscriminatedArgs } from './type-utils';
+import { IFilterToolbarProps } from './tackle2-ui-legacy/components/FilterToolbar';
+import { IToolbarBulkSelectorProps } from './tackle2-ui-legacy/components/ToolbarBulkSelector';
 
 // Generic type params used here:
 //   TItem - The actual API objects represented by rows in the table. Can be any object.
