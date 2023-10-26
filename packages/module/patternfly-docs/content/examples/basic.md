@@ -62,10 +62,6 @@ Passing one of these values as a string will set the persistence target for all 
 
 This example persists state for all features to URL parameters except filter state which is persisted in localStorage.
 
-```ts
-persistTo={{ default: "urlParams", filter: "localStorage" }}
-```
-
 ```js file="./ExampleAdvancedPersistTargets.tsx"
 
 ```
@@ -108,17 +104,17 @@ TODO - flesh this out when useSelectionState has been moved here
 
 ```
 
-### Expansion
+### Expansion (single-expand variant)
 
 TODO copy over and rework things from OLD_DOCS.md here
-
-#### Single-expand variant
 
 ```js file="./ExampleFeatureExpansionSingle.tsx"
 
 ```
 
-#### Compound-expand variant
+### Expansion (compound-expand variant)
+
+TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureExpansionCompound.tsx"
 
