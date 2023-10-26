@@ -12,7 +12,27 @@ source: react
 propComponents: ['ExtendedButton']
 ---
 
-import { ExtendedButton } from "@patternfly-labs/react-table-batteries";
+import {
+Toolbar,
+ToolbarContent,
+ToolbarItem,
+EmptyState,
+EmptyStateIcon,
+Title,
+Pagination
+} from '@patternfly/react-core';
+import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
+import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
+import {
+useLocalTableControls,
+useTableControlProps,
+useTableControlState,
+TableHeaderContentWithControls,
+ConditionalTableBody,
+TableRowContentWithControls,
+FilterToolbar,
+FilterType
+} from '@patternfly-labs/react-table-batteries';
 
 ## Why?
 
@@ -33,11 +53,29 @@ With this pattern, tables are easy to build and maintain with code that is short
 
 ### Example table with client-side filtering/sorting/pagination
 
+For client-paginated tables, the only hook we need is `useLocalTableControls`. All arguments can be passed to it in one object, and the `tableControls` object returned by it contains everything we need to render the composable table.
+
+This simple example includes only the filtering, sorting and pagination features and excludes arguments and properties related to the other features (see [Features](#features)).
+
+Features are enabled by passing `is[Feature]Enabled` boolean arguments. Required arguments for the enabled features will be enforced by TypeScript based on which features are enabled. All features are disabled by default; for this basic example with filtering, sorting and pagination, we must pass true values for `isFilterEnabled`, `isSortEnabled` and `isPaginationEnabled`.
+
+This example also shows a powerful optional capability of these hooks: the `persistTo` argument. This can be passed to either `useTableControlState` or `useLocalTableControls` and it allows us to store the current pagination/sort/filter state in a custom location and use that as the source of truth. The supported `persistTo` values are `"state"` (default), `"urlParams"` (recommended), `"localStorage"` or `"sessionStorage"`. For more on each option see [Custom state persistence targets](#custom-state-persistence-targets).
+
+Here we use `persistTo: "urlParams"` which will store and update the table state in the browser's URL query parameters. We also pass an optional `persistenceKeyPrefix` which distinguishes this persisted state from any other state that may be persisted in the URL by other tables on the same page (it can be omitted if there is only one table on the page). It should be a short string because it is included as a prefix on every URL param name. We'll use `'t1'` for the first table on the page that contains Thing objects.
+
+Because our state is persisted in the page URL, we can reload the browser or press the Back and Forward buttons without losing our current filter, sort, and pagination selections. We can even bookmark the page and all that state will be restored when loading the bookmark! You can try that right on this page.
+
 ```js file="./ExampleBasicClientPaginated.tsx"
 
 ```
 
 ### Example table with server-side filtering/sorting/pagination
+
+The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useLocalTableControls` into two separate objects passed to `useTableControlState` and `useTableControlProps` based on when they are needed. Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableControlState` and `useTableControlProps` as well as the return values from both are included in the `tableControls` object returned by `useTableControlProps` (and by `useLocalTableControls` above). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
+
+Note also: the destructuring of `tableControls` and returned JSX is not included in this example code because **_it is identical to the example above_**. The only differences between client-paginated and server-paginated tables are in the hook calls; the `tableControls` object and its usage are the same for all tables.
+
+NOTE/TODO/FIXME: This example is currently broken because we haven't properly mocked the server side of it in this new extension docs site yet. It should render fine but the filtering/pagination/sorting controls won't have any effect on what data is shown.
 
 ```js file="./ExampleBasicServerPaginated.tsx"
 
@@ -47,11 +85,9 @@ With this pattern, tables are easy to build and maintain with code that is short
 
 The basic usage above and feature usage examples below (see [Features](#features)) should be sufficient for most tables. However, there are some less-frequently used options available:
 
-### Multiple state persistence targets
+### Custom state persistence targets
 
-TODO bring up basic state persistence with the descriptions of the basic examples instead of here, just more detail here
-
-The state used by each feature (see [Features](#features)) can be stored either in React state (default), in the browser's URL query parameters (recommended), or in the browser's `localStorage` or `sessionStorage`. If URL params are used, the user's current filters, sort, pagination state, expanded/active rows and more are preserved when reloading the browser, using the browser Back and Forward buttons, or loading a bookmark. The storage target for each feature is specified with the `persistTo` property. The supported `persistTo` values are:
+As described in [the first example](#example-table-with-client-side-filteringsortingpagination) above, the state used by each feature (see [Features](#features)) can be stored either in React state (default), in the browser's URL query parameters (recommended), or in the browser's `localStorage` or `sessionStorage`. If URL params are used, the user's current filters, sort, pagination state, expanded/active rows and more are preserved when reloading the browser, using the browser Back and Forward buttons, or loading a bookmark. The storage target for each feature is specified with the `persistTo` property. The supported `persistTo` values are:
 
 - `"state"` (default) - Plain React state. Resets on component unmount or page reload.
 - `"urlParams"` (recommended) - URL query parameters. Persists on page reload, browser history buttons (back/forward) or loading a bookmark. Resets on page navigation.
@@ -146,7 +182,7 @@ In most cases, you'll only need to use these higher-level hooks and helpers to b
 - For server-paginated tables: `useTableControlState`, `getHubRequestParams`, and `useTableControlProps`.
   - Choose whether you want to use React state, URL params or localStorage/sessionStorage as the source of truth, and call `useTableControlState` with the appropriate `persistTo` option and optional `persistenceKeyPrefix` (to namespace persisted state for multiple tables on the same page).
     - `persistTo` can be `"state" | "urlParams" | "localStorage" | "sessionStorage"`, and defaults to `"state"` if omitted (falls back to regular React state).
-    - You can also use a different type of storage for the state of each feature by passing an object for `persistTo`. See [State persistence targets](#state-persistence-targets).
+    - You can also use a different type of storage for the state of each feature by passing an object for `persistTo`. See [Custom state persistence targets](#custom-state-persistence-targets).
   - Take the object returned by that hook (generally named `tableControlState`) and pass it to the `getHubRequestParams` function (you may need to spread it and add additional properties like `hubSortFieldKeys`). (⚠️ TECH DEBT NOTE: This is Konveyor-specific)
   - Call your API query hooks, using the `hubRequestParams` as needed.
   - Call `useTableControlProps` and pass it an object spreading all properties from `tableControlState` along with additional config arguments. Some of these arguments will be derived from your API data, such as `currentPageItems`, `totalItemCount` and `isLoading`. Others are simply passed here rather than above because they are used only for rendering and not required for state management.

@@ -2,6 +2,7 @@ export * from './useTableControlState';
 export * from './useTableControlProps';
 export * from './getLocalTableControlDerivedState';
 export * from './useLocalTableControls';
+export * from './generic';
 export * from './filtering';
 export * from './sorting';
 export * from './pagination';
