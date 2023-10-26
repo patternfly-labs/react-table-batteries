@@ -31,7 +31,8 @@ TableHeaderContentWithControls,
 ConditionalTableBody,
 TableRowContentWithControls,
 FilterToolbar,
-FilterType
+FilterType,
+ExtendedButton
 } from '@patternfly-labs/react-table-batteries';
 
 ## Why?
