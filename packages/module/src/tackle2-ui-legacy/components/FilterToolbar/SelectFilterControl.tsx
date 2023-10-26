@@ -5,8 +5,6 @@ import { IFilterControlProps } from './FilterControl';
 import { ISelectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
 import { css } from '@patternfly/react-styles';
 
-import './select-overrides.css';
-
 export interface ISelectFilterControlProps<TItem, TFilterCategoryKey extends string>
   extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: ISelectFilterCategory<TItem, TFilterCategoryKey>;

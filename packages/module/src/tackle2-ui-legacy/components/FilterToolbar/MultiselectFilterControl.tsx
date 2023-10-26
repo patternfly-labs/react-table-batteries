@@ -11,8 +11,6 @@ import { IFilterControlProps } from './FilterControl';
 import { IMultiselectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
 import { css } from '@patternfly/react-styles';
 
-import './select-overrides.css';
-
 export interface IMultiselectFilterControlProps<TItem, TFilterCategoryKey extends string>
   extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: IMultiselectFilterCategory<TItem, TFilterCategoryKey>;
