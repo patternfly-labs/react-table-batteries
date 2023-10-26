@@ -45,7 +45,11 @@ With this pattern, tables are easy to build and maintain with code that is short
 
 ## Advanced usage
 
-### State persistence targets
+The basic usage above and feature usage examples below (see [Features](#features)) should be sufficient for most tables. However, there are some less-frequently used options available:
+
+### Multiple state persistence targets
+
+TODO bring up basic state persistence with the descriptions of the basic examples instead of here, just more detail here
 
 The state used by each feature (see [Features](#features)) can be stored either in React state (default), in the browser's URL query parameters (recommended), or in the browser's `localStorage` or `sessionStorage`. If URL params are used, the user's current filters, sort, pagination state, expanded/active rows and more are preserved when reloading the browser, using the browser Back and Forward buttons, or loading a bookmark. The storage target for each feature is specified with the `persistTo` property. The supported `persistTo` values are:
 
