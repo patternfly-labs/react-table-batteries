@@ -35,7 +35,7 @@ FilterType,
 ExtendedButton
 } from '@patternfly-labs/react-table-batteries';
 
-## Why?
+## Introduction
 
 These hooks and components are intended as the missing "batteries" for the composable PatternFly Table. When PatternFly deprecated the "batteries included" legacy monolith Table in favor of the newer composable Table components, the price of the improved flexibility was that the table itself can no longer manage its own state and its usage became more verbose with more required boilerplate code. This trade-off was worth it for PatternFly because the composability offered by the new components is so crucial. However, we can have the best of both worlds by encapsulating the boilerplate logic into hooks that feed props into the composable components without abstracting those components away.
 
