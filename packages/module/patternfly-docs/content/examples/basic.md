@@ -48,7 +48,7 @@ The react-table-batteries hooks and components provide a pattern where:
 - You retain full control over the JSX, can override any prop and have access to all the state at any level.
 - Strict type safety and support for generics provide a safe and convenient TypeScript development experience.
 
-With this pattern, tables are easy to build and maintain with code that is short and readable without sacrificing composability or refactorability. You'll gain back some of the magic that used to be abstracted away in the deprecated table, but you don't have to sacrifice any of the benefits gained by migrating away from it. You'll also gain powerful and easily-enabled new features that the deprecated table never had.
+This pattern makes tables easier to build, maintain and enhance. Your code will be shorter and more readable without sacrificing composability or refactorability. You'll gain back some of the magic that used to be abstracted away in the deprecated table, but you don't have to sacrifice any of the benefits gained by migrating away from it. You'll also gain powerful and easily-enabled new features that the deprecated table never had.
 
 ## Basic examples
 
