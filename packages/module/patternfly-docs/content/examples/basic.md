@@ -97,9 +97,9 @@ As described in [the first example](#example-table-with-client-side-filteringsor
 - `"localStorage"` - Browser localStorage API. Persists semi-permanently and is shared across all tabs/windows. Resets only when the user clears their browsing data.
 - `"sessionStorage"` - Browser sessionStorage API. Persists on page/history navigation/reload. Resets when the tab/window is closed.
 
-Passing one of these values as a string will set the persistence target for all features (as is done in the [Basic usage](#basic-usage) examples above). If you want to persist the state for some features in different storage than others, you can instead pass an object with features as keys and one of the above strings as each feature's value. The `default` key can be used to set the persistence target for any features not included in your object.
+Passing one of these values as a string will set the persistence target for all features (as is done in the [Basic examples](#basic-examples) examples above). If you want to persist the state for some features in different storage than others, you can instead pass an object with features as keys and one of the above strings as each feature's value. The `default` key can be used to set the persistence target for any features not included in your object.
 
-This example persists state for all features to URL parameters except filter state which is persisted in localStorage.
+This example persists state for all features to URL parameters except filter state which is persisted in localStorage (resets only when clearing browsing data) and pagination state which is stored in React state (resets when reloading the page).
 
 ```js file="./ExampleAdvancedPersistTargets.tsx"
 
@@ -137,7 +137,7 @@ TODO remark on how this may be helpful as the first step in incremental adoption
 
 The functionality and state of the table-batteries hooks is broken down into the following features. Each of these features represents a slice of the logical concerns for a table UI.
 
-Note that the filtering, sorting and pagination features are special because they must be performed in a specific order to work correctly: filter and sort data, then paginate it. Using the higher-level hooks like `useLocalTableControls` or `useTableControlState` + `useTableControlProps` will take care of this for you (see [Basic usage](#basic-usage)), but if you are handling filtering/sorting/pagination yourself with the lower-level hooks you'll need to be mindful of this order.
+Note that the filtering, sorting and pagination features are special because they must be performed in a specific order to work correctly: filter and sort data, then paginate it. Using the table-batteries hooks like `useLocalTableControls` or `useTableControlState` and `useTableControlProps` will take care of this for you (see [Basic examples](#basic-examples) and [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need)), but if you are handling filtering/sorting/pagination yourself
 
 ### Filter
 

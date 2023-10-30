@@ -85,7 +85,7 @@ const fetchMockData = (apiParams: {
 export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
   const tableControlState = useTableControlState({
     persistTo: 'urlParams',
-    persistenceKeyPrefix: 't3', // The third Things table on this page.
+    persistenceKeyPrefix: 't2', // The second Things table on this page.
     columnNames: {
       name: 'Name',
       description: 'Description'
