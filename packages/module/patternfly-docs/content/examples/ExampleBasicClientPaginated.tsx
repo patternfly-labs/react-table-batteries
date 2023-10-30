@@ -56,7 +56,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
         getItemValue: (thing) => thing.name || ''
       }
     ],
-    // Because isSortEnabled, TypeScript will require these sort-related properties:
+    // Because isSortEnabled is true, TypeScript will require these sort-related properties:
     sortableColumns: ['name', 'description'],
     getSortValues: (thing) => ({
       name: thing.name || '',

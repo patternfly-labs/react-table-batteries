@@ -43,6 +43,21 @@ export const useUrlParams = <TDeserializedParams, TKeyPrefix extends string, TUR
   serialize,
   deserialize
 }: IUseUrlParamsArgs<TDeserializedParams, TKeyPrefix, TURLParamKey>): TURLParamStateTuple<TDeserializedParams> => {
+  // Sync document.location.search with state via an event listener in order to re-render when it changes
+  const [locationSearch, setLocationSearch] = React.useState(document.location.search);
+  React.useEffect(() => {
+    const onPopState = () => {
+      // eslint-disable-next-line no-console
+      console.log('popstate happening?');
+      setLocationSearch(document.location.search);
+    };
+    window.addEventListener('popstate', onPopState);
+    return () => {
+      window.removeEventListener('popstate', onPopState);
+    };
+  }, [setLocationSearch]);
+  const urlParams = new URLSearchParams(locationSearch);
+
   type TPrefixedURLParamKey = TURLParamKey | `${TKeyPrefix}:${TURLParamKey}`;
 
   const withPrefix = (key: TURLParamKey): TPrefixedURLParamKey =>
@@ -67,26 +82,13 @@ export const useUrlParams = <TDeserializedParams, TKeyPrefix extends string, TUR
     const existingSearchParams = new URLSearchParams(search);
     // We prefix the params object here so the serialize function doesn't have to care about the keyPrefix.
     const newPrefixedSerializedParams = withPrefixes(serialize(newParams));
-    history.replaceState(
-      '',
-      '',
-      `${pathname}?${trimAndStringifyUrlParams({
-        existingSearchParams,
-        newPrefixedSerializedParams
-      })}`
-    );
+    const newLocationSearch = trimAndStringifyUrlParams({
+      existingSearchParams,
+      newPrefixedSerializedParams
+    });
+    setLocationSearch(newLocationSearch);
+    history.replaceState('', '', `${pathname}?${newLocationSearch}`);
   };
-
-  // Sync document.location.search with state via an event listener in order to re-render when it changes
-  const [locationSearch, setLocationSearch] = React.useState(document.location.search);
-  React.useEffect(() => {
-    const onPopState = () => setLocationSearch(document.location.search);
-    window.addEventListener('popstate', onPopState);
-    return () => {
-      window.removeEventListener('popstate', onPopState);
-    };
-  }, [setLocationSearch]);
-  const urlParams = new URLSearchParams(locationSearch);
 
   // We un-prefix the params object here so the deserialize function doesn't have to care about the keyPrefix.
   let allParamsEmpty = true;
