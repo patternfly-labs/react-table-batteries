@@ -59,7 +59,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
 
   const tableControls = useLocalTableControls({
     persistTo: 'urlParams',
-    persistenceKeyPrefix: 't1',
+    persistenceKeyPrefix: 't1', // The first Things table on this page.
     idProperty: 'id', // The name of a unique string or number property on the data items.
     items: mockApiResponse.data, // The generic type `TItem` is inferred from the items passed here.
     columnNames: {

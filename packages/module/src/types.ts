@@ -162,7 +162,7 @@ export type ITableControlState<
    * A string that changes whenever state changes that should result in a data refetch if this is a server-filtered/sorted/paginated table.
    * For use as a useEffect dependency, react-query key, or other value that will trigger an API refetch when it changes.
    */
-  cacheBuster: string;
+  cacheKey: string;
 };
 
 /**

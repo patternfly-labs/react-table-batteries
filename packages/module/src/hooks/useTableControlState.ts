@@ -51,7 +51,7 @@ export const useTableControlState = <
   const { filterValues } = filterState;
   const { activeSort } = sortState;
   const { pageNumber, itemsPerPage } = paginationState;
-  const cacheBuster = JSON.stringify({ filterValues, activeSort, pageNumber, itemsPerPage });
+  const cacheKey = JSON.stringify({ filterValues, activeSort, pageNumber, itemsPerPage });
   return {
     ...args,
     filterState,
@@ -59,6 +59,6 @@ export const useTableControlState = <
     paginationState,
     expansionState,
     activeItemState,
-    cacheBuster
+    cacheKey
   };
 };

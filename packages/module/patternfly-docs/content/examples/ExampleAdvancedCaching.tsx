@@ -17,6 +17,9 @@ import {
   FilterType,
   FilterValue,
   IActiveSort,
+  IFilterState,
+  IPaginationState,
+  ISortState,
   TableHeaderContentWithControls,
   TableRowContentWithControls,
   useTableControlProps,
@@ -82,10 +85,43 @@ const fetchMockData = (apiParams: {
     }, 1000);
   });
 
-export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
+// Here's a mock hook using a ref to store a map of cacheKeys to cached API responses.
+// In a real implementation, you would likely use a library like react-query with a built-in cache instead.
+const useMemoizedMockDataFetch = (tableControlState: {
+  filterState: IFilterState<'name' | 'description'>;
+  sortState: ISortState<'name' | 'description'>;
+  paginationState: IPaginationState;
+  cacheKey: string;
+}): { isLoadingMockData: boolean; mockFetchResponse: MockAPIResponse } => {
+  const cacheRef = React.useRef<Record<string, MockAPIResponse>>({});
+  const [isLoadingMockData, setIsLoadingMockData] = React.useState(false);
+
+  const {
+    filterState: { filterValues },
+    sortState: { activeSort },
+    paginationState: { pageNumber, itemsPerPage },
+    cacheKey
+  } = tableControlState;
+
+  React.useEffect(() => {
+    if (!cacheRef.current[cacheKey]) {
+      setIsLoadingMockData(true);
+      fetchMockData({ filterValues, activeSort, pageNumber, itemsPerPage }).then((response) => {
+        cacheRef.current[cacheKey] = response;
+        setIsLoadingMockData(false);
+      });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cacheKey]);
+  // The cacheKey string above changes when filtering, sorting or pagination state change and the API data should be refetched.
+
+  return { isLoadingMockData, mockFetchResponse: cacheRef.current[cacheKey] || { data: [], totalItemCount: 0 } };
+};
+
+export const ExampleAdvancedCaching: React.FunctionComponent = () => {
   const tableControlState = useTableControlState({
     persistTo: 'urlParams',
-    persistenceKeyPrefix: 't3', // The third Things table on this page.
+    persistenceKeyPrefix: 't4', // The fourth Things table on this page.
     columnNames: {
       name: 'Name',
       description: 'Description'
@@ -112,30 +148,16 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
   });
 
   const {
-    filterState: { filterValues },
-    sortState: { activeSort },
-    paginationState: { pageNumber, itemsPerPage }
-  } = tableControlState;
-
-  // In a real table we'd use a real API fetch here, perhaps using a library like react-query.
-  const [mockApiResponse, setMockApiResponse] = React.useState<MockAPIResponse>({ data: [], totalItemCount: 0 });
-  const [isLoadingMockData, setIsLoadingMockData] = React.useState(false);
-  React.useEffect(() => {
-    setIsLoadingMockData(true);
-    fetchMockData({ filterValues, activeSort, pageNumber, itemsPerPage }).then((response) => {
-      setMockApiResponse(response);
-      setIsLoadingMockData(false);
-    });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableControlState.cacheKey]);
-  // The cacheKey string above changes when filtering, sorting or pagination state change and the API data should be refetched.
+    isLoadingMockData,
+    mockFetchResponse: { data, totalItemCount }
+  } = useMemoizedMockDataFetch(tableControlState);
 
   const tableControls = useTableControlProps({
     ...tableControlState,
     idProperty: 'id',
     isLoading: isLoadingMockData,
-    currentPageItems: mockApiResponse.data,
-    totalItemCount: mockApiResponse.totalItemCount,
+    currentPageItems: data,
+    totalItemCount,
     // TODO this shouldn't be necessary once we refactor useSelectionState to fit the rest of the table-batteries pattern.
     // Due to an unresolved issue, the `selectionState` is required here even though we're not using selection.
     // As a temporary workaround we pass stub values for these properties.
