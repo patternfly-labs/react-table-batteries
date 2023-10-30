@@ -46,15 +46,15 @@ const fetchMockData = (apiParams: {
     setTimeout(() => {
       const { filterValues, activeSort, pageNumber, itemsPerPage } = apiParams;
       const rawMockData: Thing[] = [
-        { id: 1, name: 'Thing 1', description: 'Something from the API' },
-        { id: 2, name: 'Thing 2', description: 'Something else from the API' },
-        { id: 3, name: 'Thing 3', description: 'Another API object' },
-        { id: 4, name: 'Thing 4', description: 'These desriptions are unique' },
-        { id: 5, name: 'Thing 5', description: 'So you can try filtering and sorting' },
-        { id: 6, name: 'Thing 6', description: 'Go ahead and try it above' },
-        { id: 7, name: 'Thing 7', description: 'Every time you change filters, sort or pagination' },
-        { id: 8, name: 'Thing 8', description: 'The data will refetch' },
-        { id: 9, name: 'Thing 9', description: 'To perform that logic' },
+        { id: 1, name: 'Thing 01', description: 'Something from the API' },
+        { id: 2, name: 'Thing 02', description: 'Something else from the API' },
+        { id: 3, name: 'Thing 03', description: 'Another API object' },
+        { id: 4, name: 'Thing 04', description: 'These desriptions are unique' },
+        { id: 5, name: 'Thing 05', description: 'So you can try filtering and sorting' },
+        { id: 6, name: 'Thing 06', description: 'Go ahead and try it above' },
+        { id: 7, name: 'Thing 07', description: 'Every time you change filters, sort or pagination' },
+        { id: 8, name: 'Thing 08', description: 'The data will refetch' },
+        { id: 9, name: 'Thing 09', description: 'To perform that logic' },
         { id: 10, name: 'Thing 10', description: 'On the server' },
         { id: 11, name: 'Thing 11', description: 'We have more than 10 things here' },
         { id: 12, name: 'Thing 12', description: 'So you can try pagination' }
@@ -71,9 +71,9 @@ const fetchMockData = (apiParams: {
             const sortValueA = thingA[activeSort.columnKey];
             const sortValueB = thingB[activeSort.columnKey];
             if (activeSort.direction === 'asc') {
-              return sortValueA < sortValueB ? 1 : -1;
+              return sortValueA < sortValueB ? -1 : 1;
             }
-            return sortValueA > sortValueB ? 1 : -1;
+            return sortValueA > sortValueB ? -1 : 1;
           })
         : filteredData;
       const pageStartIndex = (pageNumber - 1) * itemsPerPage;

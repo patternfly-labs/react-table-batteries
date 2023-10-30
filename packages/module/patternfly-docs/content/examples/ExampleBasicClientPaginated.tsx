@@ -38,8 +38,8 @@ const fetchMockData = () =>
   new Promise<MockAPIResponse>((resolve) => {
     setTimeout(() => {
       const mockData: Thing[] = [
-        { id: 1, name: 'Thing 1', description: 'Something from the API' },
-        { id: 2, name: 'Thing 2', description: 'Something else from the API' }
+        { id: 1, name: 'Thing 01', description: 'Something from the API' },
+        { id: 2, name: 'Thing 02', description: 'Something else from the API' }
       ];
       resolve({ data: mockData });
     }, 1000);
