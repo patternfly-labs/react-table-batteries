@@ -64,7 +64,9 @@ This example also shows a powerful optional capability of these hooks: the `pers
 
 Here we use `persistTo: "urlParams"` which will store and update the table state in the browser's URL query parameters. We also pass an optional `persistenceKeyPrefix` which distinguishes this persisted state from any other state that may be persisted in the URL by other tables on the same page (it can be omitted if there is only one table on the page). It should be a short string because it is included as a prefix on every URL param name. We'll use `'t1'` for the first table on the page that contains Thing objects.
 
-Because our state is persisted in the page URL, we can reload the browser or press the Back and Forward buttons without losing our current filter, sort, and pagination selections. We can even bookmark the page and all that state will be restored when loading the bookmark! You can try now: Apply a sort or filter to the table, navigate to the [/design-guidelines](Design guidelines) tab or any other page and click the browser Back button.
+Because our state is persisted in the page URL, we can reload the browser or press the Back and Forward buttons without losing our current filter, sort, and pagination selections. You can try it now: Apply a sort or filter to the table below, then navigate to the [design guidelines](design-guidelines) tab or any other page and click the browser Back button. You can even bookmark the page and all that state will be restored when loading the bookmark!
+
+Note that the filtering/sorting/pagination business logic in this example happens inside `useLocalTableControls`. If you want to perform that logic on a server, see the [server-side basic example](#server-side-filteringsortingpagination). If you want to perform that logic on the client yourself, see the ["bring your own client-side filtering/sorting/pagination logic"](#bring-your-own-client-side-filteringsortingpagination-logic) advanced example.
 
 ```js file="./ExampleBasicClientPaginated.tsx"
 
