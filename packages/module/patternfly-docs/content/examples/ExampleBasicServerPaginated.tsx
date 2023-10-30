@@ -21,6 +21,35 @@ import {
   useTableControlState
 } from '@patternfly-labs/react-table-batteries';
 
+// This example table's rows represent Thing objects in our fake API.
+interface Thing {
+  id: number;
+  name: string;
+  description: string;
+}
+
+interface MockAPIResponse {
+  data: Thing[];
+  totalItemCount: number;
+}
+
+// In a real table, this API data would come from a server, perhaps using a library like react-query.
+const fetchMockData = () =>
+  new Promise<MockAPIResponse>((resolve) => {
+    console.log('SET TIMEOUT!');
+    setTimeout(() => {
+      console.log('TIMEOUT RESOLVE!');
+      // TODO perform sorting, filtering and pagination here
+      resolve({
+        data: [
+          { id: 1, name: 'Thing 1', description: 'Something from the API' },
+          { id: 2, name: 'Thing 2', description: 'Something else from the API' }
+        ],
+        totalItemCount: 2
+      });
+    }, 1000);
+  });
+
 export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
   const tableControlState = useTableControlState({
     persistTo: 'urlParams',
@@ -44,30 +73,42 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
     initialSort: { columnKey: 'name', direction: 'asc' }
   });
 
-  // Here, we would fetch API data from the server using values from inside `tableControlState` as
-  // parameters for passing filters, active sort column and direction, and pagination state to the server.
-  // The fetched data should be made available here in such a way that when those parameters change in `tableControlState`
-  // the data gets refetched automatically. A library like react-query or a custom fetch hook with useEffect both work here.
-  // For this example, we'll mock the returned data. In a real app, useFetchThings might call useQuery from react-query.
-  const useFetchThings = () => ({
-    data: [
-      { id: 1, name: 'Thing 1', description: 'Something from the API' },
-      { id: 2, name: 'Thing 2', description: 'Something else from the API' }
-    ],
-    totalItemCount: 2,
-    isLoading: false,
-    isError: false
-  });
-  const { data, totalItemCount, isLoading: isLoadingThings, isError: isErrorLoadingThings } = useFetchThings();
-  // TODO we need some way for the mocked API fetch to actually do the pagination/etc logic in this example
-  // TODO maybe use mock-service-worker somehow? or just a minimal stub using promises?
+  // In a real table we'd use a real API fetch here, perhaps using a library like react-query.
+  const [mockApiResponse, setMockApiResponse] = React.useState<MockAPIResponse>({ data: [], totalItemCount: 0 });
+  const [isLoadingMockData, setIsLoadingMockData] = React.useState(false);
+  React.useEffect(() => {
+    setIsLoadingMockData(true);
+    fetchMockData().then((response) => {
+      setMockApiResponse(response);
+      setIsLoadingMockData(false);
+    });
+  }, [tableControlState.cacheBuster]);
+  // The cacheBuster string above changes when filtering, sorting or pagination state change and the API data should be refetched.
+
+  // // Here, we would fetch API data from the server using values from inside `tableControlState` as
+  // // parameters for passing filters, active sort column and direction, and pagination state to the server.
+  // // The fetched data should be made available here in such a way that when those parameters change in `tableControlState`
+  // // the data gets refetched automatically. A library like react-query or a custom fetch hook with useEffect both work here.
+  // // For this example, we'll mock the returned data. In a real app, useFetchThings might call useQuery from react-query.
+  // const useFetchThings = () => ({
+  //   data: [
+  //     { id: 1, name: 'Thing 1', description: 'Something from the API' },
+  //     { id: 2, name: 'Thing 2', description: 'Something else from the API' }
+  //   ],
+  //   totalItemCount: 2,
+  //   isLoading: false,
+  //   isError: false
+  // });
+  // const { data, totalItemCount, isLoading: isLoadingThings, isError: isErrorLoadingThings } = useFetchThings();
+  // // TODO we need some way for the mocked API fetch to actually do the pagination/etc logic in this example
+  // // TODO maybe use mock-service-worker somehow? or just a minimal stub using promises?
 
   const tableControls = useTableControlProps({
     ...tableControlState,
     idProperty: 'id',
-    currentPageItems: data,
-    totalItemCount,
-    isLoading: isLoadingThings,
+    isLoading: isLoadingMockData,
+    currentPageItems: mockApiResponse.data,
+    totalItemCount: mockApiResponse.totalItemCount,
     // TODO this shouldn't be necessary once we refactor useSelectionState to fit the rest of the table-batteries pattern.
     // Due to an unresolved issue, the `selectionState` is required here even though we're not using selection.
     // As a temporary workaround we pass stub values for these properties.
@@ -126,8 +167,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
           </Tr>
         </Thead>
         <ConditionalTableBody
-          isLoading={isLoadingThings}
-          isError={isErrorLoadingThings}
+          isLoading={isLoadingMockData}
           isNoData={currentPageItems.length === 0}
           noDataEmptyState={
             <EmptyState variant="sm">

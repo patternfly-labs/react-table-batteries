@@ -48,12 +48,17 @@ export const useTableControlState = <
     ...args,
     persistTo: getPersistTo('activeItem')
   });
+  const { filterValues } = filterState;
+  const { activeSort } = sortState;
+  const { pageNumber, itemsPerPage } = paginationState;
+  const cacheBuster = JSON.stringify({ filterValues, activeSort, pageNumber, itemsPerPage });
   return {
     ...args,
     filterState,
     sortState,
     paginationState,
     expansionState,
-    activeItemState
+    activeItemState,
+    cacheBuster
   };
 };

@@ -55,7 +55,7 @@ export const useUrlParams = <TDeserializedParams, TKeyPrefix extends string, TUR
     return () => {
       window.removeEventListener('popstate', onPopState);
     };
-  }, [setLocationSearch]);
+  }, []);
   const urlParams = new URLSearchParams(locationSearch);
 
   type TPrefixedURLParamKey = TURLParamKey | `${TKeyPrefix}:${TURLParamKey}`;
