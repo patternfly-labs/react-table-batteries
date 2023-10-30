@@ -19,25 +19,49 @@ import {
   FilterType
 } from '@patternfly-labs/react-table-batteries';
 
+// This example table's rows represent Thing objects in our fake API.
+interface Thing {
+  id: number;
+  name: string;
+  description: string;
+}
+
+// This is a barebones mock API server to demonstrate fetching data.
+// We use a timeout of 1000ms here to simulate the loading state when data is fetched.
+// Note that the filtering/sorting/pagination business logic happens inside `useLocalTableControls`.
+// If you want to perform that logic on a server, see the server-side basic example.
+// If you want to perform that logic on the client yourself, see the "Bring your own state and logic" advanced example.
+interface MockAPIResponse {
+  data: Thing[];
+}
+const fetchMockData = () =>
+  new Promise<MockAPIResponse>((resolve) => {
+    setTimeout(() => {
+      const mockData: Thing[] = [
+        { id: 1, name: 'Thing 1', description: 'Something from the API' },
+        { id: 2, name: 'Thing 2', description: 'Something else from the API' }
+      ];
+      resolve({ data: mockData });
+    }, 1000);
+  });
+
 export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
-  // In a real table, this API data would come from a server fetch via something like react-query.
-  interface Thing {
-    id: number;
-    name: string;
-    description: string;
-  }
-  const isLoadingThings = false;
-  const isErrorLoadingThings = false;
-  const things: Thing[] = [
-    { id: 1, name: 'Thing 1', description: 'Something from the API' },
-    { id: 2, name: 'Thing 2', description: 'Something else from the API' }
-  ];
+  // In a real table we'd use a real API fetch here, perhaps using a library like react-query.
+  const [mockApiResponse, setMockApiResponse] = React.useState<MockAPIResponse>({ data: [] });
+  const [isLoadingMockData, setIsLoadingMockData] = React.useState(false);
+  React.useEffect(() => {
+    setIsLoadingMockData(true);
+    fetchMockData().then((response) => {
+      setMockApiResponse(response);
+      setIsLoadingMockData(false);
+    });
+  }, []);
 
   const tableControls = useLocalTableControls({
     persistTo: 'urlParams',
     persistenceKeyPrefix: 't1',
     idProperty: 'id', // The name of a unique string or number property on the data items.
-    items: things, // The generic type `TItem` is inferred from the items passed here.
+    items: mockApiResponse.data, // The generic type `TItem` is inferred from the items passed here.
     columnNames: {
       // The keys of this object define the inferred generic type `TColumnKey`. See "Unique Identifiers".
       name: 'Name',
@@ -69,7 +93,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       description: thing.description || ''
     }),
     initialSort: { columnKey: 'name', direction: 'asc' },
-    isLoading: isLoadingThings
+    isLoading: isLoadingMockData
   });
 
   // Here we destructure some of the properties from `tableControls` for rendering.
@@ -115,8 +139,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
           </Tr>
         </Thead>
         <ConditionalTableBody
-          isLoading={isLoadingThings}
-          isError={isErrorLoadingThings}
+          isLoading={isLoadingMockData}
           isNoData={currentPageItems.length === 0}
           noDataEmptyState={
             <EmptyState variant="sm">

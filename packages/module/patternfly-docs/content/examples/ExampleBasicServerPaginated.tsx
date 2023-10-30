@@ -31,7 +31,7 @@ interface Thing {
 }
 
 // This is a barebones mock API server to demonstrate removing filter/sort/pagination logic from the client.
-// We use a timeout of 1000ms here to simulate server round-trip whenever data is refetched.
+// We use a timeout of 1000ms here to simulate the loading state when data is fetched.
 interface MockAPIResponse {
   data: Thing[];
   totalItemCount: number;
