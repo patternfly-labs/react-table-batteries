@@ -101,6 +101,22 @@ This example persists state for all features to URL parameters except filter sta
 
 ```
 
+### Bring your own state
+
+TODO don't use useTableControlState, but use getLocalTableControlDerivedState
+TODO remark on how this may be helpful for incremental adoption
+
+### Bring your own client-side filtering/sorting/pagination logic
+
+TODO useTableControlState, but perform filtering/sorting/pagination inline before useTableControlProps
+TODO remark on how this may be helpful for incremental adoption
+TODO remark on how it is similar to the [basic server-side example](#server-side-filteringsortingpagination) except performing the logic in the component instead of on a mock server.
+
+### Bring your own state and logic (use prop helpers only)
+
+TODO remark on how all the state management and built-in logic provided by `useTableControlState` and `useLocalTableControls` is optional, and if you want your table to handle all its own business logic you can still benefit from useTableControlProps to make rendering easier.
+TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableControlState` and then maybe `getLocalTableControlDerivedState` or the full `useLocalTableControls` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
+
 ## Features
 
 The functionality and state of the table-batteries hooks is broken down into the following features. Each of these features represents a slice of the logical concerns for a table UI.
