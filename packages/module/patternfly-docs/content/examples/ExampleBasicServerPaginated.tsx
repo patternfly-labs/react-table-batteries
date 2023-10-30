@@ -15,6 +15,8 @@ import {
   ConditionalTableBody,
   FilterToolbar,
   FilterType,
+  FilterValue,
+  IActiveSort,
   TableHeaderContentWithControls,
   TableRowContentWithControls,
   useTableControlProps,
@@ -28,25 +30,55 @@ interface Thing {
   description: string;
 }
 
+// This is a barebones mock API server to demonstrate removing filter/sort/pagination logic from the client.
+// We use a timeout of 1000ms here to simulate server round-trip whenever data is refetched.
 interface MockAPIResponse {
   data: Thing[];
   totalItemCount: number;
 }
-
-// In a real table, this API data would come from a server, perhaps using a library like react-query.
-const fetchMockData = () =>
+const fetchMockData = (apiParams: {
+  filterValues: Partial<Record<'name' | 'description', FilterValue>>;
+  activeSort: IActiveSort<'name' | 'description'> | null;
+  pageNumber: number;
+  itemsPerPage: number;
+}) =>
   new Promise<MockAPIResponse>((resolve) => {
-    console.log('SET TIMEOUT!');
     setTimeout(() => {
-      console.log('TIMEOUT RESOLVE!');
-      // TODO perform sorting, filtering and pagination here
-      resolve({
-        data: [
-          { id: 1, name: 'Thing 1', description: 'Something from the API' },
-          { id: 2, name: 'Thing 2', description: 'Something else from the API' }
-        ],
-        totalItemCount: 2
-      });
+      const { filterValues, activeSort, pageNumber, itemsPerPage } = apiParams;
+      const rawMockData: Thing[] = [
+        { id: 1, name: 'Thing 1', description: 'Something from the API' },
+        { id: 2, name: 'Thing 2', description: 'Something else from the API' },
+        { id: 3, name: 'Thing 3', description: 'Another API object' },
+        { id: 4, name: 'Thing 4', description: 'These desriptions are unique' },
+        { id: 5, name: 'Thing 5', description: 'So you can try filtering and sorting' },
+        { id: 6, name: 'Thing 6', description: 'Go ahead and try it above' },
+        { id: 7, name: 'Thing 7', description: 'Every time you change filters, sort or pagination' },
+        { id: 8, name: 'Thing 8', description: 'The data will refetch' },
+        { id: 9, name: 'Thing 9', description: 'To perform that logic' },
+        { id: 10, name: 'Thing 10', description: 'On the server' },
+        { id: 11, name: 'Thing 11', description: 'We have more than 10 things here' },
+        { id: 12, name: 'Thing 12', description: 'So you can try pagination' }
+      ];
+      // None of this mock filter/sort/pagination logic is ever necessary when rendering a real table.
+      // It'll either be handled for you in useLocalTableControls or on a server.
+      const filteredData = rawMockData.filter((thing) =>
+        ['name', 'description'].every(
+          (field) => !filterValues[field] || thing[field].toLowerCase().includes(filterValues[field][0].toLowerCase())
+        )
+      );
+      const sortedData = activeSort
+        ? filteredData.sort((thingA, thingB) => {
+            const sortValueA = thingA[activeSort.columnKey];
+            const sortValueB = thingB[activeSort.columnKey];
+            if (activeSort.direction === 'asc') {
+              return sortValueA < sortValueB ? 1 : -1;
+            }
+            return sortValueA > sortValueB ? 1 : -1;
+          })
+        : filteredData;
+      const pageStartIndex = (pageNumber - 1) * itemsPerPage;
+      const paginatedData = sortedData.slice(pageStartIndex, pageStartIndex + itemsPerPage);
+      resolve({ data: paginatedData, totalItemCount: rawMockData.length });
     }, 1000);
   });
 
@@ -67,41 +99,36 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
         title: 'Name',
         type: FilterType.search,
         placeholderText: 'Filter by name...'
+      },
+      {
+        key: 'description',
+        title: 'Description',
+        type: FilterType.search,
+        placeholderText: 'Filter by description...'
       }
     ],
     sortableColumns: ['name', 'description'],
     initialSort: { columnKey: 'name', direction: 'asc' }
   });
 
+  const {
+    filterState: { filterValues },
+    sortState: { activeSort },
+    paginationState: { pageNumber, itemsPerPage }
+  } = tableControlState;
+
   // In a real table we'd use a real API fetch here, perhaps using a library like react-query.
   const [mockApiResponse, setMockApiResponse] = React.useState<MockAPIResponse>({ data: [], totalItemCount: 0 });
   const [isLoadingMockData, setIsLoadingMockData] = React.useState(false);
   React.useEffect(() => {
     setIsLoadingMockData(true);
-    fetchMockData().then((response) => {
+    fetchMockData({ filterValues, activeSort, pageNumber, itemsPerPage }).then((response) => {
       setMockApiResponse(response);
       setIsLoadingMockData(false);
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tableControlState.cacheBuster]);
   // The cacheBuster string above changes when filtering, sorting or pagination state change and the API data should be refetched.
-
-  // // Here, we would fetch API data from the server using values from inside `tableControlState` as
-  // // parameters for passing filters, active sort column and direction, and pagination state to the server.
-  // // The fetched data should be made available here in such a way that when those parameters change in `tableControlState`
-  // // the data gets refetched automatically. A library like react-query or a custom fetch hook with useEffect both work here.
-  // // For this example, we'll mock the returned data. In a real app, useFetchThings might call useQuery from react-query.
-  // const useFetchThings = () => ({
-  //   data: [
-  //     { id: 1, name: 'Thing 1', description: 'Something from the API' },
-  //     { id: 2, name: 'Thing 2', description: 'Something else from the API' }
-  //   ],
-  //   totalItemCount: 2,
-  //   isLoading: false,
-  //   isError: false
-  // });
-  // const { data, totalItemCount, isLoading: isLoadingThings, isError: isErrorLoadingThings } = useFetchThings();
-  // // TODO we need some way for the mocked API fetch to actually do the pagination/etc logic in this example
-  // // TODO maybe use mock-service-worker somehow? or just a minimal stub using promises?
 
   const tableControls = useTableControlProps({
     ...tableControlState,

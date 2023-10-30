@@ -54,6 +54,12 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
         type: FilterType.search,
         placeholderText: 'Filter by name...',
         getItemValue: (thing) => thing.name || ''
+      },
+      {
+        key: 'description',
+        title: 'Description',
+        type: FilterType.search,
+        placeholderText: 'Filter by description...'
       }
     ],
     // Because isSortEnabled is true, TypeScript will require these sort-related properties:
