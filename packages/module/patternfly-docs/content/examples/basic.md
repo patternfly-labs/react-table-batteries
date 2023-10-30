@@ -54,7 +54,7 @@ This pattern makes tables easier to build, maintain and enhance. Your code will 
 
 ### Client-side filtering/sorting/pagination
 
-For client-paginated tables, the only hook we need is `useLocalTableControls`. All arguments can be passed to it in one object, and the `tableControls` object returned by it contains everything we need to render the composable table.
+For client-paginated tables, the only hook you need is `useLocalTableControls`. All arguments can be passed to it in one object, and the `tableControls` object returned by it contains everything you need to render the composable table.
 
 This simple example includes only the filtering, sorting and pagination features and excludes arguments and properties related to the other features (see [Features](#features)).
 
