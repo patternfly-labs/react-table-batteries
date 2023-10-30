@@ -85,16 +85,15 @@ const fetchMockData = (apiParams: {
     }, 1000);
   });
 
-// Here's a mock hook using a ref to store a map of cacheKeys to cached API responses.
+// Here's a mock hook using state to store a map of cacheKeys to cached API responses.
 // In a real implementation, you would likely use a library like react-query with a built-in cache instead.
 const useMemoizedMockDataFetch = (tableControlState: {
   filterState: IFilterState<'name' | 'description'>;
   sortState: ISortState<'name' | 'description'>;
   paginationState: IPaginationState;
   cacheKey: string;
-}): { isLoadingMockData: boolean; mockFetchResponse: MockAPIResponse } => {
-  const cacheRef = React.useRef<Record<string, MockAPIResponse>>({});
-  const [isLoadingMockData, setIsLoadingMockData] = React.useState(false);
+}): { isLoadingMockData: boolean; mockFetchResponse: MockAPIResponse | undefined } => {
+  const [cache, updateCache] = React.useState<Record<string, MockAPIResponse>>({});
 
   const {
     filterState: { filterValues },
@@ -104,18 +103,16 @@ const useMemoizedMockDataFetch = (tableControlState: {
   } = tableControlState;
 
   React.useEffect(() => {
-    if (!cacheRef.current[cacheKey]) {
-      setIsLoadingMockData(true);
+    if (!cache[cacheKey]) {
       fetchMockData({ filterValues, activeSort, pageNumber, itemsPerPage }).then((response) => {
-        cacheRef.current[cacheKey] = response;
-        setIsLoadingMockData(false);
+        updateCache({ ...cache, [cacheKey]: response });
       });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cacheKey]);
   // The cacheKey string above changes when filtering, sorting or pagination state change and the API data should be refetched.
 
-  return { isLoadingMockData, mockFetchResponse: cacheRef.current[cacheKey] || { data: [], totalItemCount: 0 } };
+  return { isLoadingMockData: !cache[cacheKey], mockFetchResponse: cache[cacheKey] || undefined };
 };
 
 export const ExampleAdvancedCaching: React.FunctionComponent = () => {
@@ -147,17 +144,14 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
     initialSort: { columnKey: 'name', direction: 'asc' }
   });
 
-  const {
-    isLoadingMockData,
-    mockFetchResponse: { data, totalItemCount }
-  } = useMemoizedMockDataFetch(tableControlState);
+  const { isLoadingMockData, mockFetchResponse } = useMemoizedMockDataFetch(tableControlState);
 
   const tableControls = useTableControlProps({
     ...tableControlState,
     idProperty: 'id',
     isLoading: isLoadingMockData,
-    currentPageItems: data,
-    totalItemCount,
+    currentPageItems: mockFetchResponse?.data || [],
+    totalItemCount: mockFetchResponse?.totalItemCount || 0,
     // TODO this shouldn't be necessary once we refactor useSelectionState to fit the rest of the table-batteries pattern.
     // Due to an unresolved issue, the `selectionState` is required here even though we're not using selection.
     // As a temporary workaround we pass stub values for these properties.

@@ -29,7 +29,9 @@ export const usePaginationEffects = ({
   const lastPageNumber = Math.max(Math.ceil(totalItemCount / itemsPerPage), 1);
   React.useEffect(() => {
     if (isPaginationEnabled && pageNumber > lastPageNumber && !isLoading) {
+      // eslint-disable-next-line no-console
+      console.log("IT'S THE DAMN EFFECT!", { itemsPerPage, pageNumber, totalItemCount, isLoading });
       setPageNumber(lastPageNumber);
     }
-  });
+  }, [isLoading, isPaginationEnabled, itemsPerPage, lastPageNumber, pageNumber, setPageNumber, totalItemCount]);
 };

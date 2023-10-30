@@ -54,7 +54,7 @@ This pattern makes tables easier to build, maintain and enhance. Your code will 
 
 ### Client-side filtering/sorting/pagination
 
-For client-paginated tables, the only hook you need is `useLocalTableControls`. All arguments can be passed to it in one object, and the `tableControls` object returned by it contains everything you need to render the composable table.
+For client-paginated tables, the only hook you need is `useLocalTableControls`. All arguments can be passed to it in one object, and the `tableControls` object returned by it contains everything you need to render the composable table. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need).
 
 This simple example includes only the filtering, sorting and pagination features and excludes arguments and properties related to the other features (see [Features](#features)).
 
@@ -74,7 +74,7 @@ Note that the filtering/sorting/pagination business logic in this example happen
 
 ### Server-side filtering/sorting/pagination
 
-The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useLocalTableControls` into two separate objects passed to `useTableControlState` and `useTableControlProps` based on when they are needed. Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableControlState` and `useTableControlProps` as well as the return values from both are included in the `tableControls` object returned by `useTableControlProps` (and by `useLocalTableControls` above). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
+The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useLocalTableControls` into two separate objects passed to `useTableControlState` and `useTableControlProps` based on when they are needed. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need) Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableControlState` and `useTableControlProps` as well as the return values from both are included in the `tableControls` object returned by `useTableControlProps` (and by `useLocalTableControls` above). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
 
 Note that the `tableControlState` object returned by `useTableControlState` contains a `cacheKey` string property which changes any time the user interacts with filter, sort or pagination controls. Here we use it as a `useEffect` dependency to ensure the mock data is refetched accordingly. This value can also be used to cache data views we've already seen and avoid unnecessary fetches (see [Caching](#caching)).
 
