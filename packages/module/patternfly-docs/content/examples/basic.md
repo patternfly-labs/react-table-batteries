@@ -90,7 +90,7 @@ The basic usage above and feature usage examples below (see [Features](#features
 
 ### Custom state persistence targets
 
-As described in [the first example](#example-table-with-client-side-filteringsortingpagination) above, the state used by each feature (see [Features](#features)) can be stored either in React state (default), in the browser's URL query parameters (recommended), or in the browser's `localStorage` or `sessionStorage`. If URL params are used, the user's current filters, sort, pagination state, expanded/active rows and more are preserved when reloading the browser, using the browser Back and Forward buttons, or loading a bookmark. The storage target for each feature is specified with the `persistTo` property. The supported `persistTo` values are:
+As described in [the first example](#client-side-filteringsortingpagination) above, the state used by each feature (see [Features](#features)) can be stored either in React state (default), in the browser's URL query parameters (recommended), or in the browser's `localStorage` or `sessionStorage`. If URL params are used, the user's current filters, sort, pagination state, expanded/active rows and more are preserved when reloading the browser, using the browser Back and Forward buttons, or loading a bookmark. The storage target for each feature is specified with the `persistTo` property. The supported `persistTo` values are:
 
 - `'state'` (default) - Plain React state. Resets on component unmount or page reload.
 - `'urlParams'` (recommended) - URL query parameters. Persists on page reload, browser history buttons (back/forward) or loading a bookmark. Resets on page navigation.
