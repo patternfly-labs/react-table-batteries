@@ -50,9 +50,9 @@ The react-table-batteries hooks and components provide a pattern where:
 
 With this pattern, tables are easy to build and maintain with code that is short and readable without sacrificing composability or refactorability. You'll gain back some of the magic that used to be abstracted away in the deprecated table, but you don't have to sacrifice any of the benefits gained by migrating away from it. You'll also gain powerful and easily-enabled new features that the deprecated table never had.
 
-## Basic usage
+## Basic examples
 
-### Example table with client-side filtering/sorting/pagination
+### Client-side filtering/sorting/pagination
 
 For client-paginated tables, the only hook we need is `useLocalTableControls`. All arguments can be passed to it in one object, and the `tableControls` object returned by it contains everything we need to render the composable table.
 
@@ -64,25 +64,23 @@ This example also shows a powerful optional capability of these hooks: the `pers
 
 Here we use `persistTo: "urlParams"` which will store and update the table state in the browser's URL query parameters. We also pass an optional `persistenceKeyPrefix` which distinguishes this persisted state from any other state that may be persisted in the URL by other tables on the same page (it can be omitted if there is only one table on the page). It should be a short string because it is included as a prefix on every URL param name. We'll use `'t1'` for the first table on the page that contains Thing objects.
 
-Because our state is persisted in the page URL, we can reload the browser or press the Back and Forward buttons without losing our current filter, sort, and pagination selections. We can even bookmark the page and all that state will be restored when loading the bookmark! You can try now: Apply a sort or filter to the table, navigate to the `[/design-guidelines](Design guidelines)` tab or any other page and click the browser Back button.
+Because our state is persisted in the page URL, we can reload the browser or press the Back and Forward buttons without losing our current filter, sort, and pagination selections. We can even bookmark the page and all that state will be restored when loading the bookmark! You can try now: Apply a sort or filter to the table, navigate to the [/design-guidelines](Design guidelines) tab or any other page and click the browser Back button.
 
 ```js file="./ExampleBasicClientPaginated.tsx"
 
 ```
 
-### Example table with server-side filtering/sorting/pagination
+### Server-side filtering/sorting/pagination
 
 The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useLocalTableControls` into two separate objects passed to `useTableControlState` and `useTableControlProps` based on when they are needed. Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableControlState` and `useTableControlProps` as well as the return values from both are included in the `tableControls` object returned by `useTableControlProps` (and by `useLocalTableControls` above). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
 
-Note also: the destructuring of `tableControls` and returned JSX is not included in this example code because **_it is identical to the example above_**. The only differences between client-paginated and server-paginated tables are in the hook calls; the `tableControls` object and its usage are the same for all tables.
-
-NOTE/TODO/FIXME: This example is currently broken because we haven't properly mocked the server side of it in this new extension docs site yet. It should render fine but the filtering/pagination/sorting controls won't have any effect on what data is shown.
+Note also: the destructuring of `tableControls` and returned JSX in this example **_is identical to the client-based example above_**. The only differences between client-paginated and server-paginated tables are in the hook calls; the `tableControls` object and its usage are always the same.
 
 ```js file="./ExampleBasicServerPaginated.tsx"
 
 ```
 
-## Advanced usage
+## Advanced examples
 
 The basic usage above and feature usage examples below (see [Features](#features)) should be sufficient for most tables. However, there are some less-frequently used options available:
 
@@ -173,7 +171,9 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ```
 
-## Which Hooks/Functions Do I Need?
+## Usage notes
+
+### Which Hooks/Functions Do I Need?
 
 In most cases, you'll only need to use these higher-level hooks and helpers to build a table:
 
@@ -191,11 +191,9 @@ In most cases, you'll only need to use these higher-level hooks and helpers to b
 
 If desired, you can use lower-level feature-specific hooks on their own (for example, if you really only need pagination and you're not rendering a full table). For a full list of the lower-level hooks, see CONTRIBUTING.md. (TODO -- should we just make examples with this? it's not recommended. maybe just ditch it) However, if you are using more than one or two of them you may want to consider using these higher-level hooks even if you don't need all the features. You can omit the config arguments for any features you don't need and then just don't use the relevant `propHelpers`.
 
-## Important Data Structure Notes
+### Item Objects, Not Row Objects
 
 Because using react-table-batteries involves passing in API data and configuration which is used to infer the types of other arguments, it can be helpful to understand how the relevant TypeScript types and properties are used internally. A few of the most important details are explained here, but more on the implementation detail of these hooks can be found in CONTRIBUTING.md.
-
-### Item Objects, Not Row Objects
 
 None of the code here treats "rows" as their own data structure. The content and style of a row is a presentational detail that should be limited to the JSX where rows are rendered. In implementations which use arrays of row objects (like the deprecated PatternFly table) those objects tend to duplicate API data with a different structure and the code must reason about two different representations of the data. Instead, this code works directly with arrays of "items" (the API data objects themselves) and makes all of an item's API object properties available where they might be needed without extra lookups. The consumer maps over item objects and derives row components from them only at render time.
 
