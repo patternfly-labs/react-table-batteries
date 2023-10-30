@@ -78,7 +78,7 @@ const fetchMockData = (apiParams: {
         : filteredData;
       const pageStartIndex = (pageNumber - 1) * itemsPerPage;
       const paginatedData = sortedData.slice(pageStartIndex, pageStartIndex + itemsPerPage);
-      resolve({ data: paginatedData, totalItemCount: rawMockData.length });
+      resolve({ data: paginatedData, totalItemCount: filteredData.length });
     }, 1000);
   });
 
