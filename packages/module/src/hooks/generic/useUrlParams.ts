@@ -46,11 +46,7 @@ export const useUrlParams = <TDeserializedParams, TKeyPrefix extends string, TUR
   // Sync document.location.search with state via an event listener in order to re-render when it changes
   const [locationSearch, setLocationSearch] = React.useState(document.location.search);
   React.useEffect(() => {
-    const onPopState = () => {
-      // eslint-disable-next-line no-console
-      console.log('popstate happening?');
-      setLocationSearch(document.location.search);
-    };
+    const onPopState = () => setLocationSearch(document.location.search);
     window.addEventListener('popstate', onPopState);
     return () => {
       window.removeEventListener('popstate', onPopState);

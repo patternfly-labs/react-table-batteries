@@ -94,6 +94,7 @@ const useMemoizedMockDataFetch = (tableControlState: {
   cacheKey: string;
 }): { isLoadingMockData: boolean; mockFetchResponse: MockAPIResponse | undefined } => {
   const [cache, updateCache] = React.useState<Record<string, MockAPIResponse>>({});
+  const lastMockFetchResponseRef = React.useRef<MockAPIResponse | undefined>();
 
   const {
     filterState: { filterValues },
@@ -112,7 +113,15 @@ const useMemoizedMockDataFetch = (tableControlState: {
   }, [cacheKey]);
   // The cacheKey string above changes when filtering, sorting or pagination state change and the API data should be refetched.
 
-  return { isLoadingMockData: !cache[cacheKey], mockFetchResponse: cache[cacheKey] || undefined };
+  const mockFetchResponse = cache[cacheKey] || undefined;
+  if (mockFetchResponse) {
+    lastMockFetchResponseRef.current = mockFetchResponse;
+  }
+
+  return {
+    isLoadingMockData: !cache[cacheKey],
+    mockFetchResponse: cache[cacheKey] || lastMockFetchResponseRef.current || undefined
+  };
 };
 
 export const ExampleAdvancedCaching: React.FunctionComponent = () => {

@@ -30,7 +30,6 @@ export const usePaginationEffects = ({
   React.useEffect(() => {
     if (isPaginationEnabled && pageNumber > lastPageNumber && !isLoading) {
       // eslint-disable-next-line no-console
-      console.log("IT'S THE DAMN EFFECT!", { itemsPerPage, pageNumber, totalItemCount, isLoading });
       setPageNumber(lastPageNumber);
     }
   }, [isLoading, isPaginationEnabled, itemsPerPage, lastPageNumber, pageNumber, setPageNumber, totalItemCount]);
