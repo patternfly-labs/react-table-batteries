@@ -2,9 +2,6 @@ import React from 'react';
 import { DisallowCharacters } from '../../type-utils';
 import { objectKeys } from '../../utils';
 
-// TODO remove dependency on react-router-dom?
-import { useLocation, useHistory } from 'react-router-dom';
-
 // useUrlParams is a generic hook similar to React.useState which stores its state in the URL search params string.
 // The state is retained on a page reload, when using the browser back/forward buttons, or when bookmarking the page.
 // It can be used to store a value of any type (`TDeserializedParams`) in one or more URL params by providing:
@@ -48,8 +45,6 @@ export const useUrlParams = <TDeserializedParams, TKeyPrefix extends string, TUR
 }: IUseUrlParamsArgs<TDeserializedParams, TKeyPrefix, TURLParamKey>): TURLParamStateTuple<TDeserializedParams> => {
   type TPrefixedURLParamKey = TURLParamKey | `${TKeyPrefix}:${TURLParamKey}`;
 
-  const history = useHistory();
-
   const withPrefix = (key: TURLParamKey): TPrefixedURLParamKey =>
     persistenceKeyPrefix ? `${persistenceKeyPrefix}:${key}` : key;
 
@@ -72,19 +67,28 @@ export const useUrlParams = <TDeserializedParams, TKeyPrefix extends string, TUR
     const existingSearchParams = new URLSearchParams(search);
     // We prefix the params object here so the serialize function doesn't have to care about the keyPrefix.
     const newPrefixedSerializedParams = withPrefixes(serialize(newParams));
-    history.replace({
-      pathname,
-      search: trimAndStringifyUrlParams({
+    history.replaceState(
+      '',
+      '',
+      `${pathname}?${trimAndStringifyUrlParams({
         existingSearchParams,
         newPrefixedSerializedParams
-      })
-    });
+      })}`
+    );
   };
 
-  // We use useLocation here so we are re-rendering when the params change.
-  const urlParams = new URLSearchParams(useLocation().search);
-  // We un-prefix the params object here so the deserialize function doesn't have to care about the keyPrefix.
+  // Sync document.location.search with state via an event listener in order to re-render when it changes
+  const [locationSearch, setLocationSearch] = React.useState(document.location.search);
+  React.useEffect(() => {
+    const onPopState = () => setLocationSearch(document.location.search);
+    window.addEventListener('popstate', onPopState);
+    return () => {
+      window.removeEventListener('popstate', onPopState);
+    };
+  }, [setLocationSearch]);
+  const urlParams = new URLSearchParams(locationSearch);
 
+  // We un-prefix the params object here so the deserialize function doesn't have to care about the keyPrefix.
   let allParamsEmpty = true;
   let params: TDeserializedParams = defaultValue;
   if (isEnabled) {
