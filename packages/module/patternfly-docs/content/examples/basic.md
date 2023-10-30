@@ -181,7 +181,7 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ```
 
-### Kitchen Sink example (all features enabled)
+### Kitchen sink example (all features enabled)
 
 TODO copy over and rework things from OLD_DOCS.md here
 
@@ -191,7 +191,13 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ## Usage notes
 
-### Which Hooks/Functions Do I Need?
+### Should I use client or server logic?
+
+If the API endpoints you're using support server-side pagination parameters, it is generally a good idea to use them for better performance and scalability. If you do use server-side pagination, you'll need to also use server-side filtering and sorting if you are enabling those features.
+
+If your API does not support these parameters or you need to have the entire collection of items in memory at once for some other reason, you'll need a client-paginated table.
+
+### Which hooks/functions do I need?
 
 In most cases, you'll only need to use these higher-level hooks and helpers to build a table:
 
@@ -202,14 +208,15 @@ In most cases, you'll only need to use these higher-level hooks and helpers to b
   - Choose whether you want to use React state, URL params or localStorage/sessionStorage as the source of truth, and call `useTableControlState` with the appropriate `persistTo` option and optional `persistenceKeyPrefix` (to namespace persisted state for multiple tables on the same page).
     - `persistTo` can be `"state" | "urlParams" | "localStorage" | "sessionStorage"`, and defaults to `"state"` if omitted (falls back to regular React state).
     - You can also use a different type of storage for the state of each feature by passing an object for `persistTo`. See [Custom state persistence targets](#custom-state-persistence-targets).
-  - Take the object returned by that hook (generally named `tableControlState`) and pass it to the `getHubRequestParams` function (you may need to spread it and add additional properties like `hubSortFieldKeys`). (⚠️ TECH DEBT NOTE: This is Konveyor-specific)
-  - Call your API query hooks, using the `hubRequestParams` as needed.
+  - Take the object returned by that hook (generally named `tableControlState`) and pull out the parameters you need for your API fetch from the `filterState`, `sortState` and `paginationState` properties. Fetch your filtered/sorted/paginated API data using these values.
   - Call `useTableControlProps` and pass it an object spreading all properties from `tableControlState` along with additional config arguments. Some of these arguments will be derived from your API data, such as `currentPageItems`, `totalItemCount` and `isLoading`. Others are simply passed here rather than above because they are used only for rendering and not required for state management.
   - The return value (the same `tableControls` object returned by `useLocalTableControls`) has everything you need to render your table. Give it a `console.log` to see what is available.
 
-If desired, you can use lower-level feature-specific hooks on their own (for example, if you really only need pagination and you're not rendering a full table). For a full list of the lower-level hooks, see CONTRIBUTING.md. (TODO -- should we just make examples with this? it's not recommended. maybe just ditch it) However, if you are using more than one or two of them you may want to consider using these higher-level hooks even if you don't need all the features. You can omit the config arguments for any features you don't need and then just don't use the relevant `propHelpers`.
+### Incremental adoption
 
-### Item Objects, Not Row Objects
+TODO reference advanced examples
+
+### Item objects, not row objects
 
 Because using react-table-batteries involves passing in API data and configuration which is used to infer the types of other arguments, it can be helpful to understand how the relevant TypeScript types and properties are used internally. A few of the most important details are explained here, but more on the implementation detail of these hooks can be found in CONTRIBUTING.md.
 
@@ -219,9 +226,9 @@ An item object has the generic type `TItem`, which is inferred by TypeScript eit
 
 > ℹ️ CAVEAT: For server-paginated tables the item data is not in scope until after the API query hook is called, but the `useTableControlState` hook must be called _before_ API queries because its return values are needed to serialize filter/sort/pagination params for the API. This means the inferred `TItem` type is not available when passing arguments to `useTableControlState`. `TItem` resolves to `unknown` in this scope, which is usually fine since the arguments there don't need to know what type of items they are working with. If the item type is needed for any of these arguments it can be explicitly passed as a type param. However...
 >
-> ⚠️ TECH DEBT NOTE: TypeScript generic type param lists (example: `fn<This, List, Here>(args);`) are all-or-nothing (you must either omit the list and infer all generics for a function or pass them all explicitly). This means if you need to pass an explicit type for `TItem`, all other type params which are normally inferred must also be explicitly passed (including all of the `TColumnKey`s and `TFilterCategoryKey`s). This makes for some redundant code, although TypeScript will still enforce that it is all consistent. There is a possible upcoming TypeScript language feature which would allow partial inference in type param lists and may alleviate this in the future. See TypeScript pull requests [#26349](https://github.com/microsoft/TypeScript/pull/26349) and [#54047](https://github.com/microsoft/TypeScript/pull/54047), and our issue [#1456](https://github.com/konveyor/tackle2-ui/issues/1456).
+> ⚠️ TECH DEBT NOTE: TypeScript generic type param lists (example: `fn<This, List, Here>(args);`) are all-or-nothing (you must either omit the list and infer all generics for a function or pass them all explicitly). This means if you need to pass an explicit type for `TItem`, all other type params which are normally inferred must also be explicitly passed (including all of the `TColumnKey`s and `TFilterCategoryKey`s). This makes for some redundant code, although TypeScript will still enforce that it is all consistent. There is a possible upcoming TypeScript language feature which would allow partial inference in type param lists and may alleviate this in the future. See TypeScript pull requests [#26349](https://github.com/microsoft/TypeScript/pull/26349) and [#54047](https://github.com/microsoft/TypeScript/pull/54047), and the Konveyor issue [#1456](https://github.com/konveyor/tackle2-ui/issues/1456).
 
-### Unique Identifiers
+### Unique identifiers
 
 #### Column keys
 
@@ -229,12 +236,6 @@ Table columns are identified by unique keys which are statically inferred from t
 
 #### Item IDs
 
-Item objects must contain some unique identifier which is either a string or number. The property key of this identifier is a required config argument called `idProperty`, which will usually be `"id"`. If no unique identifier is present in the API data, an artificial one can be injected before passing the data into these hooks, which can be done in the useQuery `select` callback (see instances where we have used `"_ui_unique_id"`). Any state which keeps track of something by item (i.e. by row) makes use of `item[idProperty]` as an identifier. Examples of this include selected rows, expanded rows and active rows. Valid `idProperty` values are also enforced by TypeScript generics; if an `idProperty` is provided that is not a property on the `TItem` type, you should get a type error.
+Item objects must contain some unique identifier which is either a string or number. The property key of this identifier is a required config argument called `idProperty`, which will usually be `"id"` but could be something like `"uid"`, or `"name"` if your object names are unique. If no unique identifier is present in the API data, an artificial one should be injected before passing the data into these hooks. This can be done in your fetch implementation before data is returned, for example by using the `select` callback in react-query.
 
-> ⚠️ TECH DEBT NOTE: Things specific to `useQuery` and `_ui_unique_id` here are Konveyor-specific notes that should be removed after moving this to table-batteries.
-
-### Should I Use Client or Server Logic?
-
-If the API endpoints you're using support server-side pagination parameters, it is generally a good idea to use them for better performance and scalability. If you do use server-side pagination, you'll need to also use server-side filtering and sorting.
-
-If the endpoints do not support these parameters or you need to have the entire collection of items in memory at once for some other reason, you'll need a client-paginated table. It is also slightly easier to implement a client-paginated table.
+Any state which keeps track of something by item (i.e. by row) makes use of `item[idProperty]` as an identifier. Examples of this include selected items, expanded items and active items. Valid `idProperty` values are also enforced by TypeScript generics; if an `idProperty` is provided that is not a property on the `TItem` type, you should get a type error.
