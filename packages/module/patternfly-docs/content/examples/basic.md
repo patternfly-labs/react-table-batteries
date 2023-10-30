@@ -66,7 +66,7 @@ Here we use `persistTo: "urlParams"` which will store and update the table state
 
 Because our state is persisted in the page URL, we can reload the browser or press the Back and Forward buttons without losing our current filter, sort, and pagination selections. You can try it now: Apply a sort or filter to the table below, then navigate to the [design guidelines](design-guidelines) tab or any other page and click the browser Back button. You can even bookmark the page and all that state will be restored when loading the bookmark!
 
-Note that the filtering/sorting/pagination business logic in this example happens inside `useLocalTableControls`. If you want to perform that logic on a server, see the [server-side basic example](#server-side-filteringsortingpagination). If you want to perform that logic on the client yourself, see the ["bring your own client-side filtering/sorting/pagination logic"](#bring-your-own-client-side-filteringsortingpagination-logic) advanced example.
+Note that the filtering/sorting/pagination business logic in this example happens inside `useLocalTableControls`. If you want to perform that logic on a server, see the [server-side basic example](#server-side-filteringsortingpagination). If you want to perform that logic on the client yourself, see the ["bringing your own client-side filtering/sorting/pagination logic"](#bringing-your-own-client-side-filteringsortingpagination-logic) advanced example.
 
 ```js file="./ExampleBasicClientPaginated.tsx"
 
@@ -75,6 +75,8 @@ Note that the filtering/sorting/pagination business logic in this example happen
 ### Server-side filtering/sorting/pagination
 
 The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useLocalTableControls` into two separate objects passed to `useTableControlState` and `useTableControlProps` based on when they are needed. Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableControlState` and `useTableControlProps` as well as the return values from both are included in the `tableControls` object returned by `useTableControlProps` (and by `useLocalTableControls` above). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
+
+Note that the `tableControlState` object returned by `useTableControlState` contains a `cacheBuster` string property which changes any time the user interacts with filter, sort or pagination controls. Here we use it as a `useEffect` dependency to ensure the mock data is refetched accordingly. This value can also be used to cache data views we've already seen and avoid unnecessary fetches (see [Caching](#caching)).
 
 Note also: the destructuring of `tableControls` and returned JSX in this example **_is identical to the client-based example above_**. The only differences between client-paginated and server-paginated tables are in the hook calls; the `tableControls` object and its usage are always the same.
 
@@ -103,18 +105,30 @@ This example persists state for all features to URL parameters except filter sta
 
 ```
 
-### Bring your own state
+### Caching to prevent redundant data fetches
+
+When using server-side filtering/sorting/pagination, we need to refetch the API data any time the user interacts with the filtering/sorting/pagination controls. We achieve this by fetching new data when the `tableControlState.cacheBuster` value changes, by using it as a dependency in a fetch effect or by other means. However, let's say the user applies a filter and then clears that filter. We'll fetch the unfiltered data, then fetch the filtered data, then fetch the unfiltered data again! For each fetch, the user is shown a spinner and must wait.
+
+If we introduce a caching layer that reuses previous data when fetching with the same `cacheBuster` value, we prevent this third fetch/loading state. When the user clears their filters (or restores the original sort/pagination state) the data will update instantly as it is retrieved from the cache. If the user is toggling sort/pagination back and forth, they will see fewer loading states as they continue to interact with the table.
+
+The easiest way to achieve this caching behavior is to use a data fetching library with caching support built in. For example, when using react-query's `useQuery` hook, you can use the `tableControlState.cacheBuster` as part of your `queryKey` value and you'll get these benefits for free.
+
+Here we implement our own cache (not recommended) for demonstration purposes:
+
+TODO example of storing a memoized set of API responses based on cacheBuster
+
+### Bringing your own state
 
 TODO don't use useTableControlState, but use getLocalTableControlDerivedState
 TODO remark on how this may be helpful for incremental adoption
 
-### Bring your own client-side filtering/sorting/pagination logic
+### Bringing your own client-side filtering/sorting/pagination logic
 
 TODO useTableControlState, but perform filtering/sorting/pagination inline before useTableControlProps
 TODO remark on how this may be helpful for incremental adoption
 TODO remark on how it is similar to the [basic server-side example](#server-side-filteringsortingpagination) except performing the logic in the component instead of on a mock server.
 
-### Bring your own state and logic (use prop helpers only)
+### Bringing your own state and logic (use prop helpers only)
 
 TODO remark on how all the state management and built-in logic provided by `useTableControlState` and `useLocalTableControls` is optional, and if you want your table to handle all its own business logic you can still benefit from useTableControlProps to make rendering easier.
 TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableControlState` and then maybe `getLocalTableControlDerivedState` or the full `useLocalTableControls` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
@@ -209,6 +223,7 @@ In most cases, you'll only need to use these higher-level hooks and helpers to b
     - `persistTo` can be `"state" | "urlParams" | "localStorage" | "sessionStorage"`, and defaults to `"state"` if omitted (falls back to regular React state).
     - You can also use a different type of storage for the state of each feature by passing an object for `persistTo`. See [Custom state persistence targets](#custom-state-persistence-targets).
   - Take the object returned by that hook (generally named `tableControlState`) and pull out the parameters you need for your API fetch from the `filterState`, `sortState` and `paginationState` properties. Fetch your filtered/sorted/paginated API data using these values.
+  - Make your data refetch when the `tableControlState.cacheBuster` string changes. This will ensure that when the user interacts with filter, sort or pagination controls the data will update accordingly. If your data fetching implementation supports caching by key (for example, the `queryKey` option in react-query) you can use this `cacheBuster` value as that key to prevent re-fetching data for a filter/sort/pagination view you've already fetched.
   - Call `useTableControlProps` and pass it an object spreading all properties from `tableControlState` along with additional config arguments. Some of these arguments will be derived from your API data, such as `currentPageItems`, `totalItemCount` and `isLoading`. Others are simply passed here rather than above because they are used only for rendering and not required for state management.
   - The return value (the same `tableControls` object returned by `useLocalTableControls`) has everything you need to render your table. Give it a `console.log` to see what is available.
 
