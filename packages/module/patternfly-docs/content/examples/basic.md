@@ -32,6 +32,11 @@ ConditionalTableBody,
 TableRowContentWithControls,
 FilterToolbar,
 FilterType,
+FilterValue,
+IActiveSort,
+IFilterState,
+IPaginationState,
+ISortState,
 ExtendedButton
 } from '@patternfly-labs/react-table-batteries';
 
@@ -119,19 +124,34 @@ The easiest way to achieve this caching behavior is to use a data fetching libra
 
 ### Bringing your own state
 
+TODO this example will come in a separate PR - the
 TODO don't use useTableControlState, but use getLocalTableControlDerivedState
 TODO remark on how this may be helpful for incremental adoption
 
+```js file="./ExampleAdvancedBYOState.tsx"
+
+```
+
 ### Bringing your own client-side filtering/sorting/pagination logic
 
+TODO this example will come in a separate PR
 TODO useTableControlState, but perform filtering/sorting/pagination inline before useTableControlProps
 TODO remark on how this may be helpful for incremental adoption
 TODO remark on how it is similar to the [basic server-side example](#server-side-filteringsortingpagination) except performing the logic in the component instead of on a mock server.
 
+```js file="./ExampleAdvancedBYOLogic.tsx"
+
+```
+
 ### Bringing your own state and logic (use prop helpers only)
 
+TODO this example will come in a separate PR
 TODO remark on how all the state management and built-in logic provided by `useTableControlState` and `useLocalTableControls` is optional, and if you want your table to handle all its own business logic you can still benefit from useTableControlProps to make rendering easier.
 TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableControlState` and then maybe `getLocalTableControlDerivedState` or the full `useLocalTableControls` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
+
+```js file="./ExampleAdvancedBYOStateAndLogic.tsx"
+
+```
 
 ## Features
 
@@ -139,16 +159,20 @@ The functionality and state of the table-batteries hooks is broken down into the
 
 Note that the filtering, sorting and pagination features are special because they must be performed in a specific order to work correctly: filter and sort data, then paginate it. Using the table-batteries hooks like `useLocalTableControls` or `useTableControlState` and `useTableControlProps` will take care of this for you (see [Basic examples](#basic-examples) and [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need)), but if you are handling filtering/sorting/pagination yourself
 
-### Filter
+### Filtering
 
+TODO this example will come in a separate PR
+TODO add a version of the basic client table example with only filtering enabled
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureFilter.tsx"
 
 ```
 
-### Sort
+### Sorting
 
+TODO this example will come in a separate PR
+TODO add a version of the basic client table example with only sorting enabled
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureSort.tsx"
@@ -157,6 +181,8 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ### Pagination
 
+TODO this example will come in a separate PR
+TODO add a version of the basic client table example with only pagination enabled
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeaturePagination.tsx"
@@ -165,7 +191,10 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ### Selection
 
-TODO - flesh this out when useSelectionState has been moved here
+TODO this example will come in a separate PR
+TODO add a version of the basic client table example with only selection enabled
+TODO copy over and rework things from OLD_DOCS.md here
+TODO flesh this out when useSelectionState has been moved to this repo
 
 ```js file="./ExampleFeatureSelection.tsx"
 
@@ -173,6 +202,8 @@ TODO - flesh this out when useSelectionState has been moved here
 
 ### Expansion (single-expand variant)
 
+TODO this example will come in a separate PR
+TODO add a version of the basic client table example with only single-expand enabled
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureExpansionSingle.tsx"
@@ -181,6 +212,8 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ### Expansion (compound-expand variant)
 
+TODO this example will come in a separate PR
+TODO add a version of the basic client table example with only compound-expand enabled
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureExpansionCompound.tsx"
@@ -189,6 +222,9 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ### Active Item
 
+TODO this example will come in a separate PR
+TODO add a version of the basic client table example with only active-item enabled
+TODO should we copy over PageDrawer code? or just some text with the active item name above the table?
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureActiveItem.tsx"
@@ -197,6 +233,8 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ### Kitchen sink example (all features enabled)
 
+TODO this example will come in a separate PR
+TODO add a version of the basic client table example with all of the above features enabled
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleKitchenSink.tsx"
