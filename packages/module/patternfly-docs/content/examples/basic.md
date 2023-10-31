@@ -127,7 +127,7 @@ The easiest way to achieve this caching behavior is to use a data fetching libra
 
 ### Bringing your own state
 
-TODO this example will come in a separate PR - the
+TODO this example will come in a separate PR
 TODO don't use useTableControlState, but use getLocalTableControlDerivedState
 TODO remark on how this may be helpful for incremental adoption
 
