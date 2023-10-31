@@ -9,8 +9,15 @@ id: Table batteries
 source: react
 # If you use typescript, the name of the interface to display props for
 # These are found through the sourceProps function provided in patternfly-docs.source.js
-propComponents: ['ExtendedButton']
-# TODO add hooks/components to propComponents and make sure those are rendering correctly - separate PR?
+propComponents: [
+    # 'useTableControlState',
+    # 'useTableControlProps',
+    # 'useLocalTableControls',
+    'TableHeaderContentWithControls',
+    'ConditionalTableBody',
+    'TableRowContentWithControls'
+  ]
+# TODO see if we can render props tables for hooks in addition to components? see why the props aren't showing for the components we do have listed
 ---
 
 import {
