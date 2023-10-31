@@ -23,7 +23,8 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
   setFilterValue,
   showToolbarItem,
   isDisabled = false,
-  isScrollable = false
+  isScrollable = false,
+  id
 }: React.PropsWithChildren<IMultiselectFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = React.useState(false);
 
@@ -88,7 +89,7 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
 
   return (
     <ToolbarFilter
-      id={`filter-control-${category.key}`}
+      id={`${id}-filter-control-${category.key}`}
       chips={chips}
       deleteChip={(_, chip) => onFilterClear(chip as string)}
       categoryName={category.title}
@@ -97,7 +98,7 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
       <Select
         className={css(isScrollable && 'isScrollable')}
         aria-label={category.title}
-        toggleId={`${category.key}-filter-value-select`}
+        toggleId={`${id}-${category.key}-filter-value-select`}
         onToggle={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
         selections={selections || []}
         onSelect={(_, value) => onFilterSelect(value)}

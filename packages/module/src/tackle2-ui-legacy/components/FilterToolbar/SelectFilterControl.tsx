@@ -17,7 +17,8 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
   setFilterValue,
   showToolbarItem,
   isDisabled = false,
-  isScrollable = false
+  isScrollable = false,
+  id
 }: React.PropsWithChildren<ISelectFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = React.useState(false);
 
@@ -55,7 +56,7 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
 
   return (
     <ToolbarFilter
-      id={`filter-control-${category.key}`}
+      id={`${id}-filter-control-${category.key}`}
       chips={chips}
       deleteChip={(_, chip) => onFilterClear(chip as string)}
       categoryName={category.title}
@@ -64,7 +65,7 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
       <Select
         className={css(isScrollable && 'isScrollable')}
         aria-label={category.title}
-        toggleId={`${category.key}-filter-value-select`}
+        toggleId={`${id}-${category.key}-filter-value-select`}
         onToggle={() => setIsFilterDropdownOpen(!isFilterDropdownOpen)}
         selections={selections || []}
         onSelect={(_, value) => onFilterSelect(value)}

@@ -16,7 +16,8 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
   setFilterValue,
   showToolbarItem,
   isNumeric,
-  isDisabled = false
+  isDisabled = false,
+  id
 }: React.PropsWithChildren<ISearchFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   // Keep internal copy of value until submitted by user
   const [inputValue, setInputValue] = React.useState(filterValue?.[0] || '');
@@ -29,7 +30,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
     // Ignore value with multiple spaces
     setFilterValue(inputValue ? [inputValue.replace(/\s+/g, ' ')] : []);
 
-  const id = `${category.key}-input`;
+  const inputId = `${id}-${category.key}-input`;
   return (
     <ToolbarFilter
       chips={filterValue || []}
@@ -39,8 +40,8 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
     >
       <InputGroup>
         <TextInput
-          name={id}
-          id={id}
+          name={inputId}
+          id={inputId}
           type={isNumeric ? 'number' : 'search'}
           onChange={(_, value) => setInputValue(value)}
           aria-label={`${category.title} filter`}
@@ -56,7 +57,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
         />
         <Button
           variant={ButtonVariant.control}
-          id="search-button"
+          id={`${id}-search-button`}
           aria-label="search button for search input"
           onClick={onFilterSubmit}
           isDisabled={isDisabled}

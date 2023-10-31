@@ -79,15 +79,21 @@ export interface IFilterToolbarProps<TItem, TFilterCategoryKey extends string> {
   pagination?: JSX.Element;
   showFiltersSideBySide?: boolean;
   isDisabled?: boolean;
+  id: string; // Unique per toolbar, prepended to ids on individual filter inputs
 }
 
+/**
+ * @deprecated - This FilterToolbar is an old component from Konveyor that needs to be replaced with a more composable solution.
+ * TODO - rewrite FilterToolbar to follow the batteries pattern
+ */
 export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
   filterCategories,
   filterValues,
   setFilterValues,
   pagination,
   showFiltersSideBySide = false,
-  isDisabled = false
+  isDisabled = false,
+  id
 }: React.PropsWithChildren<IFilterToolbarProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = React.useState(false);
   const [currentFilterCategoryKey, setCurrentFilterCategoryKey] = React.useState(filterCategories[0]?.key);
@@ -153,7 +159,8 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
             <Dropdown
               toggle={(toggleRef) => (
                 <MenuToggle
-                  id="filtered-by"
+                  id={`${id}-filtered-by`}
+                  aria-label="Filtered by" // TODO support i18n / custom text here
                   ref={toggleRef}
                   onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
                   isDisabled={isDisabled}
@@ -170,6 +177,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
 
         {filterCategories.map((category) => (
           <FilterControl<TItem, TFilterCategoryKey>
+            id={id}
             key={category.key}
             category={category}
             filterValue={filterValues[category.key]}
