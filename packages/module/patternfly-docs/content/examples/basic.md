@@ -31,7 +31,7 @@ Pagination
 } from '@patternfly/react-core';
 import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
-import {¡
+import {
 useClientTableBatteries,
 useTablePropHelpers,
 useTableState,
