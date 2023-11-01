@@ -1,8 +1,6 @@
 {
-  "plugins": [
-    "markdown",
-    "react"
-  ],
+  "extends": ["plugin:markdown/recommended"],
+  "plugins": ["react"],
   "parserOptions": {
     "ecmaVersion": 9,
     "sourceType": "module",
@@ -12,7 +10,7 @@
   },
   "settings": {
     "react": {
-      "version": "16.4.0"
+      "version": "18.2.0"
     }
   },
   "rules": {
