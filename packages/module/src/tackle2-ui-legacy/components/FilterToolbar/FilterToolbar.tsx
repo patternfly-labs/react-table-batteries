@@ -40,26 +40,26 @@ export interface BasicFilterCategory<
 }
 
 export interface MultiselectFilterCategory<TItem, TFilterCategoryKey extends string>
-  extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
+  extends BasicFilterCategory<TItem, TFilterCategoryKey> {
   selectOptions: OptionPropsWithKey[];
   placeholderText?: string;
   logicOperator?: 'AND' | 'OR';
 }
 
 export interface SelectFilterCategory<TItem, TFilterCategoryKey extends string>
-  extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
+  extends BasicFilterCategory<TItem, TFilterCategoryKey> {
   selectOptions: OptionPropsWithKey[];
 }
 
 export interface SearchFilterCategory<TItem, TFilterCategoryKey extends string>
-  extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
+  extends BasicFilterCategory<TItem, TFilterCategoryKey> {
   placeholderText: string;
 }
 
 export type FilterCategory<TItem, TFilterCategoryKey extends string> =
-  | IMultiselectFilterCategory<TItem, TFilterCategoryKey>
-  | ISelectFilterCategory<TItem, TFilterCategoryKey>
-  | ISearchFilterCategory<TItem, TFilterCategoryKey>;
+  | MultiselectFilterCategory<TItem, TFilterCategoryKey>
+  | SelectFilterCategory<TItem, TFilterCategoryKey>
+  | SearchFilterCategory<TItem, TFilterCategoryKey>;
 
 export type FilterValues<TFilterCategoryKey extends string> = Partial<Record<TFilterCategoryKey, FilterValue>>;
 
@@ -67,13 +67,13 @@ export const getFilterLogicOperator = <TItem, TFilterCategoryKey extends string>
   filterCategory?: FilterCategory<TItem, TFilterCategoryKey>,
   defaultOperator: 'AND' | 'OR' = 'OR'
 ) =>
-  (filterCategory && (filterCategory as IMultiselectFilterCategory<TItem, TFilterCategoryKey>).logicOperator) ||
+  (filterCategory && (filterCategory as MultiselectFilterCategory<TItem, TFilterCategoryKey>).logicOperator) ||
   defaultOperator;
 
 export interface FilterToolbarProps<TItem, TFilterCategoryKey extends string> {
   filterCategories: FilterCategory<TItem, TFilterCategoryKey>[];
-  filterValues: IFilterValues<TFilterCategoryKey>;
-  setFilterValues: (values: IFilterValues<TFilterCategoryKey>) => void;
+  filterValues: FilterValues<TFilterCategoryKey>;
+  setFilterValues: (values: FilterValues<TFilterCategoryKey>) => void;
   beginToolbarItems?: JSX.Element;
   endToolbarItems?: JSX.Element;
   pagination?: JSX.Element;
@@ -94,7 +94,7 @@ export const FilterToolbar = <TItem, TFilterCategoryKey extends string>({
   showFiltersSideBySide = false,
   isDisabled = false,
   id
-}: React.PropsWithChildren<IFilterToolbarProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
+}: React.PropsWithChildren<FilterToolbarProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = React.useState(false);
   const [currentFilterCategoryKey, setCurrentFilterCategoryKey] = React.useState(filterCategories[0]?.key);
 

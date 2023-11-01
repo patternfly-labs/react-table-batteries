@@ -4,9 +4,9 @@ import {
   FilterCategory,
   FilterValue,
   FilterType,
-  ISelectFilterCategory,
-  ISearchFilterCategory,
-  IMultiselectFilterCategory
+  SelectFilterCategory,
+  SearchFilterCategory,
+  MultiselectFilterCategory
 } from './FilterToolbar';
 import { SelectFilterControl } from './SelectFilterControl';
 import { SearchFilterControl } from './SearchFilterControl';
@@ -24,12 +24,12 @@ export interface FilterControlProps<TItem, TFilterCategoryKey extends string> {
 export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   category,
   ...props
-}: React.PropsWithChildren<IFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
+}: React.PropsWithChildren<FilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   if (category.type === FilterType.select) {
     return (
       <SelectFilterControl
         isScrollable
-        category={category as ISelectFilterCategory<TItem, TFilterCategoryKey>}
+        category={category as SelectFilterCategory<TItem, TFilterCategoryKey>}
         {...props}
       />
     );
@@ -37,7 +37,7 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
   if (category.type === FilterType.search || category.type === FilterType.numsearch) {
     return (
       <SearchFilterControl
-        category={category as ISearchFilterCategory<TItem, TFilterCategoryKey>}
+        category={category as SearchFilterCategory<TItem, TFilterCategoryKey>}
         isNumeric={category.type === FilterType.numsearch}
         {...props}
       />
@@ -47,7 +47,7 @@ export const FilterControl = <TItem, TFilterCategoryKey extends string>({
     return (
       <MultiselectFilterControl
         isScrollable
-        category={category as IMultiselectFilterCategory<TItem, TFilterCategoryKey>}
+        category={category as MultiselectFilterCategory<TItem, TFilterCategoryKey>}
         {...props}
       />
     );

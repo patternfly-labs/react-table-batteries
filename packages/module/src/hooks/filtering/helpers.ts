@@ -1,4 +1,4 @@
-import { FilterValue, IFilterValues } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { FilterValue, FilterValues } from '../../tackle2-ui-legacy/components/FilterToolbar';
 import { objectKeys } from '../../utils';
 
 /**
@@ -6,7 +6,7 @@ import { objectKeys } from '../../utils';
  * Given a structured filter values object, returns a string to be stored in the feature's PersistTarget (URL params, localStorage, etc).
  */
 export const serializeFilterUrlParams = <TFilterCategoryKey extends string>(
-  filterValues: IFilterValues<TFilterCategoryKey>
+  filterValues: FilterValues<TFilterCategoryKey>
 ): { filters?: string | null } => {
   // If a filter value is empty/cleared, don't put it in the object in URL params
   const trimmedFilterValues = { ...filterValues };

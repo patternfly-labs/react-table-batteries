@@ -1,5 +1,5 @@
 import { useTablePropHelpers } from './useTablePropHelpers';
-import { ITableBatteries, IUseClientTableBatteriesArgs } from '../types';
+import { TableBatteries, UseClientTableBatteriesArgs } from '../types';
 import { getClientTableDerivedState } from './getClientTableDerivedState';
 import { useTableState } from './useTableState';
 import { useSelectionState } from '@migtools/lib-ui';
@@ -17,8 +17,8 @@ export const useClientTableBatteries = <
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(
-  args: IUseClientTableBatteriesArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-): ITableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
+  args: UseClientTableBatteriesArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+): TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const state = useTableState(args);
   const derivedState = getClientTableDerivedState({ ...args, ...state });
   return useTablePropHelpers({

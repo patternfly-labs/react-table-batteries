@@ -16,7 +16,7 @@ import {
   FilterToolbar,
   FilterType,
   FilterValue,
-  IActiveSort,
+  ActiveSort,
   TableHeaderContentWithBatteries,
   TableRowContentWithBatteries,
   useTablePropHelpers,
@@ -38,7 +38,7 @@ interface MockAPIResponse {
 }
 const fetchMockData = (apiParams: {
   filterValues: Partial<Record<'name' | 'description', FilterValue>>;
-  activeSort: IActiveSort<'name' | 'description'> | null;
+  activeSort: ActiveSort<'name' | 'description'> | null;
   pageNumber: number;
   itemsPerPage: number;
 }) =>

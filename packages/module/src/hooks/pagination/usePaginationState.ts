@@ -1,5 +1,5 @@
 import { DiscriminatedArgs } from '../../type-utils';
-import { IFeaturePersistenceArgs } from '../../types';
+import { FeaturePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 
 /**
@@ -18,12 +18,12 @@ export interface ActivePagination {
 
 /**
  * The "source of truth" state for the pagination feature.
- * - Included in the object returned by useTableState (ITableState) under the `paginationState` property.
- * - Also included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see ITableState
- * @see ITableBatteries
+ * - Included in the object returned by useTableState (TableState) under the `paginationState` property.
+ * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see TableState
+ * @see TableBatteries
  */
-export interface PaginationState extends IActivePagination {
+export interface PaginationState extends ActivePagination {
   /**
    * Updates the current page number on the user's pagination controls (counting from 1)
    */
@@ -36,14 +36,14 @@ export interface PaginationState extends IActivePagination {
 
 /**
  * Args for usePaginationState
- * - Makes up part of the arguments object taken by useTableState (IUseTableStateArgs)
+ * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)
  * - The properties defined here are only required by useTableState if isPaginationEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see IUseTableStateArgs
+ * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see UseTableStateArgs
  * @see DiscriminatedArgs
- * @see ITableBatteries
+ * @see TableBatteries
  */
-export type PaginationStateArgs = DiscriminatedArgs<
+export type UsePaginationStateArgs = DiscriminatedArgs<
   'isPaginationEnabled',
   {
     /**
@@ -60,12 +60,12 @@ export type PaginationStateArgs = DiscriminatedArgs<
  * @see PersistTarget
  */
 export const usePaginationState = <TPersistenceKeyPrefix extends string = string>(
-  args: IPaginationStateArgs & IFeaturePersistenceArgs<TPersistenceKeyPrefix>
-): IPaginationState => {
+  args: UsePaginationStateArgs & FeaturePersistenceArgs<TPersistenceKeyPrefix>
+): PaginationState => {
   const { isPaginationEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
   const initialItemsPerPage = (isPaginationEnabled && args.initialItemsPerPage) || 10;
 
-  const defaultValue: IActivePagination = {
+  const defaultValue: ActivePagination = {
     pageNumber: 1,
     itemsPerPage: initialItemsPerPage
   };
@@ -73,7 +73,7 @@ export const usePaginationState = <TPersistenceKeyPrefix extends string = string
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456
   const [paginationState, setPaginationState] = usePersistentState<
-    IActivePagination,
+    ActivePagination,
     TPersistenceKeyPrefix,
     'pageNumber' | 'itemsPerPage'
   >({

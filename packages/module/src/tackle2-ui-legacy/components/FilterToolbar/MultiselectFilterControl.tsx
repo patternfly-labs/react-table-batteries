@@ -7,13 +7,13 @@ import {
   SelectVariant,
   SelectProps
 } from '@patternfly/react-core/deprecated'; // TODO upgrade to new PF5 Select stuff
-import { IFilterControlProps } from './FilterControl';
-import { IMultiselectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
+import { FilterControlProps } from './FilterControl';
+import { MultiselectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
 import { css } from '@patternfly/react-styles';
 
 export interface MultiselectFilterControlProps<TItem, TFilterCategoryKey extends string>
-  extends IFilterControlProps<TItem, TFilterCategoryKey> {
-  category: IMultiselectFilterCategory<TItem, TFilterCategoryKey>;
+  extends FilterControlProps<TItem, TFilterCategoryKey> {
+  category: MultiselectFilterCategory<TItem, TFilterCategoryKey>;
   isScrollable?: boolean;
 }
 
@@ -25,7 +25,7 @@ export const MultiselectFilterControl = <TItem, TFilterCategoryKey extends strin
   isDisabled = false,
   isScrollable = false,
   id
-}: React.PropsWithChildren<IMultiselectFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
+}: React.PropsWithChildren<MultiselectFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = React.useState(false);
 
   const getOptionKeyFromOptionValue = (optionValue: string | SelectOptionObject) =>

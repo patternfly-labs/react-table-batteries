@@ -1,14 +1,14 @@
 import * as React from 'react';
-import { IPaginationState } from './usePaginationState';
+import { PaginationState } from './usePaginationState';
 
 /**
  * Args for usePaginationEffects
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
  */
 export interface UsePaginationEffectsArgs {
   isPaginationEnabled?: boolean;
-  paginationState: IPaginationState;
+  paginationState: PaginationState;
   totalItemCount: number;
   isLoading?: boolean;
 }
@@ -24,7 +24,7 @@ export const usePaginationEffects = ({
   paginationState: { itemsPerPage, pageNumber, setPageNumber },
   totalItemCount,
   isLoading = false
-}: IUsePaginationEffectsArgs) => {
+}: UsePaginationEffectsArgs) => {
   // When items are removed, make sure the current page still exists
   const lastPageNumber = Math.max(Math.ceil(totalItemCount / itemsPerPage), 1);
   React.useEffect(() => {

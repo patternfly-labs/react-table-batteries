@@ -14,7 +14,7 @@ export interface ConditionalTableBodyProps {
   children: React.ReactNode;
 }
 
-export const ConditionalTableBody: React.FC<IConditionalTableBodyProps> = ({
+export const ConditionalTableBody: React.FC<ConditionalTableBodyProps> = ({
   numRenderedColumns,
   isLoading = false,
   isError = false,

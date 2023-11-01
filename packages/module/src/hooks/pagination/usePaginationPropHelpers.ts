@@ -1,19 +1,19 @@
 import { PaginationProps, ToolbarItemProps } from '@patternfly/react-core';
-import { IPaginationState } from './usePaginationState';
-import { IUsePaginationEffectsArgs, usePaginationEffects } from './usePaginationEffects';
+import { PaginationState } from './usePaginationState';
+import { UsePaginationEffectsArgs, usePaginationEffects } from './usePaginationEffects';
 
 /**
  * Args for usePaginationPropHelpers that come from outside useTablePropHelpers
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
- * @see ITableState
- * @see IUseTablePropHelpersArgs
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
+ * @see TableState
+ * @see UseTablePropHelpersArgs
  */
-export type PaginationPropHelpersExternalArgs = IUsePaginationEffectsArgs & {
+export type UsePaginationPropHelpersExternalArgs = UsePaginationEffectsArgs & {
   /**
    * The "source of truth" state for the pagination feature (returned by usePaginationState)
    */
-  paginationState: IPaginationState;
+  paginationState: PaginationState;
   /**
     The total number of items in the entire un-filtered, un-paginated table (the size of the entire API collection being tabulated).
    */
@@ -26,7 +26,7 @@ export type PaginationPropHelpersExternalArgs = IUsePaginationEffectsArgs & {
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const usePaginationPropHelpers = (args: IPaginationPropHelpersExternalArgs) => {
+export const usePaginationPropHelpers = (args: UsePaginationPropHelpersExternalArgs) => {
   const {
     totalItemCount,
     paginationState: { itemsPerPage, pageNumber, setPageNumber, setItemsPerPage }

@@ -1,16 +1,16 @@
-import { IExpansionState } from './useExpansionState';
+import { ExpansionState } from './useExpansionState';
 import { getExpansionDerivedState } from './getExpansionDerivedState';
 import { TdProps } from '@patternfly/react-table';
 import { KeyWithValueType } from '../../type-utils';
 
 /**
  * Args for useExpansionPropHelpers that come from outside useTablePropHelpers
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
- * @see ITableState
- * @see IUseTablePropHelpersArgs
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
+ * @see TableState
+ * @see UseTablePropHelpersArgs
  */
-export interface ExpansionPropHelpersExternalArgs<TItem, TColumnKey extends string> {
+export interface UseExpansionPropHelpersExternalArgs<TItem, TColumnKey extends string> {
   /**
    * An ordered mapping of unique keys to human-readable column name strings.
    * - Keys of this object are used as unique identifiers for columns (`columnKey`).
@@ -24,14 +24,14 @@ export interface ExpansionPropHelpersExternalArgs<TItem, TColumnKey extends stri
   /**
    * The "source of truth" state for the expansion feature (returned by useExpansionState)
    */
-  expansionState: IExpansionState<TColumnKey>;
+  expansionState: ExpansionState<TColumnKey>;
 }
 
 /**
  * Additional args for useExpansionPropHelpers that come from logic inside useTablePropHelpers
  * @see useTablePropHelpers
  */
-export interface ExpansionPropHelpersInternalArgs<TColumnKey extends string> {
+export interface UseExpansionPropHelpersInternalArgs<TColumnKey extends string> {
   /**
    * The keys of the `columnNames` object (unique keys identifying each column).
    */
@@ -51,7 +51,7 @@ export interface ExpansionPropHelpersInternalArgs<TColumnKey extends string> {
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const useExpansionPropHelpers = <TItem, TColumnKey extends string>(
-  args: IExpansionPropHelpersExternalArgs<TItem, TColumnKey> & IExpansionPropHelpersInternalArgs<TColumnKey>
+  args: UseExpansionPropHelpersExternalArgs<TItem, TColumnKey> & UseExpansionPropHelpersInternalArgs<TColumnKey>
 ) => {
   const {
     columnNames,

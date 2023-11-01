@@ -1,16 +1,16 @@
-import { IFilterValues, FilterCategory } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { FilterValues, FilterCategory } from '../../tackle2-ui-legacy/components/FilterToolbar';
 import { DiscriminatedArgs } from '../../type-utils';
-import { IFeaturePersistenceArgs } from '../../types';
+import { FeaturePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 import { serializeFilterUrlParams } from './helpers';
 import { deserializeFilterUrlParams } from './helpers';
 
 /**
  * The "source of truth" state for the filter feature.
- * - Included in the object returned by useTableState (ITableState) under the `filterState` property.
- * - Also included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see ITableState
- * @see ITableBatteries
+ * - Included in the object returned by useTableState (TableState) under the `filterState` property.
+ * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see TableState
+ * @see TableBatteries
  */
 export interface FilterState<TFilterCategoryKey extends string> {
   /**
@@ -18,23 +18,23 @@ export interface FilterState<TFilterCategoryKey extends string> {
    * - from string keys uniquely identifying a filterCategory (inferred from the `key` properties of elements in the `filterCategories` array)
    * - to arrays of strings representing the current value(s) of that filter. Single-value filters are stored as an array with one element.
    */
-  filterValues: IFilterValues<TFilterCategoryKey>;
+  filterValues: FilterValues<TFilterCategoryKey>;
   /**
    * Updates the `filterValues` mapping.
    */
-  setFilterValues: (values: IFilterValues<TFilterCategoryKey>) => void;
+  setFilterValues: (values: FilterValues<TFilterCategoryKey>) => void;
 }
 
 /**
  * Args for useFilterState
- * - Makes up part of the arguments object taken by useTableState (IUseTableStateArgs)
+ * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)
  * - The properties defined here are only required by useTableState if isFilterEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see IUseTableStateArgs
+ * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see UseTableStateArgs
  * @see DiscriminatedArgs
- * @see ITableBatteries
+ * @see TableBatteries
  */
-export type FilterStateArgs<TItem, TFilterCategoryKey extends string> = DiscriminatedArgs<
+export type UseFilterStateArgs<TItem, TFilterCategoryKey extends string> = DiscriminatedArgs<
   'isFilterEnabled',
   {
     /**
@@ -51,14 +51,14 @@ export type FilterStateArgs<TItem, TFilterCategoryKey extends string> = Discrimi
  * @see PersistTarget
  */
 export const useFilterState = <TItem, TFilterCategoryKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: IFilterStateArgs<TItem, TFilterCategoryKey> & IFeaturePersistenceArgs<TPersistenceKeyPrefix>
-): IFilterState<TFilterCategoryKey> => {
+  args: UseFilterStateArgs<TItem, TFilterCategoryKey> & FeaturePersistenceArgs<TPersistenceKeyPrefix>
+): FilterState<TFilterCategoryKey> => {
   const { isFilterEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456
   const [filterValues, setFilterValues] = usePersistentState<
-    IFilterValues<TFilterCategoryKey>,
+    FilterValues<TFilterCategoryKey>,
     TPersistenceKeyPrefix,
     'filters'
   >({

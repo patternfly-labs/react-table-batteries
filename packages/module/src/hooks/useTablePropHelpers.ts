@@ -1,6 +1,6 @@
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 
-import { ITableBatteries, IUseTablePropHelpersArgs } from '../types';
+import { TableBatteries, UseTablePropHelpersArgs } from '../types';
 import { useFilterPropHelpers } from './filtering';
 import { useSortPropHelpers } from './sorting';
 import { usePaginationPropHelpers } from './pagination';
@@ -26,9 +26,9 @@ export const useTablePropHelpers = <
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(
-  args: IUseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-): ITableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
-  type PropHelpers = ITableBatteries<
+  args: UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+): TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
+  type PropHelpers = TableBatteries<
     TItem,
     TColumnKey,
     TSortableColumnKey,

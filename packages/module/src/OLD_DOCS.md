@@ -181,7 +181,7 @@ Items are filtered according to user-selected filter key/value pairs.
 
 - Keys and filter types (search, select, etc) are defined by the `filterCategories` array config argument. The `key` properties of each of these `FilterCategory` objects are the source of truth for the inferred generic type `TFilterCategoryKeys` (For more, see the JSDoc comments in the `types.ts` file).
 - Filter state is provided by `useFilterState`.
-- For client-side filtering, the filter logic is provided by `getLocalFilterDerivedState` (based on the `getItemValue` callback defined on each `FilterCategory` object, which is not required when using server-side filtering).
+- For client-side filtering, the filter logic is provided by `getClientFilterDerivedState` (based on the `getItemValue` callback defined on each `FilterCategory` object, which is not required when using server-side filtering).
 - For server-side filtering, filter state is serialized for the API by `getFilterHubRequestParams`.
 - Filter-related component props are provided by `useFilterPropHelpers`.
 - Filter inputs and chips are rendered by the `FilterToolbar` component.
@@ -194,7 +194,7 @@ Items are sorted according to the user-selected sort column and direction.
 
 - Sortable columns are defined by a `sortableColumns` array of `TColumnKey` values (see [Unique Identifiers](#unique-identifiers)).
 - Sort state is provided by `useSortState`.
-- For client-side sorting, the sort logic is provided by `getLocalSortDerivedState` (based on the `getSortValues` config argument, which is not required when using server-side sorting).
+- For client-side sorting, the sort logic is provided by `getClientSortDerivedState` (based on the `getSortValues` config argument, which is not required when using server-side sorting).
 - For server-side sorting, sort state is serialized for the API by `getSortHubRequestParams`.
 - Sort-related component props are provided by `useSortPropHelpers`.
 - Sort inputs are rendered by the table's `Th` PatternFly component.
@@ -205,7 +205,7 @@ Items are paginated according to the user-selected page number and items-per-pag
 
 - The only config argument for pagination is the optional `initialItemsPerPage` which defaults to 10.
 - Pagination state is provided by `usePaginationState`.
-- For client-side pagination, the pagination logic is provided by `getLocalPaginationDerivedState`.
+- For client-side pagination, the pagination logic is provided by `getClientPaginationDerivedState`.
 - For server-side pagination, pagination state is serialized for the API by `getPaginationHubRequestParams`.
 - Pagination-related component props are provided by `usePaginationPropHelpers`.
 - A `useEffect` call which prevents invalid state after an item is deleted is provided by `usePaginationEffects`. This is called internally by `usePaginationPropHelpers`.

@@ -1,11 +1,11 @@
 import * as React from 'react';
-import { IActiveItemDerivedState } from './getActiveItemDerivedState';
-import { IActiveItemState } from './useActiveItemState';
+import { ActiveItemDerivedState } from './getActiveItemDerivedState';
+import { ActiveItemState } from './useActiveItemState';
 
 /**
  * Args for useActiveItemEffects
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
  */
 export interface UseActiveItemEffectsArgs<TItem> {
   /**
@@ -15,11 +15,11 @@ export interface UseActiveItemEffectsArgs<TItem> {
   /**
    * The "source of truth" state for the active item feature (returned by useActiveItemState)
    */
-  activeItemState: IActiveItemState;
+  activeItemState: ActiveItemState;
   /**
    * The "derived state" for the active item feature (returned by getActiveItemDerivedState)
    */
-  activeItemDerivedState: IActiveItemDerivedState<TItem>;
+  activeItemDerivedState: ActiveItemDerivedState<TItem>;
 }
 
 /**
@@ -32,7 +32,7 @@ export const useActiveItemEffects = <TItem>({
   isLoading,
   activeItemState: { activeItemId },
   activeItemDerivedState: { activeItem, clearActiveItem }
-}: IUseActiveItemEffectsArgs<TItem>) => {
+}: UseActiveItemEffectsArgs<TItem>) => {
   React.useEffect(() => {
     if (!isLoading && activeItemId && !activeItem) {
       clearActiveItem();

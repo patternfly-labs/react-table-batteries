@@ -1,18 +1,18 @@
 import { ThProps } from '@patternfly/react-table';
-import { ISortState } from './useSortState';
+import { SortState } from './useSortState';
 
 /**
  * Args for useSortPropHelpers that come from outside useTablePropHelpers
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
- * @see ITableState
- * @see IUseTablePropHelpersArgs
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
+ * @see TableState
+ * @see UseTablePropHelpersArgs
  */
-export interface SortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
+export interface UseSortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
   /**
    * The "source of truth" state for the sort feature (returned by useSortState)
    */
-  sortState: ISortState<TSortableColumnKey>;
+  sortState: SortState<TSortableColumnKey>;
   /**
    * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
    */
@@ -23,7 +23,7 @@ export interface SortPropHelpersExternalArgs<TColumnKey extends string, TSortabl
  * Additional args for useSortPropHelpers that come from logic inside useTablePropHelpers
  * @see useTablePropHelpers
  */
-export interface SortPropHelpersInternalArgs<TColumnKey extends string> {
+export interface UseSortPropHelpersInternalArgs<TColumnKey extends string> {
   /**
    * The keys of the `columnNames` object passed to useTableState (for all columns, not just the sortable ones)
    */
@@ -37,7 +37,7 @@ export interface SortPropHelpersInternalArgs<TColumnKey extends string> {
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const useSortPropHelpers = <TColumnKey extends string, TSortableColumnKey extends TColumnKey>(
-  args: ISortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> & ISortPropHelpersInternalArgs<TColumnKey>
+  args: UseSortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> & UseSortPropHelpersInternalArgs<TColumnKey>
 ) => {
   const {
     sortState: { activeSort, setActiveSort },

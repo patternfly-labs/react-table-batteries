@@ -1,14 +1,14 @@
 import { KeyWithValueType } from '../../type-utils';
-import { IActiveItemState } from './useActiveItemState';
+import { ActiveItemState } from './useActiveItemState';
 
 /**
  * Args for getActiveItemDerivedState
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
- * @see ITableState
- * @see IUseTablePropHelpersArgs
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
+ * @see TableState
+ * @see UseTablePropHelpersArgs
  */
-export interface ActiveItemDerivedStateArgs<TItem> {
+export interface GetActiveItemDerivedStateArgs<TItem> {
   /**
    * The current page of API data items after filtering/sorting/pagination
    */
@@ -20,7 +20,7 @@ export interface ActiveItemDerivedStateArgs<TItem> {
   /**
    * The "source of truth" state for the active item feature (returned by useActiveItemState)
    */
-  activeItemState: IActiveItemState;
+  activeItemState: ActiveItemState;
 }
 
 /**
@@ -52,15 +52,15 @@ export interface ActiveItemDerivedState<TItem> {
  * Given the "source of truth" state for the active item feature and additional arguments, returns "derived state" values and convenience functions.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  *
- * NOTE: Unlike `getLocal[Filter|Sort|Pagination]DerivedState`, this is not named `getLocalActiveItemDerivedState` because it
+ * NOTE: Unlike `getClient[Filter|Sort|Pagination]DerivedState`, this is not named `getClientActiveItemDerivedState` because it
  * is always local/client-computed, and it is still used when working with server-computed tables
- * (it's not specific to client-only-computed tables like the other `getLocal*DerivedState` functions are).
+ * (it's not specific to client-only-computed tables like the other `getClient*DerivedState` functions are).
  */
 export const getActiveItemDerivedState = <TItem>({
   currentPageItems,
   idProperty,
   activeItemState: { activeItemId, setActiveItemId }
-}: IActiveItemDerivedStateArgs<TItem>): IActiveItemDerivedState<TItem> => ({
+}: GetActiveItemDerivedStateArgs<TItem>): ActiveItemDerivedState<TItem> => ({
   activeItem: currentPageItems.find((item) => item[idProperty] === activeItemId) || null,
   setActiveItem: (item: TItem | null) => {
     const itemId = (item?.[idProperty] ?? null) as string | number | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?

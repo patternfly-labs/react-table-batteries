@@ -16,10 +16,10 @@ import {
   FilterToolbar,
   FilterType,
   FilterValue,
-  IActiveSort,
-  IFilterState,
-  IPaginationState,
-  ISortState,
+  ActiveSort,
+  FilterState,
+  PaginationState,
+  SortState,
   TableHeaderContentWithBatteries,
   TableRowContentWithBatteries,
   useTablePropHelpers,
@@ -41,7 +41,7 @@ interface MockAPIResponse {
 }
 const fetchMockData = (apiParams: {
   filterValues: Partial<Record<'name' | 'description', FilterValue>>;
-  activeSort: IActiveSort<'name' | 'description'> | null;
+  activeSort: ActiveSort<'name' | 'description'> | null;
   pageNumber: number;
   itemsPerPage: number;
 }) =>
@@ -88,9 +88,9 @@ const fetchMockData = (apiParams: {
 // Here's a mock hook using state to store a map of cacheKeys to cached API responses.
 // In a real implementation, you would likely use a library like react-query with a built-in cache instead.
 const useMemoizedMockDataFetch = (tableState: {
-  filterState: IFilterState<'name' | 'description'>;
-  sortState: ISortState<'name' | 'description'>;
-  paginationState: IPaginationState;
+  filterState: FilterState<'name' | 'description'>;
+  sortState: SortState<'name' | 'description'>;
+  paginationState: PaginationState;
   cacheKey: string;
 }): { isLoadingMockData: boolean; mockFetchResponse: MockAPIResponse | undefined } => {
   const [cache, updateCache] = React.useState<Record<string, MockAPIResponse>>({});

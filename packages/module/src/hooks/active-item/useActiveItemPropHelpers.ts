@@ -1,17 +1,17 @@
 import { TrProps } from '@patternfly/react-table';
-import { IActiveItemDerivedStateArgs, getActiveItemDerivedState } from './getActiveItemDerivedState';
-import { IActiveItemState } from './useActiveItemState';
-import { IUseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
+import { GetActiveItemDerivedStateArgs, getActiveItemDerivedState } from './getActiveItemDerivedState';
+import { ActiveItemState } from './useActiveItemState';
+import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
 
 /**
  * Args for useActiveItemPropHelpers that come from outside useTablePropHelpers
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
- * @see ITableState
- * @see IUseTablePropHelpersArgs
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
+ * @see TableState
+ * @see UseTablePropHelpersArgs
  */
-export type ActiveItemPropHelpersExternalArgs<TItem> = IActiveItemDerivedStateArgs<TItem> &
-  Omit<IUseActiveItemEffectsArgs<TItem>, 'activeItemDerivedState'> & {
+export type UseActiveItemPropHelpersExternalArgs<TItem> = GetActiveItemDerivedStateArgs<TItem> &
+  Omit<UseActiveItemEffectsArgs<TItem>, 'activeItemDerivedState'> & {
     /**
      * Whether the table data is loading
      */
@@ -19,7 +19,7 @@ export type ActiveItemPropHelpersExternalArgs<TItem> = IActiveItemDerivedStateAr
     /**
      * The "source of truth" state for the active item feature (returned by useActiveItemState)
      */
-    activeItemState: IActiveItemState;
+    activeItemState: ActiveItemState;
   };
 
 /**
@@ -29,7 +29,7 @@ export type ActiveItemPropHelpersExternalArgs<TItem> = IActiveItemDerivedStateAr
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const useActiveItemPropHelpers = <TItem>(args: IActiveItemPropHelpersExternalArgs<TItem>) => {
+export const useActiveItemPropHelpers = <TItem>(args: UseActiveItemPropHelpersExternalArgs<TItem>) => {
   const activeItemDerivedState = getActiveItemDerivedState(args);
   const { isActiveItem, setActiveItem, clearActiveItem } = activeItemDerivedState;
 

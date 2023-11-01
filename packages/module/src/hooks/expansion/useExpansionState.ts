@@ -1,5 +1,5 @@
 import { DiscriminatedArgs } from '../../type-utils';
-import { IFeaturePersistenceArgs } from '../../types';
+import { FeaturePersistenceArgs } from '../../types';
 import { objectKeys } from '../../utils';
 import { usePersistentState } from '../generic/usePersistentState';
 
@@ -10,39 +10,39 @@ import { usePersistentState } from '../generic/usePersistentState';
  *   - true if the row is expanded (for single-expand)
  *   - false if the row and all its cells are collapsed (for both single-expand and compound-expand).
  */
-export type TExpandedCells<TColumnKey extends string> = Record<string, TColumnKey | boolean>;
+export type ExpandedCells<TColumnKey extends string> = Record<string, TColumnKey | boolean>;
 
 /**
  * The "source of truth" state for the expansion feature.
- * - Included in the object returned by useTableState (ITableState) under the `expansionState` property.
- * - Also included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see ITableState
- * @see ITableBatteries
+ * - Included in the object returned by useTableState (TableState) under the `expansionState` property.
+ * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see TableState
+ * @see TableBatteries
  */
 export interface ExpansionState<TColumnKey extends string> {
   /**
    * A map of item ids to a `columnKey` or boolean for the current expansion state of that cell/row
-   * @see TExpandedCells
+   * @see ExpandedCells
    */
-  expandedCells: TExpandedCells<TColumnKey>;
+  expandedCells: ExpandedCells<TColumnKey>;
   /**
    * Updates the `expandedCells` map (replacing the entire map).
    * - See `expansionDerivedState` for helper functions to expand/collapse individual cells/rows.
-   * @see IExpansionDerivedState
+   * @see ExpansionDerivedState
    */
-  setExpandedCells: (newExpandedCells: TExpandedCells<TColumnKey>) => void;
+  setExpandedCells: (newExpandedCells: ExpandedCells<TColumnKey>) => void;
 }
 
 /**
  * Args for useExpansionState
- * - Makes up part of the arguments object taken by useTableState (IUseTableStateArgs)
+ * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)
  * - The properties defined here are only required by useTableState if isExpansionEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see IUseTableStateArgs
+ * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see UseTableStateArgs
  * @see DiscriminatedArgs
- * @see ITableBatteries
+ * @see TableBatteries
  */
-export type ExpansionStateArgs = DiscriminatedArgs<
+export type UseExpansionStateArgs = DiscriminatedArgs<
   'isExpansionEnabled',
   {
     /**
@@ -61,14 +61,14 @@ export type ExpansionStateArgs = DiscriminatedArgs<
  * @see PersistTarget
  */
 export const useExpansionState = <TColumnKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: IExpansionStateArgs & IFeaturePersistenceArgs<TPersistenceKeyPrefix> = {}
-): IExpansionState<TColumnKey> => {
+  args: UseExpansionStateArgs & FeaturePersistenceArgs<TPersistenceKeyPrefix> = {}
+): ExpansionState<TColumnKey> => {
   const { isExpansionEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456
   const [expandedCells, setExpandedCells] = usePersistentState<
-    TExpandedCells<TColumnKey>,
+    ExpandedCells<TColumnKey>,
     TPersistenceKeyPrefix,
     'expandedCells'
   >({

@@ -1,5 +1,5 @@
 import React from 'react';
-import { IUseUrlParamsArgs, useUrlParams } from './useUrlParams';
+import { UseUrlParamsArgs, useUrlParams } from './useUrlParams';
 import { UseStorageTypeOptions, useLocalStorage, useSessionStorage } from '@migtools/lib-ui';
 import { DisallowCharacters } from '../../type-utils';
 
@@ -9,7 +9,7 @@ interface PersistToStateOptions {
 
 type PersistToUrlParamsOptions<TValue, TPersistenceKeyPrefix extends string, TURLParamKey extends string> = {
   persistTo: 'urlParams';
-} & IUseUrlParamsArgs<TValue, TPersistenceKeyPrefix, TURLParamKey>;
+} & UseUrlParamsArgs<TValue, TPersistenceKeyPrefix, TURLParamKey>;
 
 type PersistToStorageOptions<TValue> = {
   persistTo: 'localStorage' | 'sessionStorage';

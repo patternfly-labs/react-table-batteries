@@ -1,4 +1,4 @@
-import { ITableState, IUseTableStateArgs, PersistTarget, TableFeature } from '../types';
+import { TableState, UseTableStateArgs, PersistTarget, TableFeature } from '../types';
 import { useFilterState } from './filtering';
 import { useSortState } from './sorting';
 import { usePaginationState } from './pagination';
@@ -21,8 +21,8 @@ export const useTableState = <
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(
-  args: IUseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-): ITableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
+  args: UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+): TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const getPersistTo = (feature: TableFeature): PersistTarget | undefined =>
     !args.persistTo || typeof args.persistTo === 'string'
       ? args.persistTo

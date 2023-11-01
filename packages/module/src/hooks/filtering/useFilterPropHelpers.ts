@@ -1,19 +1,19 @@
-import { FilterCategory, IFilterToolbarProps } from '../../tackle2-ui-legacy/components/FilterToolbar';
-import { IFilterState } from './useFilterState';
+import { FilterCategory, FilterToolbarProps } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { FilterState } from './useFilterState';
 import { ToolbarProps } from '@patternfly/react-core';
 
 /**
  * Args for useFilterPropHelpers that come from outside useTablePropHelpers
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
- * @see ITableState
- * @see IUseTablePropHelpersArgs
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
+ * @see TableState
+ * @see UseTablePropHelpersArgs
  */
-export interface FilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extends string> {
+export interface UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extends string> {
   /**
    * The "source of truth" state for the filter feature (returned by useFilterState)
    */
-  filterState: IFilterState<TFilterCategoryKey>;
+  filterState: FilterState<TFilterCategoryKey>;
   /**
    * Definitions of the filters to be used (must include `getItemValue` functions for each category when performing filtering locally)
    */
@@ -27,7 +27,7 @@ export interface FilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extends
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
-  args: IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>
+  args: UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>
 ) => {
   const {
     filterState: { filterValues, setFilterValues },
@@ -46,7 +46,7 @@ export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
   /**
    * Props for the FilterToolbar component (our component for rendering filters)
    */
-  const propsForFilterToolbar: Omit<IFilterToolbarProps<TItem, TFilterCategoryKey>, 'id'> = {
+  const propsForFilterToolbar: Omit<FilterToolbarProps<TItem, TFilterCategoryKey>, 'id'> = {
     filterCategories,
     filterValues,
     setFilterValues

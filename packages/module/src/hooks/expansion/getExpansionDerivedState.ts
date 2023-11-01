@@ -1,14 +1,14 @@
 import { KeyWithValueType } from '../../type-utils';
-import { IExpansionState } from './useExpansionState';
+import { ExpansionState } from './useExpansionState';
 
 /**
  * Args for getExpansionDerivedState
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
- * @see ITableState
- * @see IUseTablePropHelpersArgs
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
+ * @see TableState
+ * @see UseTablePropHelpersArgs
  */
-export interface ExpansionDerivedStateArgs<TItem, TColumnKey extends string> {
+export interface GetExpansionDerivedStateArgs<TItem, TColumnKey extends string> {
   /**
    * The string key/name of a property on the API data item objects that can be used as a unique identifier (string or number)
    */
@@ -16,7 +16,7 @@ export interface ExpansionDerivedStateArgs<TItem, TColumnKey extends string> {
   /**
    * The "source of truth" state for the expansion feature (returned by useExpansionState)
    */
-  expansionState: IExpansionState<TColumnKey>;
+  expansionState: ExpansionState<TColumnKey>;
 }
 
 /**
@@ -43,14 +43,14 @@ export interface ExpansionDerivedState<TItem, TColumnKey extends string> {
  * Given the "source of truth" state for the expansion feature and additional arguments, returns "derived state" values and convenience functions.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  *
- * NOTE: Unlike `getLocal[Filter|Sort|Pagination]DerivedState`, this is not named `getLocalExpansionDerivedState` because it
+ * NOTE: Unlike `getClient[Filter|Sort|Pagination]DerivedState`, this is not named `getClientExpansionDerivedState` because it
  * is always local/client-computed, and it is still used when working with server-computed tables
- * (it's not specific to client-only-computed tables like the other `getLocal*DerivedState` functions are).
+ * (it's not specific to client-only-computed tables like the other `getClient*DerivedState` functions are).
  */
 export const getExpansionDerivedState = <TItem, TColumnKey extends string>({
   idProperty,
   expansionState: { expandedCells, setExpandedCells }
-}: IExpansionDerivedStateArgs<TItem, TColumnKey>): IExpansionDerivedState<TItem, TColumnKey> => {
+}: GetExpansionDerivedStateArgs<TItem, TColumnKey>): ExpansionDerivedState<TItem, TColumnKey> => {
   const isCellExpanded = (item: TItem, columnKey?: TColumnKey) =>
     columnKey ? expandedCells[String(item[idProperty])] === columnKey : !!expandedCells[String(item[idProperty])];
 

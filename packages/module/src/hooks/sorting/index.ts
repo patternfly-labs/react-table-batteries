@@ -1,3 +1,3 @@
 export * from './useSortState';
-export * from './getLocalSortDerivedState';
+export * from './getClientSortDerivedState';
 export * from './useSortPropHelpers';

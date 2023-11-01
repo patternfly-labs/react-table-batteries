@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { ToolbarFilter } from '@patternfly/react-core';
 import { Select, SelectOption, SelectOptionObject } from '@patternfly/react-core/deprecated';
-import { IFilterControlProps } from './FilterControl';
-import { ISelectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
+import { FilterControlProps } from './FilterControl';
+import { SelectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
 import { css } from '@patternfly/react-styles';
 
 export interface SelectFilterControlProps<TItem, TFilterCategoryKey extends string>
-  extends IFilterControlProps<TItem, TFilterCategoryKey> {
-  category: ISelectFilterCategory<TItem, TFilterCategoryKey>;
+  extends FilterControlProps<TItem, TFilterCategoryKey> {
+  category: SelectFilterCategory<TItem, TFilterCategoryKey>;
   isScrollable?: boolean;
 }
 
@@ -19,7 +19,7 @@ export const SelectFilterControl = <TItem, TFilterCategoryKey extends string>({
   isDisabled = false,
   isScrollable = false,
   id
-}: React.PropsWithChildren<ISelectFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
+}: React.PropsWithChildren<SelectFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   const [isFilterDropdownOpen, setIsFilterDropdownOpen] = React.useState(false);
 
   const getOptionKeyFromOptionValue = (optionValue: string | SelectOptionObject) =>

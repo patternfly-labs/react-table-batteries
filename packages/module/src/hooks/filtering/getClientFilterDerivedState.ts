@@ -1,15 +1,15 @@
 import { FilterCategory, getFilterLogicOperator } from '../../tackle2-ui-legacy/components/FilterToolbar';
 import { objectKeys } from '../../utils';
-import { IFilterState } from './useFilterState';
+import { FilterState } from './useFilterState';
 
 /**
- * Args for getLocalFilterDerivedState
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by getClientTableDerivedState (IGetClientTableDerivedStateArgs)
- * @see ITableState
- * @see IGetClientTableDerivedStateArgs
+ * Args for getClientFilterDerivedState
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by getClientTableDerivedState (GetClientTableDerivedStateArgs)
+ * @see TableState
+ * @see GetClientTableDerivedStateArgs
  */
-export interface LocalFilterDerivedStateArgs<TItem, TFilterCategoryKey extends string> {
+export interface GetClientFilterDerivedStateArgs<TItem, TFilterCategoryKey extends string> {
   /**
    * The API data items before filtering
    */
@@ -21,7 +21,7 @@ export interface LocalFilterDerivedStateArgs<TItem, TFilterCategoryKey extends s
   /**
    * The "source of truth" state for the filter feature (returned by useFilterState)
    */
-  filterState: IFilterState<TFilterCategoryKey>;
+  filterState: FilterState<TFilterCategoryKey>;
 }
 
 /**
@@ -29,11 +29,11 @@ export interface LocalFilterDerivedStateArgs<TItem, TFilterCategoryKey extends s
  * - For local/client-computed tables only. Performs the actual filtering logic, which is done on the server for server-computed tables.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const getLocalFilterDerivedState = <TItem, TFilterCategoryKey extends string>({
+export const getClientFilterDerivedState = <TItem, TFilterCategoryKey extends string>({
   items,
   filterCategories = [],
   filterState: { filterValues }
-}: ILocalFilterDerivedStateArgs<TItem, TFilterCategoryKey>) => {
+}: GetClientFilterDerivedStateArgs<TItem, TFilterCategoryKey>) => {
   const filteredItems = items.filter((item) =>
     objectKeys(filterValues).every((categoryKey) => {
       const values = filterValues[categoryKey];

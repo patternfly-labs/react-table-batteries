@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { ToolbarFilter, InputGroup, TextInput, Button, ButtonVariant } from '@patternfly/react-core';
 import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
-import { IFilterControlProps } from './FilterControl';
-import { ISearchFilterCategory } from './FilterToolbar';
+import { FilterControlProps } from './FilterControl';
+import { SearchFilterCategory } from './FilterToolbar';
 
 export interface SearchFilterControlProps<TItem, TFilterCategoryKey extends string>
-  extends IFilterControlProps<TItem, TFilterCategoryKey> {
-  category: ISearchFilterCategory<TItem, TFilterCategoryKey>;
+  extends FilterControlProps<TItem, TFilterCategoryKey> {
+  category: SearchFilterCategory<TItem, TFilterCategoryKey>;
   isNumeric: boolean;
 }
 
@@ -18,7 +18,7 @@ export const SearchFilterControl = <TItem, TFilterCategoryKey extends string>({
   isNumeric,
   isDisabled = false,
   id
-}: React.PropsWithChildren<ISearchFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
+}: React.PropsWithChildren<SearchFilterControlProps<TItem, TFilterCategoryKey>>): JSX.Element | null => {
   // Keep internal copy of value until submitted by user
   const [inputValue, setInputValue] = React.useState(filterValue?.[0] || '');
   // Update it if it changes externally

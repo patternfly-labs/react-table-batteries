@@ -35,7 +35,7 @@ export const ToolbarBulkSelector = <T,>({
   onSelectMultiple,
   paginationProps,
   isExpandable
-}: React.PropsWithChildren<IToolbarBulkSelectorProps<T>>): JSX.Element | null => {
+}: React.PropsWithChildren<ToolbarBulkSelectorProps<T>>): JSX.Element | null => {
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleCollapseAll = (collapse: boolean) => {

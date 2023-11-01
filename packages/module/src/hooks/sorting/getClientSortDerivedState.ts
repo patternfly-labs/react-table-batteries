@@ -1,13 +1,13 @@
-import { ISortState } from './useSortState';
+import { SortState } from './useSortState';
 
 /**
- * Args for getLocalSortDerivedState
- * - Partially satisfied by the object returned by useTableState (ITableState)
- * - Makes up part of the arguments object taken by getClientTableDerivedState (IGetClientTableDerivedStateArgs)
- * @see ITableState
- * @see IGetClientTableDerivedStateArgs
+ * Args for getClientSortDerivedState
+ * - Partially satisfied by the object returned by useTableState (TableState)
+ * - Makes up part of the arguments object taken by getClientTableDerivedState (GetClientTableDerivedStateArgs)
+ * @see TableState
+ * @see GetClientTableDerivedStateArgs
  */
-export interface LocalSortDerivedStateArgs<TItem, TSortableColumnKey extends string> {
+export interface GetClientSortDerivedStateArgs<TItem, TSortableColumnKey extends string> {
   /**
    * The API data items before sorting
    */
@@ -25,7 +25,7 @@ export interface LocalSortDerivedStateArgs<TItem, TSortableColumnKey extends str
   /**
    * The "source of truth" state for the sort feature (returned by useSortState)
    */
-  sortState: ISortState<TSortableColumnKey>;
+  sortState: SortState<TSortableColumnKey>;
 }
 
 /**
@@ -33,11 +33,11 @@ export interface LocalSortDerivedStateArgs<TItem, TSortableColumnKey extends str
  * - For local/client-computed tables only. Performs the actual sorting logic, which is done on the server for server-computed tables.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const getLocalSortDerivedState = <TItem, TSortableColumnKey extends string>({
+export const getClientSortDerivedState = <TItem, TSortableColumnKey extends string>({
   items,
   getSortValues,
   sortState: { activeSort }
-}: ILocalSortDerivedStateArgs<TItem, TSortableColumnKey>) => {
+}: GetClientSortDerivedStateArgs<TItem, TSortableColumnKey>) => {
   if (!getSortValues || !activeSort) {
     return { sortedItems: items };
   }

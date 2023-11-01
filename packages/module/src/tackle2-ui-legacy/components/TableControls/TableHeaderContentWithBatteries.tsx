@@ -7,7 +7,7 @@ export interface TableHeaderContentWithBatteriesProps {
   children: React.ReactNode;
 }
 
-export const TableHeaderContentWithBatteries: React.FC<ITableHeaderContentWithBatteriesProps> = ({
+export const TableHeaderContentWithBatteries: React.FC<TableHeaderContentWithBatteriesProps> = ({
   numColumnsBeforeData,
   numColumnsAfterData,
   children

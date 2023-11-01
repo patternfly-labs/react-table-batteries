@@ -1,6 +1,6 @@
 import React from 'react';
 import { Td } from '@patternfly/react-table';
-import { ITableBatteries } from '../../../types';
+import { TableBatteries } from '../../../types';
 
 export interface TableRowContentWithBatteriesProps<
   TItem,
@@ -12,7 +12,7 @@ export interface TableRowContentWithBatteriesProps<
   isExpansionEnabled?: boolean;
   expandableVariant?: 'single' | 'compound';
   isSelectionEnabled?: boolean;
-  propHelpers: ITableBatteries<
+  propHelpers: TableBatteries<
     TItem,
     TColumnKey,
     TSortableColumnKey,
@@ -32,7 +32,7 @@ export const TableRowContentWithBatteries = <TItem, TColumnKey extends string, T
   item,
   rowIndex,
   children
-}: React.PropsWithChildren<ITableRowContentWithBatteriesProps<TItem, TColumnKey, TSortableColumnKey>>) => (
+}: React.PropsWithChildren<TableRowContentWithBatteriesProps<TItem, TColumnKey, TSortableColumnKey>>) => (
   <>
     {isExpansionEnabled && expandableVariant === 'single' ? (
       <Td {...getSingleExpandButtonTdProps({ item, rowIndex })} />

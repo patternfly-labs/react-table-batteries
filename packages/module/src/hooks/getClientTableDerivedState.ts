@@ -1,7 +1,7 @@
-import { getLocalFilterDerivedState } from './filtering';
-import { getLocalSortDerivedState } from './sorting';
-import { getLocalPaginationDerivedState } from './pagination';
-import { IGetClientTableDerivedStateArgs, ITableDerivedState, ITableState } from '../types';
+import { getClientFilterDerivedState } from './filtering';
+import { getClientSortDerivedState } from './sorting';
+import { getClientPaginationDerivedState } from './pagination';
+import { GetClientTableDerivedStateArgs, TableDerivedState, TableState } from '../types';
 
 /**
  * Returns table-level "derived state" (the results of local/client-computed filtering/sorting/pagination)
@@ -16,19 +16,19 @@ export const getClientTableDerivedState = <
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(
-  args: ITableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
-    IGetClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>
-): ITableDerivedState<TItem> => {
+  args: TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
+    GetClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>
+): TableDerivedState<TItem> => {
   const { items, isPaginationEnabled = true } = args;
-  const { filteredItems } = getLocalFilterDerivedState({
+  const { filteredItems } = getClientFilterDerivedState({
     ...args,
     items
   });
-  const { sortedItems } = getLocalSortDerivedState({
+  const { sortedItems } = getClientSortDerivedState({
     ...args,
     items: filteredItems
   });
-  const { currentPageItems } = getLocalPaginationDerivedState({
+  const { currentPageItems } = getClientPaginationDerivedState({
     ...args,
     items: sortedItems
   });

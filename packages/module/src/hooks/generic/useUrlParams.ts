@@ -42,7 +42,7 @@ export const useUrlParams = <TDeserializedParams, TKeyPrefix extends string, TUR
   defaultValue,
   serialize,
   deserialize
-}: IUseUrlParamsArgs<TDeserializedParams, TKeyPrefix, TURLParamKey>): TURLParamStateTuple<TDeserializedParams> => {
+}: UseUrlParamsArgs<TDeserializedParams, TKeyPrefix, TURLParamKey>): TURLParamStateTuple<TDeserializedParams> => {
   // Sync document.location.search with state via an event listener in order to re-render when it changes
   const [locationSearch, setLocationSearch] = React.useState(document.location.search);
   React.useEffect(() => {
