@@ -51,9 +51,9 @@ The react-table-batteries hooks and components provide a pattern where:
 
 - Table-related state and business logic is encapsulated in hooks with simple configuration.
 - JSX for rendering table components is shortened via the use of "prop helpers" returned by the hooks.
+- You retain full control over the JSX, can override any prop and have access to all the state at any level.
 - Interactions like filtering, pagination, sorting and more can be handled automatically on an opt-in basis.
 - Filtering/pagination/sorting logic can run on either the client or a server with the same configuration and JSX.
-- You retain full control over the JSX, can override any prop and have access to all the state at any level.
 - State can be optionally persisted to URL parameters, localStorage or sessionStorage for user convenience.
 - Strict type safety and support for generics provide a safe and convenient TypeScript development experience.
 
