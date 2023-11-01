@@ -5,7 +5,7 @@ import { usePersistentState } from '../generic/usePersistentState';
 /**
  * The currently applied pagination parameters
  */
-export interface IActivePagination {
+export interface ActivePagination {
   /**
    * The current page number on the user's pagination controls (counting from 1)
    */
@@ -23,7 +23,7 @@ export interface IActivePagination {
  * @see ITableState
  * @see ITableBatteries
  */
-export interface IPaginationState extends IActivePagination {
+export interface PaginationState extends IActivePagination {
   /**
    * Updates the current page number on the user's pagination controls (counting from 1)
    */
@@ -43,7 +43,7 @@ export interface IPaginationState extends IActivePagination {
  * @see DiscriminatedArgs
  * @see ITableBatteries
  */
-export type IPaginationStateArgs = DiscriminatedArgs<
+export type PaginationStateArgs = DiscriminatedArgs<
   'isPaginationEnabled',
   {
     /**

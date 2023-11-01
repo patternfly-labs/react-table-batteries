@@ -2,7 +2,7 @@ import React from 'react';
 import { Td } from '@patternfly/react-table';
 import { ITableBatteries } from '../../../types';
 
-export interface ITableRowContentWithBatteriesProps<
+export interface TableRowContentWithBatteriesProps<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,

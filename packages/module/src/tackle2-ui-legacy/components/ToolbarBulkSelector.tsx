@@ -13,7 +13,7 @@ import {
 import AngleDownIcon from '@patternfly/react-icons/dist/esm/icons/angle-down-icon';
 import AngleRightIcon from '@patternfly/react-icons/dist/esm/icons/angle-right-icon';
 
-export interface IToolbarBulkSelectorProps<T> {
+export interface ToolbarBulkSelectorProps<T> {
   areAllSelected: boolean;
   areAllExpanded?: boolean;
   onSelectAll: (flag: boolean) => void;

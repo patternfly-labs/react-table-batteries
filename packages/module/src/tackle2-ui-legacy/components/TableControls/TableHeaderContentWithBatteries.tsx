@@ -1,7 +1,7 @@
 import React from 'react';
 import { Th } from '@patternfly/react-table';
 
-export interface ITableHeaderContentWithBatteriesProps {
+export interface TableHeaderContentWithBatteriesProps {
   numColumnsBeforeData: number;
   numColumnsAfterData: number;
   children: React.ReactNode;

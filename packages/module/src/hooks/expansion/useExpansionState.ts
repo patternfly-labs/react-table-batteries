@@ -19,7 +19,7 @@ export type TExpandedCells<TColumnKey extends string> = Record<string, TColumnKe
  * @see ITableState
  * @see ITableBatteries
  */
-export interface IExpansionState<TColumnKey extends string> {
+export interface ExpansionState<TColumnKey extends string> {
   /**
    * A map of item ids to a `columnKey` or boolean for the current expansion state of that cell/row
    * @see TExpandedCells
@@ -42,7 +42,7 @@ export interface IExpansionState<TColumnKey extends string> {
  * @see DiscriminatedArgs
  * @see ITableBatteries
  */
-export type IExpansionStateArgs = DiscriminatedArgs<
+export type ExpansionStateArgs = DiscriminatedArgs<
   'isExpansionEnabled',
   {
     /**

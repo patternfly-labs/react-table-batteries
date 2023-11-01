@@ -9,7 +9,7 @@ import { usePersistentState } from '../generic/usePersistentState';
  * @see ITableState
  * @see ITableBatteries
  */
-export interface IActiveItemState {
+export interface ActiveItemState {
   /**
    * The item id (string or number resolved from `item[idProperty]`) of the active item. Null if no item is active.
    */
@@ -27,7 +27,7 @@ export interface IActiveItemState {
  * @see IUseTableStateArgs
  * @see ITableBatteries
  */
-export interface IActiveItemStateArgs {
+export interface ActiveItemStateArgs {
   /**
    * The only arg for this feature is the enabled flag.
    * - This does not use DiscriminatedArgs because there are no additional args when the active item feature is enabled.

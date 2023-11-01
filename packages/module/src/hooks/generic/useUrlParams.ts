@@ -17,7 +17,7 @@ import { objectKeys } from '../../utils';
 
 export type TSerializedParams<TURLParamKey extends string> = Partial<Record<TURLParamKey, string | null>>;
 
-export interface IUseUrlParamsArgs<
+export interface UseUrlParamsArgs<
   TDeserializedParams,
   TPersistenceKeyPrefix extends string,
   TURLParamKey extends string

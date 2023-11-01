@@ -9,7 +9,7 @@ import { IUsePaginationEffectsArgs, usePaginationEffects } from './usePagination
  * @see ITableState
  * @see IUseTablePropHelpersArgs
  */
-export type IPaginationPropHelpersExternalArgs = IUsePaginationEffectsArgs & {
+export type PaginationPropHelpersExternalArgs = IUsePaginationEffectsArgs & {
   /**
    * The "source of truth" state for the pagination feature (returned by usePaginationState)
    */

@@ -12,7 +12,7 @@ import { deserializeFilterUrlParams } from './helpers';
  * @see ITableState
  * @see ITableBatteries
  */
-export interface IFilterState<TFilterCategoryKey extends string> {
+export interface FilterState<TFilterCategoryKey extends string> {
   /**
    * A mapping:
    * - from string keys uniquely identifying a filterCategory (inferred from the `key` properties of elements in the `filterCategories` array)
@@ -34,7 +34,7 @@ export interface IFilterState<TFilterCategoryKey extends string> {
  * @see DiscriminatedArgs
  * @see ITableBatteries
  */
-export type IFilterStateArgs<TItem, TFilterCategoryKey extends string> = DiscriminatedArgs<
+export type FilterStateArgs<TItem, TFilterCategoryKey extends string> = DiscriminatedArgs<
   'isFilterEnabled',
   {
     /**

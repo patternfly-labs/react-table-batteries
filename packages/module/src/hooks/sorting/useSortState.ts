@@ -5,7 +5,7 @@ import { usePersistentState } from '../generic/usePersistentState';
 /**
  * The currently applied sort parameters
  */
-export interface IActiveSort<TSortableColumnKey extends string> {
+export interface ActiveSort<TSortableColumnKey extends string> {
   /**
    * The identifier for the currently sorted column (`columnKey` values come from the keys of the `columnNames` object passed to useTableState)
    */
@@ -23,7 +23,7 @@ export interface IActiveSort<TSortableColumnKey extends string> {
  * @see ITableState
  * @see ITableBatteries
  */
-export interface ISortState<TSortableColumnKey extends string> {
+export interface SortState<TSortableColumnKey extends string> {
   /**
    * The currently applied sort column and direction
    */
@@ -43,7 +43,7 @@ export interface ISortState<TSortableColumnKey extends string> {
  * @see DiscriminatedArgs
  * @see ITableBatteries
  */
-export type ISortStateArgs<TSortableColumnKey extends string> = DiscriminatedArgs<
+export type SortStateArgs<TSortableColumnKey extends string> = DiscriminatedArgs<
   'isSortEnabled',
   {
     /**

@@ -54,7 +54,7 @@ export type PersistTarget = 'state' | 'urlParams' | 'localStorage' | 'sessionSto
  * - Extra args needed for persisting state both at the table level and in each use[Feature]State hook.
  * - Not required if using the default "state" PersistTarget
  */
-export interface ICommonPersistenceArgs<TPersistenceKeyPrefix extends string = string> {
+export interface CommonPersistenceArgs<TPersistenceKeyPrefix extends string = string> {
   /**
    * A short string uniquely identifying a specific table. Automatically prepended to any key used in state persistence (e.g. in a URL parameter or localStorage).
    * - Optional: Only omit if this table will not be rendered at the same time as any other tables.
@@ -69,7 +69,7 @@ export interface ICommonPersistenceArgs<TPersistenceKeyPrefix extends string = s
  * - Extra args needed for persisting state in each use[Feature]State hook.
  * - Not required if using the default "state" PersistTarget.
  */
-export type IFeaturePersistenceArgs<TPersistenceKeyPrefix extends string = string> =
+export type FeaturePersistenceArgs<TPersistenceKeyPrefix extends string = string> =
   ICommonPersistenceArgs<TPersistenceKeyPrefix> & {
     /**
      * Where to persist state for this feature.
@@ -83,7 +83,7 @@ export type IFeaturePersistenceArgs<TPersistenceKeyPrefix extends string = strin
  * - When using multiple PersistTargets, a `default` target can be passed that will be used for any features not configured explicitly.
  * - Not required if using the default "state" PersistTarget.
  */
-export type ITablePersistenceArgs<TPersistenceKeyPrefix extends string = string> =
+export type TablePersistenceArgs<TPersistenceKeyPrefix extends string = string> =
   ICommonPersistenceArgs<TPersistenceKeyPrefix> & {
     /**
      * Where to persist state for this table. Can either be a single target for all features or an object mapping individual features to different targets.
@@ -100,7 +100,7 @@ export type ITablePersistenceArgs<TPersistenceKeyPrefix extends string = string>
  * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see ITableBatteries
  */
-export type IUseTableStateArgs<
+export type UseTableStateArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -131,7 +131,7 @@ export type IUseTableStateArgs<
  * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see ITableBatteries
  */
-export type ITableState<
+export type TableState<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -174,7 +174,7 @@ export type ITableState<
  * - Also used indirectly by the useClientTableBatteries shorthand hook.
  * - Requires state and API data in scope (or just API data if using useClientTableBatteries).
  */
-export type IGetClientTableDerivedStateArgs<
+export type GetClientTableDerivedStateArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -195,7 +195,7 @@ export type IGetClientTableDerivedStateArgs<
  * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see ITableBatteries
  */
-export interface ITableDerivedState<TItem> {
+export interface TableDerivedState<TItem> {
   /**
    * The items to be rendered on the current page of the table. These items have already been filtered, sorted and paginated.
    */
@@ -216,7 +216,7 @@ export interface ITableDerivedState<TItem> {
  * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see ITableBatteries
  */
-export type IUseTablePropHelpersArgs<
+export type UseTablePropHelpersArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -260,7 +260,7 @@ export type IUseTablePropHelpersArgs<
  * - Returned by useTablePropHelpers and useClientTableBatteries
  * - Includes all args and return values from useTableState and useTablePropHelpers (configuration, state, derived state and propHelpers).
  */
-export type ITableBatteries<
+export type TableBatteries<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -360,7 +360,7 @@ export type ITableBatteries<
  * - Used by useClientTableBatteries shorthand hook
  * - Combines args for useTableState, getClientTableDerivedState and useTablePropHelpers, omitting args for any of these that come from return values of the others.
  */
-export type IUseClientTableBatteriesArgs<
+export type UseClientTableBatteriesArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,

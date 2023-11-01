@@ -5,7 +5,7 @@ import { IFilterControlProps } from './FilterControl';
 import { ISelectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
 import { css } from '@patternfly/react-styles';
 
-export interface ISelectFilterControlProps<TItem, TFilterCategoryKey extends string>
+export interface SelectFilterControlProps<TItem, TFilterCategoryKey extends string>
   extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: ISelectFilterCategory<TItem, TFilterCategoryKey>;
   isScrollable?: boolean;

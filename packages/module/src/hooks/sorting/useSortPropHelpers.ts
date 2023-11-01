@@ -8,7 +8,7 @@ import { ISortState } from './useSortState';
  * @see ITableState
  * @see IUseTablePropHelpersArgs
  */
-export interface ISortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
+export interface SortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
   /**
    * The "source of truth" state for the sort feature (returned by useSortState)
    */
@@ -23,7 +23,7 @@ export interface ISortPropHelpersExternalArgs<TColumnKey extends string, TSortab
  * Additional args for useSortPropHelpers that come from logic inside useTablePropHelpers
  * @see useTablePropHelpers
  */
-export interface ISortPropHelpersInternalArgs<TColumnKey extends string> {
+export interface SortPropHelpersInternalArgs<TColumnKey extends string> {
   /**
    * The keys of the `columnNames` object passed to useTableState (for all columns, not just the sortable ones)
    */

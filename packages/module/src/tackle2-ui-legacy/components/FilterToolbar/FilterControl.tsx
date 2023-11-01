@@ -12,7 +12,7 @@ import { SelectFilterControl } from './SelectFilterControl';
 import { SearchFilterControl } from './SearchFilterControl';
 import { MultiselectFilterControl } from './MultiselectFilterControl';
 
-export interface IFilterControlProps<TItem, TFilterCategoryKey extends string> {
+export interface FilterControlProps<TItem, TFilterCategoryKey extends string> {
   category: FilterCategory<TItem, TFilterCategoryKey>;
   filterValue: FilterValue;
   setFilterValue: (newValue: FilterValue) => void;

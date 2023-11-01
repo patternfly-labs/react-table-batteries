@@ -10,7 +10,7 @@ import { KeyWithValueType } from '../../type-utils';
  * @see ITableState
  * @see IUseTablePropHelpersArgs
  */
-export interface IExpansionPropHelpersExternalArgs<TItem, TColumnKey extends string> {
+export interface ExpansionPropHelpersExternalArgs<TItem, TColumnKey extends string> {
   /**
    * An ordered mapping of unique keys to human-readable column name strings.
    * - Keys of this object are used as unique identifiers for columns (`columnKey`).
@@ -31,7 +31,7 @@ export interface IExpansionPropHelpersExternalArgs<TItem, TColumnKey extends str
  * Additional args for useExpansionPropHelpers that come from logic inside useTablePropHelpers
  * @see useTablePropHelpers
  */
-export interface IExpansionPropHelpersInternalArgs<TColumnKey extends string> {
+export interface ExpansionPropHelpersInternalArgs<TColumnKey extends string> {
   /**
    * The keys of the `columnNames` object (unique keys identifying each column).
    */

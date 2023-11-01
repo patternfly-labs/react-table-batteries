@@ -7,7 +7,7 @@ import { IPaginationState } from './usePaginationState';
  * @see ITableState
  * @see IGetClientTableDerivedStateArgs
  */
-export interface ILocalPaginationDerivedStateArgs<TItem> {
+export interface LocalPaginationDerivedStateArgs<TItem> {
   /**
    * The API data items before pagination (but after filtering)
    */

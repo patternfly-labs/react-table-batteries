@@ -6,7 +6,7 @@ import { IPaginationState } from './usePaginationState';
  * - Partially satisfied by the object returned by useTableState (ITableState)
  * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
  */
-export interface IUsePaginationEffectsArgs {
+export interface UsePaginationEffectsArgs {
   isPaginationEnabled?: boolean;
   paginationState: IPaginationState;
   totalItemCount: number;

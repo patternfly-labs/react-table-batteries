@@ -9,7 +9,7 @@ import { IFilterState } from './useFilterState';
  * @see ITableState
  * @see IGetClientTableDerivedStateArgs
  */
-export interface ILocalFilterDerivedStateArgs<TItem, TFilterCategoryKey extends string> {
+export interface LocalFilterDerivedStateArgs<TItem, TFilterCategoryKey extends string> {
   /**
    * The API data items before filtering
    */

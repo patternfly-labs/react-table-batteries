@@ -8,7 +8,7 @@ import { IExpansionState } from './useExpansionState';
  * @see ITableState
  * @see IUseTablePropHelpersArgs
  */
-export interface IExpansionDerivedStateArgs<TItem, TColumnKey extends string> {
+export interface ExpansionDerivedStateArgs<TItem, TColumnKey extends string> {
   /**
    * The string key/name of a property on the API data item objects that can be used as a unique identifier (string or number)
    */
@@ -24,7 +24,7 @@ export interface IExpansionDerivedStateArgs<TItem, TColumnKey extends string> {
  * - "Derived state" here refers to values and convenience functions derived at render time based on the "source of truth" state.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export interface IExpansionDerivedState<TItem, TColumnKey extends string> {
+export interface ExpansionDerivedState<TItem, TColumnKey extends string> {
   /**
    * Returns whether a cell or a row is expanded
    *  - If called with a columnKey, returns whether that column's cell in this row is expanded (for compound-expand)

@@ -7,7 +7,7 @@ import { IActiveItemState } from './useActiveItemState';
  * - Partially satisfied by the object returned by useTableState (ITableState)
  * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
  */
-export interface IUseActiveItemEffectsArgs<TItem> {
+export interface UseActiveItemEffectsArgs<TItem> {
   /**
    * Whether the table data is loading
    */

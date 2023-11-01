@@ -9,7 +9,7 @@ import { ToolbarProps } from '@patternfly/react-core';
  * @see ITableState
  * @see IUseTablePropHelpersArgs
  */
-export interface IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extends string> {
+export interface FilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extends string> {
   /**
    * The "source of truth" state for the filter feature (returned by useFilterState)
    */

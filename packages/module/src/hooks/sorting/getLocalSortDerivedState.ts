@@ -7,7 +7,7 @@ import { ISortState } from './useSortState';
  * @see ITableState
  * @see IGetClientTableDerivedStateArgs
  */
-export interface ILocalSortDerivedStateArgs<TItem, TSortableColumnKey extends string> {
+export interface LocalSortDerivedStateArgs<TItem, TSortableColumnKey extends string> {
   /**
    * The API data items before sorting
    */

@@ -26,7 +26,7 @@ export interface OptionPropsWithKey extends SelectOptionProps {
   key: string;
 }
 
-export interface IBasicFilterCategory<
+export interface BasicFilterCategory<
   TItem, // The actual API objects we're filtering
   TFilterCategoryKey extends string // Unique identifiers for each filter category (inferred from key properties if possible)
 > {
@@ -39,19 +39,19 @@ export interface IBasicFilterCategory<
   getServerFilterValue?: (filterValue: FilterValue) => FilterValue; // For server-side filtering. Defaults to using the UI state's value if omitted.
 }
 
-export interface IMultiselectFilterCategory<TItem, TFilterCategoryKey extends string>
+export interface MultiselectFilterCategory<TItem, TFilterCategoryKey extends string>
   extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
   selectOptions: OptionPropsWithKey[];
   placeholderText?: string;
   logicOperator?: 'AND' | 'OR';
 }
 
-export interface ISelectFilterCategory<TItem, TFilterCategoryKey extends string>
+export interface SelectFilterCategory<TItem, TFilterCategoryKey extends string>
   extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
   selectOptions: OptionPropsWithKey[];
 }
 
-export interface ISearchFilterCategory<TItem, TFilterCategoryKey extends string>
+export interface SearchFilterCategory<TItem, TFilterCategoryKey extends string>
   extends IBasicFilterCategory<TItem, TFilterCategoryKey> {
   placeholderText: string;
 }
@@ -61,7 +61,7 @@ export type FilterCategory<TItem, TFilterCategoryKey extends string> =
   | ISelectFilterCategory<TItem, TFilterCategoryKey>
   | ISearchFilterCategory<TItem, TFilterCategoryKey>;
 
-export type IFilterValues<TFilterCategoryKey extends string> = Partial<Record<TFilterCategoryKey, FilterValue>>;
+export type FilterValues<TFilterCategoryKey extends string> = Partial<Record<TFilterCategoryKey, FilterValue>>;
 
 export const getFilterLogicOperator = <TItem, TFilterCategoryKey extends string>(
   filterCategory?: FilterCategory<TItem, TFilterCategoryKey>,
@@ -70,7 +70,7 @@ export const getFilterLogicOperator = <TItem, TFilterCategoryKey extends string>
   (filterCategory && (filterCategory as IMultiselectFilterCategory<TItem, TFilterCategoryKey>).logicOperator) ||
   defaultOperator;
 
-export interface IFilterToolbarProps<TItem, TFilterCategoryKey extends string> {
+export interface FilterToolbarProps<TItem, TFilterCategoryKey extends string> {
   filterCategories: FilterCategory<TItem, TFilterCategoryKey>[];
   filterValues: IFilterValues<TFilterCategoryKey>;
   setFilterValues: (values: IFilterValues<TFilterCategoryKey>) => void;

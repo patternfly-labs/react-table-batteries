@@ -4,7 +4,7 @@ import { Tbody, Tr, Td } from '@patternfly/react-table';
 import { StateError } from './StateError';
 import { StateNoData } from './StateNoData';
 
-export interface IConditionalTableBodyProps {
+export interface ConditionalTableBodyProps {
   numRenderedColumns: number;
   isLoading?: boolean;
   isError?: boolean;

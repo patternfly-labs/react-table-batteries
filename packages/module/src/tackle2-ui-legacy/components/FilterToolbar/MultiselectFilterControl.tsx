@@ -11,7 +11,7 @@ import { IFilterControlProps } from './FilterControl';
 import { IMultiselectFilterCategory, OptionPropsWithKey } from './FilterToolbar';
 import { css } from '@patternfly/react-styles';
 
-export interface IMultiselectFilterControlProps<TItem, TFilterCategoryKey extends string>
+export interface MultiselectFilterControlProps<TItem, TFilterCategoryKey extends string>
   extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: IMultiselectFilterCategory<TItem, TFilterCategoryKey>;
   isScrollable?: boolean;

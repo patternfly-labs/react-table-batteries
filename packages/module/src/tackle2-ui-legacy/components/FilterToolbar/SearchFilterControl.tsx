@@ -4,7 +4,7 @@ import SearchIcon from '@patternfly/react-icons/dist/esm/icons/search-icon';
 import { IFilterControlProps } from './FilterControl';
 import { ISearchFilterCategory } from './FilterToolbar';
 
-export interface ISearchFilterControlProps<TItem, TFilterCategoryKey extends string>
+export interface SearchFilterControlProps<TItem, TFilterCategoryKey extends string>
   extends IFilterControlProps<TItem, TFilterCategoryKey> {
   category: ISearchFilterCategory<TItem, TFilterCategoryKey>;
   isNumeric: boolean;

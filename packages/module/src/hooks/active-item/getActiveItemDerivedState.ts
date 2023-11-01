@@ -8,7 +8,7 @@ import { IActiveItemState } from './useActiveItemState';
  * @see ITableState
  * @see IUseTablePropHelpersArgs
  */
-export interface IActiveItemDerivedStateArgs<TItem> {
+export interface ActiveItemDerivedStateArgs<TItem> {
   /**
    * The current page of API data items after filtering/sorting/pagination
    */
@@ -28,7 +28,7 @@ export interface IActiveItemDerivedStateArgs<TItem> {
  * - "Derived state" here refers to values and convenience functions derived at render time based on the "source of truth" state.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export interface IActiveItemDerivedState<TItem> {
+export interface ActiveItemDerivedState<TItem> {
   /**
    * The API data object matching the `activeItemId` in `activeItemState`
    */

@@ -10,7 +10,7 @@ import { IUseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItem
  * @see ITableState
  * @see IUseTablePropHelpersArgs
  */
-export type IActiveItemPropHelpersExternalArgs<TItem> = IActiveItemDerivedStateArgs<TItem> &
+export type ActiveItemPropHelpersExternalArgs<TItem> = IActiveItemDerivedStateArgs<TItem> &
   Omit<IUseActiveItemEffectsArgs<TItem>, 'activeItemDerivedState'> & {
     /**
      * Whether the table data is loading
