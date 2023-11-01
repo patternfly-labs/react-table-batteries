@@ -59,5 +59,6 @@
     "react-dom": "^18",
     "serve": "^14.2.1",
     "typescript": "^5.2.2"
-  }
+  },
+  "dependencies": {}
 }
