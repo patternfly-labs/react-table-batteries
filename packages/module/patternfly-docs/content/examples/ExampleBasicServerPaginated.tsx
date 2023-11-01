@@ -180,7 +180,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
           <FilterToolbar {...filterToolbarProps} id="server-paginated-example-filters" />
           {/* You can render whatever other custom toolbar items you may need here! */}
           <ToolbarItem {...paginationToolbarItemProps}>
-            <Pagination variant="top" isCompact {...paginationProps} />
+            <Pagination variant="top" isCompact {...paginationProps} widgetId="server-paginated-example-pagination" />
           </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
@@ -222,7 +222,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
           </Tbody>
         </ConditionalTableBody>
       </Table>
-      <Pagination variant="bottom" isCompact {...paginationProps} />
+      <Pagination variant="bottom" isCompact {...paginationProps} widgetId="server-paginated-example-pagination" />
     </>
   );
 };

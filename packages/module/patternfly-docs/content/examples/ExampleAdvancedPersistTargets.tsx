@@ -126,7 +126,7 @@ export const ExampleAdvancedPersistTargets: React.FunctionComponent = () => {
           <FilterToolbar {...filterToolbarProps} id="persist-targets-example-filters" />
           {/* You can render whatever other custom toolbar items you may need here! */}
           <ToolbarItem {...paginationToolbarItemProps}>
-            <Pagination variant="top" isCompact {...paginationProps} />
+            <Pagination variant="top" isCompact {...paginationProps} widgetId="persist-targets-example-pagination" />
           </ToolbarItem>
         </ToolbarContent>
       </Toolbar>
@@ -168,7 +168,7 @@ export const ExampleAdvancedPersistTargets: React.FunctionComponent = () => {
           </Tbody>
         </ConditionalTableBody>
       </Table>
-      <Pagination variant="bottom" isCompact {...paginationProps} />
+      <Pagination variant="bottom" isCompact {...paginationProps} widgetId="persist-targets-example-pagination" />
     </>
   );
 };
