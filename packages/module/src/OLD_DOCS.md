@@ -92,7 +92,7 @@ return (
   <>
     <Toolbar {...toolbarProps}>
       <ToolbarContent>
-        <FilterToolbar {...filterToolbarProps} />
+        <FilterToolbar {...filterToolbarProps} id="kitchen-sink-example-filters" />
         <ToolbarItem {...paginationToolbarItemProps}>
           <SimplePagination
             idPrefix="example-things-table"

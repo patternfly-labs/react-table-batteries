@@ -202,7 +202,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
     <>
       <Toolbar {...toolbarProps}>
         <ToolbarContent>
-          <FilterToolbar {...filterToolbarProps} />
+          <FilterToolbar {...filterToolbarProps} id="caching-example-filters" />
           {/* You can render whatever other custom toolbar items you may need here! */}
           <ToolbarItem {...paginationToolbarItemProps}>
             <Pagination variant="top" isCompact {...paginationProps} />

@@ -46,7 +46,7 @@ export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
   /**
    * Props for the FilterToolbar component (our component for rendering filters)
    */
-  const propsForFilterToolbar: IFilterToolbarProps<TItem, TFilterCategoryKey> = {
+  const propsForFilterToolbar: Omit<IFilterToolbarProps<TItem, TFilterCategoryKey>, 'id'> = {
     filterCategories,
     filterValues,
     setFilterValues

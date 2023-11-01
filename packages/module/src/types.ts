@@ -323,9 +323,9 @@ export type ITableControls<
       args: { columnKey: TColumnKey } & DiscriminatedArgs<'isCompoundExpandToggle', { item: TItem; rowIndex: number }>
     ) => Omit<TdProps, 'ref'>;
     /**
-     * Props for the FilterToolbar component.
+     * Props for the FilterToolbar component. Omits the id prop so you must pass it by hand when rendering FilterToolbar.
      */
-    filterToolbarProps: IFilterToolbarProps<TItem, TFilterCategoryKey>;
+    filterToolbarProps: Omit<IFilterToolbarProps<TItem, TFilterCategoryKey>, 'id'>;
     /**
      * Props for the Pagination component.
      */
