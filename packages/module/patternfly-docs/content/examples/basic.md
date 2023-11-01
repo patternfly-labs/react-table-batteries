@@ -31,7 +31,7 @@ Pagination
 } from '@patternfly/react-core';
 import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
-import {
+import {¡
 useClientTableBatteries,
 useTablePropHelpers,
 useTableState,
@@ -45,7 +45,7 @@ ExtendedButton
 
 ## Introduction
 
-These hooks and components are intended as the missing "batteries" for the composable PatternFly Table. When PatternFly deprecated the "batteries included" legacy monolith Table in favor of the newer composable Table components, the price of the improved flexibility was that the table itself can no longer manage its own state and its usage became more verbose with more required boilerplate code. This trade-off was worth it for PatternFly because the composability offered by the new components is so crucial. However, we can have the best of both worlds by encapsulating the boilerplate logic into hooks that feed props into the composable components without abstracting those components away.
+These hooks and components are intended as the missing "batteries" for the composable PatternFly Table. When PatternFly deprecated the "batteries included" monolith Table component in favor of the newer composable Table components, the price of the improved flexibility was that the table itself can no longer manage its own rendering and its usage became more verbose with more required boilerplate code. This trade-off was worth it for PatternFly because the composability offered by the new components is so crucial. However, we can have the best of both worlds by encapsulating the boilerplate logic into hooks that feed props into the composable components without abstracting those components away. These hooks can also provide featureful state management that was not available before.
 
 The react-table-batteries hooks and components provide a pattern where:
 
@@ -54,6 +54,7 @@ The react-table-batteries hooks and components provide a pattern where:
 - Interactions like filtering, pagination, sorting and more can be handled automatically on an opt-in basis.
 - Filtering/pagination/sorting logic can run on either the client or a server with the same configuration and JSX.
 - You retain full control over the JSX, can override any prop and have access to all the state at any level.
+- State can be optionally persisted to URL parameters, localStorage or sessionStorage for user convenience.
 - Strict type safety and support for generics provide a safe and convenient TypeScript development experience.
 
 This pattern makes tables easier to build, maintain and enhance. Your code will be shorter and more readable without sacrificing composability or refactorability. You'll gain back some of the magic that used to be abstracted away in the deprecated table, but you don't have to sacrifice any of the benefits gained by migrating away from it. You'll also gain powerful and easily-enabled new features that the deprecated table never had.
@@ -245,6 +246,10 @@ TODO copy over and rework things from OLD_DOCS.md here
 ```
 
 ## Usage notes
+
+### The `tableBatteries` object
+
+TODO details here about everything that is on the object with references to the types file
 
 ### Should I use client or server logic?
 
