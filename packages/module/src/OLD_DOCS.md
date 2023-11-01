@@ -10,7 +10,7 @@ Here's an example of another server-computed table with all of the table-control
 
 New features added here in addition to filtering, sorting and pagination are:
 
-- Expansion - Each row has an expand toggle button to the left of its data (automatically injected by the `TableRowContentWithControls` component), which opens additional detail below the row. (this is the "single" expand variant, compound expansion is also supported). The `expandableVariant` option is required because `isExpansionEnabled` is true.
+- Expansion - Each row has an expand toggle button to the left of its data (automatically injected by the `TableRowContentWithBatteries` component), which opens additional detail below the row. (this is the "single" expand variant, compound expansion is also supported). The `expandableVariant` option is required because `isExpansionEnabled` is true.
   - This makes the `getExpandedContentTdProps` propHelper and the `expansionDerivedState` object available on the `tableBatteries` object.
   - Each row is now contained in a `<Tbody>` component which pairs the existing `<Tr>` with another `<Tr>` containing that row's `<ExpandableRowContent>`.
 - Active item - Rows have hover styles and are clickable (handled automatically by `getTrProps`). Clicking a row marks that row's item as "active", which can be used to open a drawer or whatever else is needed on the page. This is enabled by `isActiveItemEnabled`, which does not require any additional options.
@@ -105,10 +105,10 @@ return (
     <Table {...tableProps} aria-label="Example things table">
       <Thead>
         <Tr>
-          <TableHeaderContentWithControls {...tableBatteries}>
+          <TableHeaderContentWithBatteries {...tableBatteries}>
             <Th {...getThProps({ columnKey: "name" })} />
             <Th {...getThProps({ columnKey: "description" })} />
-          </TableHeaderContentWithControls>
+          </TableHeaderContentWithBatteries>
         </Tr>
       </Thead>
       <ConditionalTableBody
@@ -129,7 +129,7 @@ return (
           {currentPageItems?.map((thing, rowIndex) => (
             <Tbody key={thing.id} isExpanded={isCellExpanded(thing)}>
               <Tr {...getTrProps({ item: thing })}>
-                <TableRowContentWithControls
+                <TableRowContentWithBatteries
                   {...tableBatteries}
                   item={thing}
                   rowIndex={rowIndex}
@@ -140,7 +140,7 @@ return (
                   <Td width={75} {...getTdProps({ columnKey: "description" })}>
                     {thing.description}
                   </Td>
-                </TableRowContentWithControls>
+                </TableRowContentWithBatteries>
               </Tr>
               {isCellExpanded(thing) && (
                 <Tr isExpanded>

@@ -2,7 +2,7 @@ import React from 'react';
 import { Td } from '@patternfly/react-table';
 import { ITableBatteries } from '../../../types';
 
-export interface ITableRowContentWithControlsProps<
+export interface ITableRowContentWithBatteriesProps<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -24,7 +24,7 @@ export interface ITableRowContentWithControlsProps<
   children: React.ReactNode;
 }
 
-export const TableRowContentWithControls = <TItem, TColumnKey extends string, TSortableColumnKey extends TColumnKey>({
+export const TableRowContentWithBatteries = <TItem, TColumnKey extends string, TSortableColumnKey extends TColumnKey>({
   isExpansionEnabled = false,
   expandableVariant,
   isSelectionEnabled = false,
@@ -32,7 +32,7 @@ export const TableRowContentWithControls = <TItem, TColumnKey extends string, TS
   item,
   rowIndex,
   children
-}: React.PropsWithChildren<ITableRowContentWithControlsProps<TItem, TColumnKey, TSortableColumnKey>>) => (
+}: React.PropsWithChildren<ITableRowContentWithBatteriesProps<TItem, TColumnKey, TSortableColumnKey>>) => (
   <>
     {isExpansionEnabled && expandableVariant === 'single' ? (
       <Td {...getSingleExpandButtonTdProps({ item, rowIndex })} />

@@ -1,13 +1,13 @@
 import React from 'react';
 import { Th } from '@patternfly/react-table';
 
-export interface ITableHeaderContentWithControlsProps {
+export interface ITableHeaderContentWithBatteriesProps {
   numColumnsBeforeData: number;
   numColumnsAfterData: number;
   children: React.ReactNode;
 }
 
-export const TableHeaderContentWithControls: React.FC<ITableHeaderContentWithControlsProps> = ({
+export const TableHeaderContentWithBatteries: React.FC<ITableHeaderContentWithBatteriesProps> = ({
   numColumnsBeforeData,
   numColumnsAfterData,
   children

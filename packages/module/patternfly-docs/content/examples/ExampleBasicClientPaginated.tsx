@@ -12,9 +12,9 @@ import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import {
   useClientTableBatteries,
-  TableHeaderContentWithControls,
+  TableHeaderContentWithBatteries,
   ConditionalTableBody,
-  TableRowContentWithControls,
+  TableRowContentWithBatteries,
   FilterToolbar,
   FilterType
 } from '@patternfly-labs/react-table-batteries';
@@ -129,10 +129,10 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       <Table {...tableProps} aria-label="Example things table">
         <Thead>
           <Tr>
-            <TableHeaderContentWithControls {...tableBatteries}>
+            <TableHeaderContentWithBatteries {...tableBatteries}>
               <Th {...getThProps({ columnKey: 'name' })} />
               <Th {...getThProps({ columnKey: 'description' })} />
-            </TableHeaderContentWithControls>
+            </TableHeaderContentWithBatteries>
           </Tr>
         </Thead>
         <ConditionalTableBody
@@ -151,14 +151,14 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithControls {...tableBatteries} item={thing} rowIndex={rowIndex}>
+                <TableRowContentWithBatteries {...tableBatteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} {...getTdProps({ columnKey: 'name' })}>
                     {thing.name}
                   </Td>
                   <Td width={70} {...getTdProps({ columnKey: 'description' })}>
                     {thing.description}
                   </Td>
-                </TableRowContentWithControls>
+                </TableRowContentWithBatteries>
               </Tr>
             ))}
           </Tbody>

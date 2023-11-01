@@ -13,9 +13,9 @@ propComponents: [
     # 'useTableState',
     # 'useTablePropHelpers',
     # 'useClientTableBatteries',
-    'TableHeaderContentWithControls',
+    'TableHeaderContentWithBatteries',
     'ConditionalTableBody',
-    'TableRowContentWithControls'
+    'TableRowContentWithBatteries'
   ]
 # TODO see if we can render props tables for hooks in addition to components? see why the props aren't showing for the components we do have listed
 ---
@@ -35,9 +35,9 @@ import {
 useClientTableBatteries,
 useTablePropHelpers,
 useTableState,
-TableHeaderContentWithControls,
+TableHeaderContentWithBatteries,
 ConditionalTableBody,
-TableRowContentWithControls,
+TableRowContentWithBatteries,
 FilterToolbar,
 FilterType,
 ExtendedButton

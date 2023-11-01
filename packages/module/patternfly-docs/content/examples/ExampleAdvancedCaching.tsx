@@ -20,8 +20,8 @@ import {
   IFilterState,
   IPaginationState,
   ISortState,
-  TableHeaderContentWithControls,
-  TableRowContentWithControls,
+  TableHeaderContentWithBatteries,
+  TableRowContentWithBatteries,
   useTablePropHelpers,
   useTableState
 } from '@patternfly-labs/react-table-batteries';
@@ -212,10 +212,10 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
       <Table {...tableProps} aria-label="Example things table">
         <Thead>
           <Tr>
-            <TableHeaderContentWithControls {...tableBatteries}>
+            <TableHeaderContentWithBatteries {...tableBatteries}>
               <Th {...getThProps({ columnKey: 'name' })} />
               <Th {...getThProps({ columnKey: 'description' })} />
-            </TableHeaderContentWithControls>
+            </TableHeaderContentWithBatteries>
           </Tr>
         </Thead>
         <ConditionalTableBody
@@ -234,14 +234,14 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithControls {...tableBatteries} item={thing} rowIndex={rowIndex}>
+                <TableRowContentWithBatteries {...tableBatteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} {...getTdProps({ columnKey: 'name' })}>
                     {thing.name}
                   </Td>
                   <Td width={70} {...getTdProps({ columnKey: 'description' })}>
                     {thing.description}
                   </Td>
-                </TableRowContentWithControls>
+                </TableRowContentWithBatteries>
               </Tr>
             ))}
           </Tbody>
