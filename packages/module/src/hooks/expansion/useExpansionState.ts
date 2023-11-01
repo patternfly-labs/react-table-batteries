@@ -14,10 +14,10 @@ export type TExpandedCells<TColumnKey extends string> = Record<string, TColumnKe
 
 /**
  * The "source of truth" state for the expansion feature.
- * - Included in the object returned by useTableControlState (ITableControlState) under the `expansionState` property.
- * - Also included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see ITableControlState
- * @see ITableControls
+ * - Included in the object returned by useTableState (ITableState) under the `expansionState` property.
+ * - Also included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see ITableState
+ * @see ITableBatteries
  */
 export interface IExpansionState<TColumnKey extends string> {
   /**
@@ -35,12 +35,12 @@ export interface IExpansionState<TColumnKey extends string> {
 
 /**
  * Args for useExpansionState
- * - Makes up part of the arguments object taken by useTableControlState (IUseTableControlStateArgs)
- * - The properties defined here are only required by useTableControlState if isExpansionEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see IUseTableControlStateArgs
+ * - Makes up part of the arguments object taken by useTableState (IUseTableStateArgs)
+ * - The properties defined here are only required by useTableState if isExpansionEnabled is true (see DiscriminatedArgs)
+ * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see IUseTableStateArgs
  * @see DiscriminatedArgs
- * @see ITableControls
+ * @see ITableBatteries
  */
 export type IExpansionStateArgs = DiscriminatedArgs<
   'isExpansionEnabled',
@@ -56,7 +56,7 @@ export type IExpansionStateArgs = DiscriminatedArgs<
 
 /**
  * Provides the "source of truth" state for the expansion feature.
- * - Used internally by useTableControlState
+ * - Used internally by useTableState
  * - Takes args defined above as well as optional args for persisting state to a configurable storage target.
  * @see PersistTarget
  */

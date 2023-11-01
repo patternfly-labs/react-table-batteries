@@ -3,11 +3,11 @@ import { IFilterState } from './useFilterState';
 import { ToolbarProps } from '@patternfly/react-core';
 
 /**
- * Args for useFilterPropHelpers that come from outside useTableControlProps
- * - Partially satisfied by the object returned by useTableControlState (ITableControlState)
- * - Makes up part of the arguments object taken by useTableControlProps (IUseTableControlPropsArgs)
- * @see ITableControlState
- * @see IUseTableControlPropsArgs
+ * Args for useFilterPropHelpers that come from outside useTablePropHelpers
+ * - Partially satisfied by the object returned by useTableState (ITableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
+ * @see ITableState
+ * @see IUseTablePropHelpersArgs
  */
 export interface IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extends string> {
   /**
@@ -22,7 +22,7 @@ export interface IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extend
 
 /**
  * Returns derived state and prop helpers for the filter feature based on given "source of truth" state.
- * - Used internally by useTableControlProps
+ * - Used internally by useTablePropHelpers
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */

@@ -1,7 +1,7 @@
-import { useTableControlProps } from './useTableControlProps';
-import { ITableControls, IUseLocalTableControlsArgs } from '../types';
-import { getLocalTableControlDerivedState } from './getLocalTableControlDerivedState';
-import { useTableControlState } from './useTableControlState';
+import { useTablePropHelpers } from './useTablePropHelpers';
+import { ITableBatteries, IUseClientTableBatteriesArgs } from '../types';
+import { getClientTableDerivedState } from './getClientTableDerivedState';
+import { useTableState } from './useTableState';
 import { useSelectionState } from '@migtools/lib-ui';
 
 /**
@@ -10,22 +10,22 @@ import { useSelectionState } from '@migtools/lib-ui';
  * - "Derived state" here refers to values and convenience functions derived at render time based on the "source of truth" state.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const useLocalTableControls = <
+export const useClientTableBatteries = <
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(
-  args: IUseLocalTableControlsArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-): ITableControls<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
-  const state = useTableControlState(args);
-  const derivedState = getLocalTableControlDerivedState({ ...args, ...state });
-  return useTableControlProps({
+  args: IUseClientTableBatteriesArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+): ITableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
+  const state = useTableState(args);
+  const derivedState = getClientTableDerivedState({ ...args, ...state });
+  return useTablePropHelpers({
     ...args,
     ...state,
     ...derivedState,
-    // TODO we won't need this here once selection state is part of useTableControlState
+    // TODO we won't need this here once selection state is part of useTableState
     selectionState: useSelectionState({
       ...args,
       isEqual: (a, b) => a[args.idProperty] === b[args.idProperty]

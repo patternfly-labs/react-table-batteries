@@ -4,8 +4,8 @@ import { IActiveItemState } from './useActiveItemState';
 
 /**
  * Args for useActiveItemEffects
- * - Partially satisfied by the object returned by useTableControlState (ITableControlState)
- * - Makes up part of the arguments object taken by useTableControlProps (IUseTableControlPropsArgs)
+ * - Partially satisfied by the object returned by useTableState (ITableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
  */
 export interface IUseActiveItemEffectsArgs<TItem> {
   /**
@@ -24,7 +24,7 @@ export interface IUseActiveItemEffectsArgs<TItem> {
 
 /**
  * Registers side effects necessary to prevent invalid state related to the active item feature.
- * - Used internally by useActiveItemPropHelpers as part of useTableControlProps
+ * - Used internally by useActiveItemPropHelpers as part of useTablePropHelpers
  * - The effect: If some state change (e.g. refetch, pagination interaction) causes the active item to disappear,
  *   remove its id from state so the drawer won't automatically reopen if the item comes back.
  */

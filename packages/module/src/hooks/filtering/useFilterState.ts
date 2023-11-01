@@ -7,10 +7,10 @@ import { deserializeFilterUrlParams } from './helpers';
 
 /**
  * The "source of truth" state for the filter feature.
- * - Included in the object returned by useTableControlState (ITableControlState) under the `filterState` property.
- * - Also included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see ITableControlState
- * @see ITableControls
+ * - Included in the object returned by useTableState (ITableState) under the `filterState` property.
+ * - Also included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see ITableState
+ * @see ITableBatteries
  */
 export interface IFilterState<TFilterCategoryKey extends string> {
   /**
@@ -27,12 +27,12 @@ export interface IFilterState<TFilterCategoryKey extends string> {
 
 /**
  * Args for useFilterState
- * - Makes up part of the arguments object taken by useTableControlState (IUseTableControlStateArgs)
- * - The properties defined here are only required by useTableControlState if isFilterEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see IUseTableControlStateArgs
+ * - Makes up part of the arguments object taken by useTableState (IUseTableStateArgs)
+ * - The properties defined here are only required by useTableState if isFilterEnabled is true (see DiscriminatedArgs)
+ * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see IUseTableStateArgs
  * @see DiscriminatedArgs
- * @see ITableControls
+ * @see ITableBatteries
  */
 export type IFilterStateArgs<TItem, TFilterCategoryKey extends string> = DiscriminatedArgs<
   'isFilterEnabled',
@@ -46,7 +46,7 @@ export type IFilterStateArgs<TItem, TFilterCategoryKey extends string> = Discrim
 
 /**
  * Provides the "source of truth" state for the filter feature.
- * - Used internally by useTableControlState
+ * - Used internally by useTableState
  * - Takes args defined above as well as optional args for persisting state to a configurable storage target.
  * @see PersistTarget
  */

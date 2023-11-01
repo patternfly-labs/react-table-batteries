@@ -1,6 +1,6 @@
 import spacing from '@patternfly/react-styles/css/utilities/Spacing/spacing';
 
-import { ITableControls, IUseTableControlPropsArgs } from '../types';
+import { ITableBatteries, IUseTablePropHelpersArgs } from '../types';
 import { useFilterPropHelpers } from './filtering';
 import { useSortPropHelpers } from './sorting';
 import { usePaginationPropHelpers } from './pagination';
@@ -10,25 +10,25 @@ import { handlePropagatedRowClick, objectKeys } from '../utils';
 
 /**
  * Returns derived state and prop helpers for all features. Used to make rendering the table components easier.
- * - Takes "source of truth" state and table-level derived state (derived either on the server or in getLocalTableControlDerivedState)
+ * - Takes "source of truth" state and table-level derived state (derived either on the server or in getClientTableDerivedState)
  *   along with API data and additional args.
  * - Also triggers side-effects for some features to prevent invalid state.
- * - If you aren't using server-side filtering/sorting/pagination, call this via the shorthand hook useLocalTableControls.
- * - If you are using server-side filtering/sorting/pagination, call this last after calling useTableControlState and fetching your API data.
- * @see useLocalTableControls
- * @see useTableControlState
- * @see getLocalTableControlDerivedState
+ * - If you aren't using server-side filtering/sorting/pagination, call this via the shorthand hook useClientTableBatteries.
+ * - If you are using server-side filtering/sorting/pagination, call this last after calling useTableState and fetching your API data.
+ * @see useClientTableBatteries
+ * @see useTableState
+ * @see getClientTableDerivedState
  */
-export const useTableControlProps = <
+export const useTablePropHelpers = <
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(
-  args: IUseTableControlPropsArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-): ITableControls<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
-  type PropHelpers = ITableControls<
+  args: IUseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+): ITableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
+  type PropHelpers = ITableBatteries<
     TItem,
     TColumnKey,
     TSortableColumnKey,

@@ -4,11 +4,11 @@ import { IActiveItemState } from './useActiveItemState';
 import { IUseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
 
 /**
- * Args for useActiveItemPropHelpers that come from outside useTableControlProps
- * - Partially satisfied by the object returned by useTableControlState (ITableControlState)
- * - Makes up part of the arguments object taken by useTableControlProps (IUseTableControlPropsArgs)
- * @see ITableControlState
- * @see IUseTableControlPropsArgs
+ * Args for useActiveItemPropHelpers that come from outside useTablePropHelpers
+ * - Partially satisfied by the object returned by useTableState (ITableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
+ * @see ITableState
+ * @see IUseTablePropHelpersArgs
  */
 export type IActiveItemPropHelpersExternalArgs<TItem> = IActiveItemDerivedStateArgs<TItem> &
   Omit<IUseActiveItemEffectsArgs<TItem>, 'activeItemDerivedState'> & {
@@ -24,7 +24,7 @@ export type IActiveItemPropHelpersExternalArgs<TItem> = IActiveItemDerivedStateA
 
 /**
  * Given "source of truth" state for the active item feature, returns derived state and `propHelpers`.
- * - Used internally by useTableControlProps
+ * - Used internally by useTablePropHelpers
  * - Also triggers side effects to prevent invalid state
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.

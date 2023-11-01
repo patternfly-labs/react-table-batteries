@@ -4,11 +4,11 @@ import { TdProps } from '@patternfly/react-table';
 import { KeyWithValueType } from '../../type-utils';
 
 /**
- * Args for useExpansionPropHelpers that come from outside useTableControlProps
- * - Partially satisfied by the object returned by useTableControlState (ITableControlState)
- * - Makes up part of the arguments object taken by useTableControlProps (IUseTableControlPropsArgs)
- * @see ITableControlState
- * @see IUseTableControlPropsArgs
+ * Args for useExpansionPropHelpers that come from outside useTablePropHelpers
+ * - Partially satisfied by the object returned by useTableState (ITableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
+ * @see ITableState
+ * @see IUseTablePropHelpersArgs
  */
 export interface IExpansionPropHelpersExternalArgs<TItem, TColumnKey extends string> {
   /**
@@ -28,8 +28,8 @@ export interface IExpansionPropHelpersExternalArgs<TItem, TColumnKey extends str
 }
 
 /**
- * Additional args for useExpansionPropHelpers that come from logic inside useTableControlProps
- * @see useTableControlProps
+ * Additional args for useExpansionPropHelpers that come from logic inside useTablePropHelpers
+ * @see useTablePropHelpers
  */
 export interface IExpansionPropHelpersInternalArgs<TColumnKey extends string> {
   /**
@@ -46,7 +46,7 @@ export interface IExpansionPropHelpersInternalArgs<TColumnKey extends string> {
 
 /**
  * Returns derived state and prop helpers for the expansion feature based on given "source of truth" state.
- * - Used internally by useTableControlProps
+ * - Used internally by useTablePropHelpers
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */

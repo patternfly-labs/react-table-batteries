@@ -2,10 +2,10 @@ import { ISortState } from './useSortState';
 
 /**
  * Args for getLocalSortDerivedState
- * - Partially satisfied by the object returned by useTableControlState (ITableControlState)
- * - Makes up part of the arguments object taken by getLocalTableControlDerivedState (ITableControlLocalDerivedStateArgs)
- * @see ITableControlState
- * @see ITableControlLocalDerivedStateArgs
+ * - Partially satisfied by the object returned by useTableState (ITableState)
+ * - Makes up part of the arguments object taken by getClientTableDerivedState (IGetClientTableDerivedStateArgs)
+ * @see ITableState
+ * @see IGetClientTableDerivedStateArgs
  */
 export interface ILocalSortDerivedStateArgs<TItem, TSortableColumnKey extends string> {
   /**
@@ -15,7 +15,7 @@ export interface ILocalSortDerivedStateArgs<TItem, TSortableColumnKey extends st
   /**
    * A callback function to return, for a given API data item, a record of sortable primitives for that item's sortable columns
    * - The record maps:
-   *   - from `columnKey` values (the keys of the `columnNames` object passed to useTableControlState)
+   *   - from `columnKey` values (the keys of the `columnNames` object passed to useTableState)
    *   - to easily sorted primitive values (string | number | boolean) for this item's value in that column
    */
   getSortValues?: (

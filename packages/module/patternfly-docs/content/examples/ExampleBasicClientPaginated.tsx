@@ -11,7 +11,7 @@ import {
 import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import {
-  useLocalTableControls,
+  useClientTableBatteries,
   TableHeaderContentWithControls,
   ConditionalTableBody,
   TableRowContentWithControls,
@@ -54,7 +54,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
     });
   }, []);
 
-  const tableControls = useLocalTableControls({
+  const tableBatteries = useClientTableBatteries({
     persistTo: 'urlParams',
     persistenceKeyPrefix: 't1', // The first Things table on this page.
     idProperty: 'id', // The name of a unique string or number property on the data items.
@@ -93,8 +93,8 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
     isLoading: isLoadingMockData
   });
 
-  // Here we destructure some of the properties from `tableControls` for rendering.
-  // Later we also spread the entire `tableControls` object onto components whose props include subsets of it.
+  // Here we destructure some of the properties from `tableBatteries` for rendering.
+  // Later we also spread the entire `tableBatteries` object onto components whose props include subsets of it.
   const {
     currentPageItems, // These items have already been paginated.
     // `numRenderedColumns` is based on the number of columnNames and additional columns needed for
@@ -113,7 +113,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       getTrProps,
       getTdProps
     }
-  } = tableControls;
+  } = tableBatteries;
 
   return (
     <>
@@ -129,7 +129,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       <Table {...tableProps} aria-label="Example things table">
         <Thead>
           <Tr>
-            <TableHeaderContentWithControls {...tableControls}>
+            <TableHeaderContentWithControls {...tableBatteries}>
               <Th {...getThProps({ columnKey: 'name' })} />
               <Th {...getThProps({ columnKey: 'description' })} />
             </TableHeaderContentWithControls>
@@ -151,7 +151,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithControls {...tableControls} item={thing} rowIndex={rowIndex}>
+                <TableRowContentWithControls {...tableBatteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} {...getTdProps({ columnKey: 'name' })}>
                     {thing.name}
                   </Td>

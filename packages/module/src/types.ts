@@ -50,7 +50,7 @@ export type PersistTarget = 'state' | 'urlParams' | 'localStorage' | 'sessionSto
 
 /**
  * Common persistence-specific args
- * - Makes up part of the arguments object taken by useTableControlState (IUseTableControlStateArgs)
+ * - Makes up part of the arguments object taken by useTableState (IUseTableStateArgs)
  * - Extra args needed for persisting state both at the table level and in each use[Feature]State hook.
  * - Not required if using the default "state" PersistTarget
  */
@@ -93,14 +93,14 @@ export type ITablePersistenceArgs<TPersistenceKeyPrefix extends string = string>
 
 /**
  * Table-level state configuration arguments
- * - Taken by useTableControlState
+ * - Taken by useTableState
  * - Made up of the combined feature-level state configuration argument objects.
  * - Does not require any state or API data in scope (can be called at the top of your component).
  * - Requires/disallows feature-specific args based on `is[Feature]Enabled` booleans via discriminated unions (see individual [Feature]StateArgs types)
- * - Properties here are included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see ITableControls
+ * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see ITableBatteries
  */
-export type IUseTableControlStateArgs<
+export type IUseTableStateArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -123,21 +123,21 @@ export type IUseTableControlStateArgs<
 
 /**
  * Table-level state object
- * - Returned by useTableControlState
+ * - Returned by useTableState
  * - Provides persisted "source of truth" state for all table features.
- * - Also includes all of useTableControlState's arguments for convenience, since useTableControlProps requires them along with the state itself.
+ * - Also includes all of useTableState's arguments for convenience, since useTablePropHelpers requires them along with the state itself.
  * - Note that this only contains the "source of truth" state and does not include "derived state" which is computed at render time.
  *   - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
- * - Properties here are included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see ITableControls
+ * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see ITableBatteries
  */
-export type ITableControlState<
+export type ITableState<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> = IUseTableControlStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> & {
+> = IUseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> & {
   /**
    * State for the filter feature. Returned by useFilterState.
    */
@@ -169,12 +169,12 @@ export type ITableControlState<
  * Table-level local derived state configuration arguments
  * - "Local derived state" refers to the results of client-side filtering/sorting/pagination. This is not used for server-paginated tables.
  * - Made up of the combined feature-level local derived state argument objects.
- * - Used by getLocalTableControlDerivedState.
- *   - getLocalTableControlDerivedState also requires the return values from useTableControlState.
- * - Also used indirectly by the useLocalTableControls shorthand hook.
- * - Requires state and API data in scope (or just API data if using useLocalTableControls).
+ * - Used by getClientTableDerivedState.
+ *   - getClientTableDerivedState also requires the return values from useTableState.
+ * - Also used indirectly by the useClientTableBatteries shorthand hook.
+ * - Requires state and API data in scope (or just API data if using useClientTableBatteries).
  */
-export type ITableControlLocalDerivedStateArgs<
+export type IGetClientTableDerivedStateArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -182,20 +182,20 @@ export type ITableControlLocalDerivedStateArgs<
 > = ILocalFilterDerivedStateArgs<TItem, TFilterCategoryKey> &
   ILocalSortDerivedStateArgs<TItem, TSortableColumnKey> &
   ILocalPaginationDerivedStateArgs<TItem>;
-// There is no ILocalExpansionDerivedStateArgs type because expansion derived state is always local and internal to useTableControlProps
-// There is no ILocalActiveItemDerivedStateArgs type because expansion derived state is always local and internal to useTableControlProps
+// There is no ILocalExpansionDerivedStateArgs type because expansion derived state is always local and internal to useTablePropHelpers
+// There is no ILocalActiveItemDerivedStateArgs type because expansion derived state is always local and internal to useTablePropHelpers
 
 /**
  * Table-level derived state object
  * - "Derived state" here refers to the results of filtering/sorting/pagination performed either on the client or the server.
- * - Makes up part of the arguments object taken by useTableControlProps (IUseTableControlPropsArgs)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
  * - Provided by either:
- *   - Return values of getLocalTableControlDerivedState (client-side filtering/sorting/pagination)
+ *   - Return values of getClientTableDerivedState (client-side filtering/sorting/pagination)
  *   - The consumer directly (server-side filtering/sorting/pagination)
- * - Properties here are included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see ITableControls
+ * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see ITableBatteries
  */
-export interface ITableControlDerivedState<TItem> {
+export interface ITableDerivedState<TItem> {
   /**
    * The items to be rendered on the current page of the table. These items have already been filtered, sorted and paginated.
    */
@@ -208,28 +208,28 @@ export interface ITableControlDerivedState<TItem> {
 
 /**
  * Rendering configuration arguments
- * - Used by only useTableControlProps
+ * - Used by only useTablePropHelpers
  * - Requires state and API data in scope
- * - Combines all args for useTableControlState with the return values of useTableControlState, args used only for rendering, and args derived from either:
+ * - Combines all args for useTableState with the return values of useTableState, args used only for rendering, and args derived from either:
  *   - Server-side filtering/sorting/pagination provided by the consumer
- *   - getLocalTableControlDerivedState (client-side filtering/sorting/pagination)
- * - Properties here are included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see ITableControls
+ *   - getClientTableDerivedState (client-side filtering/sorting/pagination)
+ * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see ITableBatteries
  */
-export type IUseTableControlPropsArgs<
+export type IUseTablePropHelpersArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> = IUseTableControlStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
+> = IUseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
   IFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey> &
   ISortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> &
   IPaginationPropHelpersExternalArgs &
   // ISelectionPropHelpersExternalArgs // TODO when we move selection from lib-ui
   IExpansionPropHelpersExternalArgs<TItem, TColumnKey> &
   IActiveItemPropHelpersExternalArgs<TItem> &
-  ITableControlDerivedState<TItem> & {
+  ITableDerivedState<TItem> & {
     /**
      * Whether the table data is loading
      */
@@ -257,16 +257,16 @@ export type IUseTableControlPropsArgs<
 /**
  * Table controls object
  * - The object used for rendering. Includes everything you need to return JSX for your table.
- * - Returned by useTableControlProps and useLocalTableControls
- * - Includes all args and return values from useTableControlState and useTableControlProps (configuration, state, derived state and propHelpers).
+ * - Returned by useTablePropHelpers and useClientTableBatteries
+ * - Includes all args and return values from useTableState and useTablePropHelpers (configuration, state, derived state and propHelpers).
  */
-export type ITableControls<
+export type ITableBatteries<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> = IUseTableControlPropsArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> & {
+> = IUseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> & {
   /**
    * The number of extra non-data columns that appear before the data in each row. Based on whether selection and single-expansion features are enabled.
    */
@@ -357,21 +357,21 @@ export type ITableControls<
 
 /**
  * Combined configuration arguments for client-paginated tables
- * - Used by useLocalTableControls shorthand hook
- * - Combines args for useTableControlState, getLocalTableControlDerivedState and useTableControlProps, omitting args for any of these that come from return values of the others.
+ * - Used by useClientTableBatteries shorthand hook
+ * - Combines args for useTableState, getClientTableDerivedState and useTablePropHelpers, omitting args for any of these that come from return values of the others.
  */
-export type IUseLocalTableControlsArgs<
+export type IUseClientTableBatteriesArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> = IUseTableControlStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
+> = IUseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
   Omit<
-    ITableControlLocalDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey> &
-      IUseTableControlPropsArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>,
-    | keyof ITableControlDerivedState<TItem>
-    | keyof ITableControlState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-    | 'selectionState' // TODO this won't be included here when selection is part of useTableControlState
+    IGetClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey> &
+      IUseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>,
+    | keyof ITableDerivedState<TItem>
+    | keyof ITableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+    | 'selectionState' // TODO this won't be included here when selection is part of useTableState
   > &
-  Pick<ISelectionStateArgs<TItem>, 'initialSelected' | 'isItemSelectable'>; // TODO this won't be included here when selection is part of useTableControlState
+  Pick<ISelectionStateArgs<TItem>, 'initialSelected' | 'isItemSelectable'>; // TODO this won't be included here when selection is part of useTableState

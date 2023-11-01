@@ -1,24 +1,24 @@
 import { getLocalFilterDerivedState } from './filtering';
 import { getLocalSortDerivedState } from './sorting';
 import { getLocalPaginationDerivedState } from './pagination';
-import { ITableControlLocalDerivedStateArgs, ITableControlDerivedState, ITableControlState } from '../types';
+import { IGetClientTableDerivedStateArgs, ITableDerivedState, ITableState } from '../types';
 
 /**
  * Returns table-level "derived state" (the results of local/client-computed filtering/sorting/pagination)
- * - Used internally by the shorthand hook useLocalTableControls.
+ * - Used internally by the shorthand hook useClientTableBatteries.
  * - Takes "source of truth" state for all features and additional args.
- * @see useLocalTableControls
+ * @see useClientTableBatteries
  */
-export const getLocalTableControlDerivedState = <
+export const getClientTableDerivedState = <
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(
-  args: ITableControlState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
-    ITableControlLocalDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>
-): ITableControlDerivedState<TItem> => {
+  args: ITableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
+    IGetClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>
+): ITableDerivedState<TItem> => {
   const { items, isPaginationEnabled = true } = args;
   const { filteredItems } = getLocalFilterDerivedState({
     ...args,

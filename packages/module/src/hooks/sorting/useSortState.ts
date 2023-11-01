@@ -7,7 +7,7 @@ import { usePersistentState } from '../generic/usePersistentState';
  */
 export interface IActiveSort<TSortableColumnKey extends string> {
   /**
-   * The identifier for the currently sorted column (`columnKey` values come from the keys of the `columnNames` object passed to useTableControlState)
+   * The identifier for the currently sorted column (`columnKey` values come from the keys of the `columnNames` object passed to useTableState)
    */
   columnKey: TSortableColumnKey;
   /**
@@ -18,10 +18,10 @@ export interface IActiveSort<TSortableColumnKey extends string> {
 
 /**
  * The "source of truth" state for the sort feature.
- * - Included in the object returned by useTableControlState (ITableControlState) under the `sortState` property.
- * - Also included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see ITableControlState
- * @see ITableControls
+ * - Included in the object returned by useTableState (ITableState) under the `sortState` property.
+ * - Also included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see ITableState
+ * @see ITableBatteries
  */
 export interface ISortState<TSortableColumnKey extends string> {
   /**
@@ -36,18 +36,18 @@ export interface ISortState<TSortableColumnKey extends string> {
 
 /**
  * Args for useSortState
- * - Makes up part of the arguments object taken by useTableControlState (IUseTableControlStateArgs)
- * - The properties defined here are only required by useTableControlState if isSortEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `ITableControls` object returned by useTableControlProps and useLocalTableControls.
- * @see IUseTableControlStateArgs
+ * - Makes up part of the arguments object taken by useTableState (IUseTableStateArgs)
+ * - The properties defined here are only required by useTableState if isSortEnabled is true (see DiscriminatedArgs)
+ * - Properties here are included in the `ITableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see IUseTableStateArgs
  * @see DiscriminatedArgs
- * @see ITableControls
+ * @see ITableBatteries
  */
 export type ISortStateArgs<TSortableColumnKey extends string> = DiscriminatedArgs<
   'isSortEnabled',
   {
     /**
-     * The `columnKey` values (keys of the `columnNames` object passed to useTableControlState) corresponding to columns with sorting enabled
+     * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
      */
     sortableColumns: TSortableColumnKey[];
     /**
@@ -59,7 +59,7 @@ export type ISortStateArgs<TSortableColumnKey extends string> = DiscriminatedArg
 
 /**
  * Provides the "source of truth" state for the sort feature.
- * - Used internally by useTableControlState
+ * - Used internally by useTableState
  * - Takes args defined above as well as optional args for persisting state to a configurable storage target.
  * @see PersistTarget
  */

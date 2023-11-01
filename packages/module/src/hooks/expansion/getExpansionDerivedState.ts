@@ -3,10 +3,10 @@ import { IExpansionState } from './useExpansionState';
 
 /**
  * Args for getExpansionDerivedState
- * - Partially satisfied by the object returned by useTableControlState (ITableControlState)
- * - Makes up part of the arguments object taken by useTableControlProps (IUseTableControlPropsArgs)
- * @see ITableControlState
- * @see IUseTableControlPropsArgs
+ * - Partially satisfied by the object returned by useTableState (ITableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
+ * @see ITableState
+ * @see IUseTablePropHelpersArgs
  */
 export interface IExpansionDerivedStateArgs<TItem, TColumnKey extends string> {
   /**

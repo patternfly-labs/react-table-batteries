@@ -6,24 +6,24 @@ TODO remove this file once all its useful content has moved to either the docs s
 
 ### Kitchen sink example with per-feature state persistence and all features enabled
 
-Here's an example of another server-computed table with all of the table-controls features enabled (see [Features](#features)). Note that if you wanted to make this example client-computed, you would pass all the new feature-specific properties seen here to `useLocalTableControls` instead of `useTableControlState`.
+Here's an example of another server-computed table with all of the table-controls features enabled (see [Features](#features)). Note that if you wanted to make this example client-computed, you would pass all the new feature-specific properties seen here to `useClientTableBatteries` instead of `useTableState`.
 
 New features added here in addition to filtering, sorting and pagination are:
 
 - Expansion - Each row has an expand toggle button to the left of its data (automatically injected by the `TableRowContentWithControls` component), which opens additional detail below the row. (this is the "single" expand variant, compound expansion is also supported). The `expandableVariant` option is required because `isExpansionEnabled` is true.
-  - This makes the `getExpandedContentTdProps` propHelper and the `expansionDerivedState` object available on the `tableControls` object.
+  - This makes the `getExpandedContentTdProps` propHelper and the `expansionDerivedState` object available on the `tableBatteries` object.
   - Each row is now contained in a `<Tbody>` component which pairs the existing `<Tr>` with another `<Tr>` containing that row's `<ExpandableRowContent>`.
 - Active item - Rows have hover styles and are clickable (handled automatically by `getTrProps`). Clicking a row marks that row's item as "active", which can be used to open a drawer or whatever else is needed on the page. This is enabled by `isActiveItemEnabled`, which does not require any additional options.
-  - This makes the `activeItemDerivedState` object available on the `tableControls` object.
+  - This makes the `activeItemDerivedState` object available on the `tableBatteries` object.
 
-> ⚠️ TECH DEBT NOTE: The selection feature is currently not enabled in this example because it is about to significantly change with a refactor. Currently to use selection you have to use the outdated `useSelectionState` from lib-ui and pass its return values to `useTableControlProps`. Once selection is moved into table-controls, it will be configurable alongside the other features in `useTableControlState` and added to this example.
+> ⚠️ TECH DEBT NOTE: The selection feature is currently not enabled in this example because it is about to significantly change with a refactor. Currently to use selection you have to use the outdated `useSelectionState` from lib-ui and pass its return values to `useTablePropHelpers`. Once selection is moved into table-controls, it will be configurable alongside the other features in `useTableState` and added to this example.
 
 > ⚠️ TECH DEBT NOTE: We should also add a compound-expand example, but that can maybe wait for the proper extension-seed docs in table-batteries after the code is moved there.
 
 Here we'll also show an alternate way of using `persistTo`: separate persistence targets per feature. Let's say that for this table, we want the user's filters to persist in `localStorage` where they will be restored no matter what the user does, but we want the sort, pagination and other state to reset when we leave the page. We can do this by passing an object to `persistTo` instead of a string. We specify the default persistence target as React state with `default: "state"`, and override it for the filters with `filter: "localStorage"`.
 
 ```tsx
-const tableControlState = useTableControlState({
+const tableState = useTableState({
   persistTo: {
     default: "state",
     filter: "localStorage",
@@ -52,7 +52,7 @@ const tableControlState = useTableControlState({
 });
 
 const hubRequestParams = getHubRequestParams({
-  ...tableControlState,
+  ...tableState,
   hubSortFieldKeys: {
     name: "name",
     description: "description",
@@ -62,8 +62,8 @@ const hubRequestParams = getHubRequestParams({
 const { data, totalItemCount, isLoading, isError } =
   useFetchThings(hubRequestParams);
 
-const tableControls = useTableControlProps({
-  ...tableControlState,
+const tableBatteries = useTablePropHelpers({
+  ...tableState,
   idProperty: "id",
   currentPageItems: data,
   totalItemCount,
@@ -86,7 +86,7 @@ const {
   },
   activeItemDerivedState: { activeItem, clearActiveItem },
   expansionDerivedState: { isCellExpanded },
-} = tableControls;
+} = tableBatteries;
 
 return (
   <>
@@ -105,7 +105,7 @@ return (
     <Table {...tableProps} aria-label="Example things table">
       <Thead>
         <Tr>
-          <TableHeaderContentWithControls {...tableControls}>
+          <TableHeaderContentWithControls {...tableBatteries}>
             <Th {...getThProps({ columnKey: "name" })} />
             <Th {...getThProps({ columnKey: "description" })} />
           </TableHeaderContentWithControls>
@@ -130,7 +130,7 @@ return (
             <Tbody key={thing.id} isExpanded={isCellExpanded(thing)}>
               <Tr {...getTrProps({ item: thing })}>
                 <TableRowContentWithControls
-                  {...tableControls}
+                  {...tableBatteries}
                   item={thing}
                   rowIndex={rowIndex}
                 >
@@ -224,7 +224,7 @@ Item details can be expanded, either with a "single expansion" variant where an 
 - Expansion shorthand functions are provided by `getExpansionDerivedState`.
 - Expansion is never managed server-side.
 - Expansion-related component props are provided by `useExpansionPropHelpers`.
-- Expansion inputs are rendered by the table's `Td` PatternFly component and expanded content is managed at the consumer level by conditionally rendering a second row with full colSpan inside a PatternFly `Tbody` component. The `numRenderedColumns` value returned by `useTableControlProps` can be used for the correct colSpan here.
+- Expansion inputs are rendered by the table's `Td` PatternFly component and expanded content is managed at the consumer level by conditionally rendering a second row with full colSpan inside a PatternFly `Tbody` component. The `numRenderedColumns` value returned by `useTablePropHelpers` can be used for the correct colSpan here.
 
 ### Active Item
 
@@ -242,4 +242,4 @@ A row can be clicked to mark its item as "active", which usually opens a drawer 
 
 Items can be selected with checkboxes on each row or with a bulk select control that provides actions like "select all", "select none" and "select page". The list of selected item ids in state can be used to perform bulk actions like Delete.
 
-> ⚠️ TECH DEBT NOTE: Currently, selection state has not yet been refactored to be a part of the table-controls pattern and we are still relying on [the old `useSelectionState` from lib-ui](https://migtools.github.io/lib-ui/?path=/docs/hooks-useselectionstate--checkboxes) which dates back to older migtools projects. The return value of this legacy `useSelectionState` is required by `useTableControlProps`. Mike is working on a refactor to bring selection state hooks into this directory.
+> ⚠️ TECH DEBT NOTE: Currently, selection state has not yet been refactored to be a part of the table-controls pattern and we are still relying on [the old `useSelectionState` from lib-ui](https://migtools.github.io/lib-ui/?path=/docs/hooks-useselectionstate--checkboxes) which dates back to older migtools projects. The return value of this legacy `useSelectionState` is required by `useTablePropHelpers`. Mike is working on a refactor to bring selection state hooks into this directory.

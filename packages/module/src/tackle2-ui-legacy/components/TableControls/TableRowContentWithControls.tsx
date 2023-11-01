@@ -1,6 +1,6 @@
 import React from 'react';
 import { Td } from '@patternfly/react-table';
-import { ITableControls } from '../../../types';
+import { ITableBatteries } from '../../../types';
 
 export interface ITableRowContentWithControlsProps<
   TItem,
@@ -12,7 +12,7 @@ export interface ITableRowContentWithControlsProps<
   isExpansionEnabled?: boolean;
   expandableVariant?: 'single' | 'compound';
   isSelectionEnabled?: boolean;
-  propHelpers: ITableControls<
+  propHelpers: ITableBatteries<
     TItem,
     TColumnKey,
     TSortableColumnKey,

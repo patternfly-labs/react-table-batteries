@@ -19,8 +19,8 @@ import {
   IActiveSort,
   TableHeaderContentWithControls,
   TableRowContentWithControls,
-  useTableControlProps,
-  useTableControlState
+  useTablePropHelpers,
+  useTableState
 } from '@patternfly-labs/react-table-batteries';
 
 // This example table's rows represent Thing objects in our fake API.
@@ -60,7 +60,7 @@ const fetchMockData = (apiParams: {
         { id: 12, name: 'Thing 12', description: 'So you can try pagination' }
       ];
       // None of this mock filter/sort/pagination logic is ever necessary when rendering a real table.
-      // It'll either be handled for you in useLocalTableControls or on a server.
+      // It'll either be handled for you in useClientTableBatteries or on a server.
       const filteredData = rawMockData.filter((thing) =>
         ['name', 'description'].every(
           (field) => !filterValues[field] || thing[field].toLowerCase().includes(filterValues[field][0].toLowerCase())
@@ -83,7 +83,7 @@ const fetchMockData = (apiParams: {
   });
 
 export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
-  const tableControlState = useTableControlState({
+  const tableState = useTableState({
     persistTo: 'urlParams',
     persistenceKeyPrefix: 't2', // The second Things table on this page.
     columnNames: {
@@ -115,7 +115,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
     filterState: { filterValues },
     sortState: { activeSort },
     paginationState: { pageNumber, itemsPerPage }
-  } = tableControlState;
+  } = tableState;
 
   // In a real table we'd use a real API fetch here, perhaps using a library like react-query.
   const [mockApiResponse, setMockApiResponse] = React.useState<MockAPIResponse>({ data: [], totalItemCount: 0 });
@@ -127,11 +127,11 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       setIsLoadingMockData(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableControlState.cacheKey]);
+  }, [tableState.cacheKey]);
   // The cacheKey string above changes when filtering, sorting or pagination state change and the API data should be refetched.
 
-  const tableControls = useTableControlProps({
-    ...tableControlState,
+  const tableBatteries = useTablePropHelpers({
+    ...tableState,
     idProperty: 'id',
     isLoading: isLoadingMockData,
     currentPageItems: mockApiResponse.data,
@@ -171,7 +171,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       getTrProps,
       getTdProps
     }
-  } = tableControls;
+  } = tableBatteries;
 
   return (
     <>
@@ -187,7 +187,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       <Table {...tableProps} aria-label="Example things table">
         <Thead>
           <Tr>
-            <TableHeaderContentWithControls {...tableControls}>
+            <TableHeaderContentWithControls {...tableBatteries}>
               <Th {...getThProps({ columnKey: 'name' })} />
               <Th {...getThProps({ columnKey: 'description' })} />
             </TableHeaderContentWithControls>
@@ -209,7 +209,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithControls {...tableControls} item={thing} rowIndex={rowIndex}>
+                <TableRowContentWithControls {...tableBatteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} {...getTdProps({ columnKey: 'name' })}>
                     {thing.name}
                   </Td>

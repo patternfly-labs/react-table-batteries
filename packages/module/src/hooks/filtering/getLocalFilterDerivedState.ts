@@ -4,10 +4,10 @@ import { IFilterState } from './useFilterState';
 
 /**
  * Args for getLocalFilterDerivedState
- * - Partially satisfied by the object returned by useTableControlState (ITableControlState)
- * - Makes up part of the arguments object taken by getLocalTableControlDerivedState (ITableControlLocalDerivedStateArgs)
- * @see ITableControlState
- * @see ITableControlLocalDerivedStateArgs
+ * - Partially satisfied by the object returned by useTableState (ITableState)
+ * - Makes up part of the arguments object taken by getClientTableDerivedState (IGetClientTableDerivedStateArgs)
+ * @see ITableState
+ * @see IGetClientTableDerivedStateArgs
  */
 export interface ILocalFilterDerivedStateArgs<TItem, TFilterCategoryKey extends string> {
   /**

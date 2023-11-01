@@ -22,8 +22,8 @@ import {
   ISortState,
   TableHeaderContentWithControls,
   TableRowContentWithControls,
-  useTableControlProps,
-  useTableControlState
+  useTablePropHelpers,
+  useTableState
 } from '@patternfly-labs/react-table-batteries';
 
 // This example table's rows represent Thing objects in our fake API.
@@ -63,7 +63,7 @@ const fetchMockData = (apiParams: {
         { id: 12, name: 'Thing 12', description: 'So you can try pagination' }
       ];
       // None of this mock filter/sort/pagination logic is ever necessary when rendering a real table.
-      // It'll either be handled for you in useLocalTableControls or on a server.
+      // It'll either be handled for you in useClientTableBatteries or on a server.
       const filteredData = rawMockData.filter((thing) =>
         ['name', 'description'].every(
           (field) => !filterValues[field] || thing[field].toLowerCase().includes(filterValues[field][0].toLowerCase())
@@ -87,7 +87,7 @@ const fetchMockData = (apiParams: {
 
 // Here's a mock hook using state to store a map of cacheKeys to cached API responses.
 // In a real implementation, you would likely use a library like react-query with a built-in cache instead.
-const useMemoizedMockDataFetch = (tableControlState: {
+const useMemoizedMockDataFetch = (tableState: {
   filterState: IFilterState<'name' | 'description'>;
   sortState: ISortState<'name' | 'description'>;
   paginationState: IPaginationState;
@@ -101,7 +101,7 @@ const useMemoizedMockDataFetch = (tableControlState: {
     sortState: { activeSort },
     paginationState: { pageNumber, itemsPerPage },
     cacheKey
-  } = tableControlState;
+  } = tableState;
 
   React.useEffect(() => {
     if (!cache[cacheKey]) {
@@ -125,7 +125,7 @@ const useMemoizedMockDataFetch = (tableControlState: {
 };
 
 export const ExampleAdvancedCaching: React.FunctionComponent = () => {
-  const tableControlState = useTableControlState({
+  const tableState = useTableState({
     persistTo: 'urlParams',
     persistenceKeyPrefix: 't4', // The fourth Things table on this page.
     columnNames: {
@@ -153,10 +153,10 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
     initialSort: { columnKey: 'name', direction: 'asc' }
   });
 
-  const { isLoadingMockData, mockFetchResponse } = useMemoizedMockDataFetch(tableControlState);
+  const { isLoadingMockData, mockFetchResponse } = useMemoizedMockDataFetch(tableState);
 
-  const tableControls = useTableControlProps({
-    ...tableControlState,
+  const tableBatteries = useTablePropHelpers({
+    ...tableState,
     idProperty: 'id',
     isLoading: isLoadingMockData,
     currentPageItems: mockFetchResponse?.data || [],
@@ -196,7 +196,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
       getTrProps,
       getTdProps
     }
-  } = tableControls;
+  } = tableBatteries;
 
   return (
     <>
@@ -212,7 +212,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
       <Table {...tableProps} aria-label="Example things table">
         <Thead>
           <Tr>
-            <TableHeaderContentWithControls {...tableControls}>
+            <TableHeaderContentWithControls {...tableBatteries}>
               <Th {...getThProps({ columnKey: 'name' })} />
               <Th {...getThProps({ columnKey: 'description' })} />
             </TableHeaderContentWithControls>
@@ -234,7 +234,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithControls {...tableControls} item={thing} rowIndex={rowIndex}>
+                <TableRowContentWithControls {...tableBatteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} {...getTdProps({ columnKey: 'name' })}>
                     {thing.name}
                   </Td>

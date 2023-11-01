@@ -1,4 +1,4 @@
-import { ITableControlState, IUseTableControlStateArgs, PersistTarget, TableFeature } from '../types';
+import { ITableState, IUseTableStateArgs, PersistTarget, TableFeature } from '../types';
 import { useFilterState } from './filtering';
 import { useSortState } from './sorting';
 import { usePaginationState } from './pagination';
@@ -9,20 +9,20 @@ import { useExpansionState } from './expansion';
  * Provides the "source of truth" state for all table features.
  * - State can be persisted in one or more configurable storage targets, either the same for the entire table or different targets per feature.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
- * - If you aren't using server-side filtering/sorting/pagination, call this via the shorthand hook useLocalTableControls.
- * - If you are using server-side filtering/sorting/pagination, call this first before fetching your API data and then calling useTableControlProps.
+ * - If you aren't using server-side filtering/sorting/pagination, call this via the shorthand hook useClientTableBatteries.
+ * - If you are using server-side filtering/sorting/pagination, call this first before fetching your API data and then calling useTablePropHelpers.
  * @param args
  * @returns
  */
-export const useTableControlState = <
+export const useTableState = <
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(
-  args: IUseTableControlStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-): ITableControlState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
+  args: IUseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+): ITableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const getPersistTo = (feature: TableFeature): PersistTarget | undefined =>
     !args.persistTo || typeof args.persistTo === 'string'
       ? args.persistTo

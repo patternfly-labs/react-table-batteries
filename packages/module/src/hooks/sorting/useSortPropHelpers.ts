@@ -2,11 +2,11 @@ import { ThProps } from '@patternfly/react-table';
 import { ISortState } from './useSortState';
 
 /**
- * Args for useSortPropHelpers that come from outside useTableControlProps
- * - Partially satisfied by the object returned by useTableControlState (ITableControlState)
- * - Makes up part of the arguments object taken by useTableControlProps (IUseTableControlPropsArgs)
- * @see ITableControlState
- * @see IUseTableControlPropsArgs
+ * Args for useSortPropHelpers that come from outside useTablePropHelpers
+ * - Partially satisfied by the object returned by useTableState (ITableState)
+ * - Makes up part of the arguments object taken by useTablePropHelpers (IUseTablePropHelpersArgs)
+ * @see ITableState
+ * @see IUseTablePropHelpersArgs
  */
 export interface ISortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
   /**
@@ -14,25 +14,25 @@ export interface ISortPropHelpersExternalArgs<TColumnKey extends string, TSortab
    */
   sortState: ISortState<TSortableColumnKey>;
   /**
-   * The `columnKey` values (keys of the `columnNames` object passed to useTableControlState) corresponding to columns with sorting enabled
+   * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
    */
   sortableColumns?: TSortableColumnKey[];
 }
 
 /**
- * Additional args for useSortPropHelpers that come from logic inside useTableControlProps
- * @see useTableControlProps
+ * Additional args for useSortPropHelpers that come from logic inside useTablePropHelpers
+ * @see useTablePropHelpers
  */
 export interface ISortPropHelpersInternalArgs<TColumnKey extends string> {
   /**
-   * The keys of the `columnNames` object passed to useTableControlState (for all columns, not just the sortable ones)
+   * The keys of the `columnNames` object passed to useTableState (for all columns, not just the sortable ones)
    */
   columnKeys: TColumnKey[];
 }
 
 /**
  * Returns derived state and prop helpers for the sort feature based on given "source of truth" state.
- * - Used internally by useTableControlProps
+ * - Used internally by useTablePropHelpers
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */

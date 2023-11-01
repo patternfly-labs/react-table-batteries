@@ -10,9 +10,9 @@ source: react
 # If you use typescript, the name of the interface to display props for
 # These are found through the sourceProps function provided in patternfly-docs.source.js
 propComponents: [
-    # 'useTableControlState',
-    # 'useTableControlProps',
-    # 'useLocalTableControls',
+    # 'useTableState',
+    # 'useTablePropHelpers',
+    # 'useClientTableBatteries',
     'TableHeaderContentWithControls',
     'ConditionalTableBody',
     'TableRowContentWithControls'
@@ -32,9 +32,9 @@ Pagination
 import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
 import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import {
-useLocalTableControls,
-useTableControlProps,
-useTableControlState,
+useClientTableBatteries,
+useTablePropHelpers,
+useTableState,
 TableHeaderContentWithControls,
 ConditionalTableBody,
 TableRowContentWithControls,
@@ -62,19 +62,19 @@ This pattern makes tables easier to build, maintain and enhance. Your code will 
 
 ### Client-side filtering/sorting/pagination
 
-For client-paginated tables, the only hook you need is `useLocalTableControls`. All arguments can be passed to it in one object, and the `tableControls` object returned by it contains everything you need to render the composable table. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need).
+For client-paginated tables, the only hook you need is `useClientTableBatteries`. All arguments can be passed to it in one object, and the `tableBatteries` object returned by it contains everything you need to render the composable table. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need).
 
 This simple example includes only the filtering, sorting and pagination features and excludes arguments and properties related to the other features (see [Features](#features)).
 
 Features are enabled by passing `is[Feature]Enabled` boolean arguments. Required arguments for the enabled features will be enforced by TypeScript based on which features are enabled. All features are disabled by default; for this basic example with filtering, sorting and pagination, we must pass true values for `isFilterEnabled`, `isSortEnabled` and `isPaginationEnabled`.
 
-This example also shows a powerful optional capability of these hooks: the `persistTo` argument. This can be passed to either `useTableControlState` or `useLocalTableControls` and it allows us to store the current pagination/sort/filter state in a custom location and use that as the source of truth. The supported `persistTo` values are `'state'` (default), `'urlParams'` (recommended), `'localStorage'` or `'sessionStorage'`. For more on each option see [Custom state persistence targets](#custom-state-persistence-targets).
+This example also shows a powerful optional capability of these hooks: the `persistTo` argument. This can be passed to either `useTableState` or `useClientTableBatteries` and it allows us to store the current pagination/sort/filter state in a custom location and use that as the source of truth. The supported `persistTo` values are `'state'` (default), `'urlParams'` (recommended), `'localStorage'` or `'sessionStorage'`. For more on each option see [Custom state persistence targets](#custom-state-persistence-targets).
 
 Here we use `persistTo: 'urlParams'` which will store and update the table state in the browser's URL query parameters. We also pass an optional `persistenceKeyPrefix` which distinguishes this persisted state from any other state that may be persisted in the URL by other tables on the same page (it can be omitted if there is only one table on the page). It should be a short string because it is included as a prefix on every URL param name. We'll use `'t1'` for the first table on the page that contains Thing objects.
 
 Because our state is persisted in the page URL, we can reload the browser or press the Back and Forward buttons without losing our current filter, sort, and pagination selections. You can try it now: Apply a sort or filter to the table below, then navigate to the [design guidelines](design-guidelines) tab or any other page and click the browser Back button. You can even bookmark the page and all that state will be restored when loading the bookmark!
 
-Note that the filtering/sorting/pagination business logic in this example happens inside `useLocalTableControls`. If you want to perform that logic on a server, see the basic example [Server-side filtering/sorting/pagination](#server-side-filteringsortingpagination). If you want to perform that logic on the client yourself, see the advanced example [Bringing your own client-side filtering/sorting/pagination logic](#bringing-your-own-client-side-filteringsortingpagination-logic).
+Note that the filtering/sorting/pagination business logic in this example happens inside `useClientTableBatteries`. If you want to perform that logic on a server, see the basic example [Server-side filtering/sorting/pagination](#server-side-filteringsortingpagination). If you want to perform that logic on the client yourself, see the advanced example [Bringing your own client-side filtering/sorting/pagination logic](#bringing-your-own-client-side-filteringsortingpagination-logic).
 
 ```js file="./ExampleBasicClientPaginated.tsx"
 
@@ -82,11 +82,11 @@ Note that the filtering/sorting/pagination business logic in this example happen
 
 ### Server-side filtering/sorting/pagination
 
-The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useLocalTableControls` into two separate objects passed to `useTableControlState` and `useTableControlProps` based on when they are needed. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need) Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableControlState` and `useTableControlProps` as well as the return values from both are included in the `tableControls` object returned by `useTableControlProps` (and by `useLocalTableControls` used in the [client-side example above](#client-side-filteringsortingpagination)). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
+The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useClientTableBatteries` into two separate objects passed to `useTableState` and `useTablePropHelpers` based on when they are needed. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need) Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableState` and `useTablePropHelpers` as well as the return values from both are included in the `tableBatteries` object returned by `useTablePropHelpers` (and by `useClientTableBatteries` used in the [client-side example above](#client-side-filteringsortingpagination)). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
 
-It's important to note that because filtering/sorting/pagination are being done on the server, you must refetch your data from the server when the user changes their filter, sort or pagination parameters. The `tableControlState` object returned by `useTableControlState` has a string property called `cacheKey` for this purpose. In this example, we use the `cacheKey` as a dependency of the `useEffect` that fetches our data. When the user interacts with table controls, the `cacheKey` will change which triggers the data to be refetched based on the new state. The `cacheKey` can also be used to cache data views we've already seen and avoid unnecessary network calls (see the advanced example [Caching to prevent redundant data fetches](#caching-to-prevent-redundant-data-fetches)).
+It's important to note that because filtering/sorting/pagination are being done on the server, you must refetch your data from the server when the user changes their filter, sort or pagination parameters. The `tableState` object returned by `useTableState` has a string property called `cacheKey` for this purpose. In this example, we use the `cacheKey` as a dependency of the `useEffect` that fetches our data. When the user interacts with table controls, the `cacheKey` will change which triggers the data to be refetched based on the new state. The `cacheKey` can also be used to cache data views we've already seen and avoid unnecessary network calls (see the advanced example [Caching to prevent redundant data fetches](#caching-to-prevent-redundant-data-fetches)).
 
-Note also: the destructuring of `tableControls` and returned JSX in this example **_is identical to the [client-side example above](#client-side-filteringsortingpagination)_**. The only differences between client-paginated and server-paginated tables are in the hook calls; the `tableControls` object and its usage are always the same.
+Note also: the destructuring of `tableBatteries` and returned JSX in this example **_is identical to the [client-side example above](#client-side-filteringsortingpagination)_**. The only differences between client-paginated and server-paginated tables are in the hook calls; the `tableBatteries` object and its usage are always the same.
 
 ```js file="./ExampleBasicServerPaginated.tsx"
 
@@ -115,11 +115,11 @@ This example persists state for all features to URL parameters except filter sta
 
 ### Caching to prevent redundant data fetches
 
-When using server-side filtering/sorting/pagination, we need to refetch the API data any time the user interacts with the filtering/sorting/pagination controls. We do this by fetching new data when the `tableControlState.cacheKey` value changes, by using it as a dependency in a fetch effect or by other means. However, let's say the user applies a filter and then clears that filter. We'll fetch the unfiltered data, then fetch the filtered data, then fetch the unfiltered data again! For each fetch, the user is shown a spinner and must wait.
+When using server-side filtering/sorting/pagination, we need to refetch the API data any time the user interacts with the filtering/sorting/pagination controls. We do this by fetching new data when the `tableState.cacheKey` value changes, by using it as a dependency in a fetch effect or by other means. However, let's say the user applies a filter and then clears that filter. We'll fetch the unfiltered data, then fetch the filtered data, then fetch the unfiltered data again! For each fetch, the user is shown a spinner and must wait.
 
 If we introduce a caching layer that reuses previous data when fetching with the same `cacheKey` value, we prevent this third fetch/loading state. When the user clears their filters or restores the original sort/pagination state the data will update instantly as it is retrieved from the cache. You can try it now: try clicking the sort toggles in the headers of each column a few times. You'll notice that the first time a specific sort is applied to a column we need to ask the server to sort the data again by refetching data and showing a spinner. However, if we have fetched data with that sort applied already (it's not the first time you're viewing it) the data will not be refetched and you'll get the results of the original fetch instantly. You'll see fewer spinners the longer you interact with the table.
 
-The easiest way to achieve this caching behavior is to use a data fetching library with caching support built in. For example, when using react-query's `useQuery` hook, you can use the `tableControlState.cacheKey` as part of your `queryKey` value and you'll get these benefits for free. Here we implement our own cache instead (not recommended) for demonstration purposes.
+The easiest way to achieve this caching behavior is to use a data fetching library with caching support built in. For example, when using react-query's `useQuery` hook, you can use the `tableState.cacheKey` as part of your `queryKey` value and you'll get these benefits for free. Here we implement our own cache instead (not recommended) for demonstration purposes.
 
 ```js file="./ExampleAdvancedCaching.tsx"
 
@@ -128,7 +128,7 @@ The easiest way to achieve this caching behavior is to use a data fetching libra
 ### Bringing your own state
 
 TODO this example will come in a separate PR
-TODO don't use useTableControlState, but use getLocalTableControlDerivedState
+TODO don't use useTableState, but use getClientTableDerivedState
 TODO remark on how this may be helpful for incremental adoption
 
 ```js file="./ExampleAdvancedBYOState.tsx"
@@ -138,7 +138,7 @@ TODO remark on how this may be helpful for incremental adoption
 ### Bringing your own client-side filtering/sorting/pagination logic
 
 TODO this example will come in a separate PR
-TODO useTableControlState, but perform filtering/sorting/pagination inline before useTableControlProps
+TODO useTableState, but perform filtering/sorting/pagination inline before useTablePropHelpers
 TODO remark on how this may be helpful for incremental adoption
 TODO remark on how it is similar to the [basic server-side example](#server-side-filteringsortingpagination) except performing the logic in the component instead of on a mock server.
 
@@ -149,8 +149,8 @@ TODO remark on how it is similar to the [basic server-side example](#server-side
 ### Bringing your own state and logic (use prop helpers only)
 
 TODO this example will come in a separate PR
-TODO remark on how all the state management and built-in logic provided by `useTableControlState` and `useLocalTableControls` is optional, and if you want your table to handle all its own business logic you can still benefit from useTableControlProps to make rendering easier.
-TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableControlState` and then maybe `getLocalTableControlDerivedState` or the full `useLocalTableControls` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
+TODO remark on how all the state management and built-in logic provided by `useTableState` and `useClientTableBatteries` is optional, and if you want your table to handle all its own business logic you can still benefit from useTablePropHelpers to make rendering easier.
+TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableState` and then maybe `getClientTableDerivedState` or the full `useClientTableBatteries` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
 
 ```js file="./ExampleAdvancedBYOStateAndLogic.tsx"
 
@@ -160,7 +160,7 @@ TODO remark on how this may be helpful as the first step in incremental adoption
 
 The functionality and state of the table-batteries hooks is broken down into the following features. Each of these features represents a slice of the logical concerns for a table UI.
 
-Note that the filtering, sorting and pagination features are special because they must be performed in a specific order to work correctly: filter and sort data, then paginate it. Using the table-batteries hooks like `useLocalTableControls` or `useTableControlState` and `useTableControlProps` will take care of this for you (see [Basic examples](#basic-examples) and [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need)), but if you are handling filtering/sorting/pagination yourself
+Note that the filtering, sorting and pagination features are special because they must be performed in a specific order to work correctly: filter and sort data, then paginate it. Using the table-batteries hooks like `useClientTableBatteries` or `useTableState` and `useTablePropHelpers` will take care of this for you (see [Basic examples](#basic-examples) and [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need)), but if you are handling filtering/sorting/pagination yourself
 
 ### Filtering
 
@@ -256,17 +256,17 @@ If your API does not support these parameters or you need to have the entire col
 
 In most cases, you'll only need to use these higher-level hooks and helpers to build a table:
 
-- For client-paginated tables: `useLocalTableControls` is all you need.
-  - Internally it uses `useTableControlState`, `useTableControlProps` and the `getLocalTableControlDerivedState` helper. The config arguments object is a combination of the arguments required by `useTableControlState` and `useTableControlProps`.
-  - The return value (an object we generally name `tableControls`) has everything you need to render your table. Give it a `console.log` to see what is available.
-- For server-paginated tables: `useTableControlState`, `getHubRequestParams`, and `useTableControlProps`.
-  - Choose whether you want to use React state (default), URL params (recommended), localStorage or sessionStorage as the source of truth, and call `useTableControlState` with the appropriate `persistTo` option and optional `persistenceKeyPrefix` (to namespace persisted state for multiple tables on the same page).
+- For client-paginated tables: `useClientTableBatteries` is all you need.
+  - Internally it uses `useTableState`, `useTablePropHelpers` and the `getClientTableDerivedState` helper. The config arguments object is a combination of the arguments required by `useTableState` and `useTablePropHelpers`.
+  - The return value (an object we generally name `tableBatteries`) has everything you need to render your table. Give it a `console.log` to see what is available.
+- For server-paginated tables: `useTableState`, `getHubRequestParams`, and `useTablePropHelpers`.
+  - Choose whether you want to use React state (default), URL params (recommended), localStorage or sessionStorage as the source of truth, and call `useTableState` with the appropriate `persistTo` option and optional `persistenceKeyPrefix` (to namespace persisted state for multiple tables on the same page).
     - `persistTo` can be `'state' | 'urlParams' | 'localStorage' | 'sessionStorage'`, and defaults to `'state'` if omitted (falls back to regular React state).
     - You can also use a different type of storage for the state of each feature by passing an object for `persistTo`. See [Custom state persistence targets](#custom-state-persistence-targets).
-  - Take the object returned by that hook (generally named `tableControlState`) and pull out the parameters you need for your API fetch from the `filterState`, `sortState` and `paginationState` properties. Fetch your filtered/sorted/paginated API data using these values.
-  - Set up your API client to refetch data when the `tableControlState.cacheKey` string changes. This will ensure that when the user interacts with filter, sort or pagination controls the data will update accordingly. If your data fetching implementation supports caching by key (for example, the `queryKey` option in react-query) you can use this `cacheKey` value as part of that key to prevent re-fetching data for a filter/sort/pagination view you've already fetched. See the advanced example [Caching to prevent redundant data fetches](#caching-to-prevent-redundant-data-fetches).
-  - Call `useTableControlProps` and pass it an object spreading all properties from `tableControlState` along with additional config arguments. Some of these arguments will be derived from your API data fetch, such as `currentPageItems`, `totalItemCount` and `isLoading`. Others are simply passed here rather than above because they are used only for rendering and not required for state management.
-  - The return value (the same `tableControls` object returned by `useLocalTableControls`) has everything you need to render your table. Give it a `console.log` to see what is available or reference [the `ITableControls` type in the `types.ts` file](https://github.com/mturley/react-table-batteries/blob/main/packages/module/src/types.ts#L263).
+  - Take the object returned by that hook (generally named `tableState`) and pull out the parameters you need for your API fetch from the `filterState`, `sortState` and `paginationState` properties. Fetch your filtered/sorted/paginated API data using these values.
+  - Set up your API client to refetch data when the `tableState.cacheKey` string changes. This will ensure that when the user interacts with filter, sort or pagination controls the data will update accordingly. If your data fetching implementation supports caching by key (for example, the `queryKey` option in react-query) you can use this `cacheKey` value as part of that key to prevent re-fetching data for a filter/sort/pagination view you've already fetched. See the advanced example [Caching to prevent redundant data fetches](#caching-to-prevent-redundant-data-fetches).
+  - Call `useTablePropHelpers` and pass it an object spreading all properties from `tableState` along with additional config arguments. Some of these arguments will be derived from your API data fetch, such as `currentPageItems`, `totalItemCount` and `isLoading`. Others are simply passed here rather than above because they are used only for rendering and not required for state management.
+  - The return value (the same `tableBatteries` object returned by `useClientTableBatteries`) has everything you need to render your table. Give it a `console.log` to see what is available or reference [the `ITableBatteries` type in the `types.ts` file](https://github.com/mturley/react-table-batteries/blob/main/packages/module/src/types.ts#L263).
 
 ### Incremental adoption
 
@@ -278,9 +278,9 @@ Because using react-table-batteries involves passing in API data and configurati
 
 None of the code here treats "rows" as their own data structure. The content and style of a row is a presentational detail that should be limited to the JSX where rows are rendered. In implementations which use arrays of row objects (like the deprecated PatternFly table) those objects tend to duplicate API data with a different structure and the code must reason about two different representations of the data. Instead, this code works directly with arrays of "items" (the API data objects themselves) and makes all of an item's API object properties available where they might be needed without extra lookups. The consumer maps over item objects and derives row components from them only at render time.
 
-An item object has the generic type `TItem`, which is inferred by TypeScript either from the type of the `items` array passed into `useLocalTableControls` (for client-paginated tables) or from the `currentPageItems` array passed into `useTableControlProps` (for server-paginated tables). For more, see the JSDoc comments in the `types.ts` file.
+An item object has the generic type `TItem`, which is inferred by TypeScript either from the type of the `items` array passed into `useClientTableBatteries` (for client-paginated tables) or from the `currentPageItems` array passed into `useTablePropHelpers` (for server-paginated tables). For more, see the JSDoc comments in the `types.ts` file.
 
-ℹ️ CAVEAT: For server-paginated tables the item data is not in scope until after the API query hook is called, but the `useTableControlState` hook must be called _before_ API queries because its return values are needed to serialize filter/sort/pagination params for the API. This means the inferred `TItem` type is not available when passing arguments to `useTableControlState`. `TItem` resolves to `unknown` in this scope, which is usually fine since the arguments there don't need to know what type of items they are working with. If the item type is needed for any of these arguments it can be explicitly passed as a type param. However...
+ℹ️ CAVEAT: For server-paginated tables the item data is not in scope until after the API query hook is called, but the `useTableState` hook must be called _before_ API queries because its return values are needed to serialize filter/sort/pagination params for the API. This means the inferred `TItem` type is not available when passing arguments to `useTableState`. `TItem` resolves to `unknown` in this scope, which is usually fine since the arguments there don't need to know what type of items they are working with. If the item type is needed for any of these arguments it can be explicitly passed as a type param. However...
 
 ⚠️ TECH DEBT NOTE: TypeScript generic type param lists (example: `fn<This, List, Here>(args);`) are all-or-nothing (you must either omit the list and infer all generics for a function or pass them all explicitly). This means if you need to pass an explicit type for `TItem`, all other type params which are normally inferred must also be explicitly passed (including all of the `TColumnKey`s and `TFilterCategoryKey`s). This makes for some redundant code, although TypeScript will still enforce that it is all consistent. There is a possible upcoming TypeScript language feature which would allow partial inference in type param lists and may alleviate this in the future. See TypeScript pull requests [#26349](https://github.com/microsoft/TypeScript/pull/26349) and [#54047](https://github.com/microsoft/TypeScript/pull/54047), and the Konveyor issue [#1456](https://github.com/konveyor/tackle2-ui/issues/1456).
 
