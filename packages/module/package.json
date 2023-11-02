@@ -1,6 +1,6 @@
 {
   "name": "@patternfly-labs/react-table-batteries",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Hooks and components that make it easier to build and maintain featureful and composable PatternFly tables",
   "main": "dist/esm/index.js",
   "module": "dist/esm/index.js",
