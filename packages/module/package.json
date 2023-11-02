@@ -29,6 +29,7 @@
     "access": "public"
   },
   "dependencies": {
+    "@migtools/lib-ui": "^10.0.1",
     "@patternfly/react-core": "^5.1.1"
   },
   "peerDependencies": {

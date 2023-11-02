@@ -63,7 +63,6 @@
     "eqeqeq": ["error", "smart"],
     "guard-for-in": "error",
     "max-classes-per-file": ["error", 1],
-    "no-nested-ternary": "error",
     "no-bitwise": "error",
     "no-caller": "error",
     "no-cond-assign": "error",
