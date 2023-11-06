@@ -53,6 +53,8 @@ export type TableFeature = 'filter' | 'sort' | 'pagination' | 'selection' | 'exp
  */
 export type PersistTarget = 'state' | 'urlParams' | 'localStorage' | 'sessionStorage';
 
+export type ItemId = string | number;
+
 /**
  * Common persistence-specific args
  * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)

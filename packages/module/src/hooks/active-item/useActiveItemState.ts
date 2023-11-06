@@ -1,4 +1,4 @@
-import { FeaturePersistenceArgs } from '../../types';
+import { FeaturePersistenceArgs, ItemId } from '../../types';
 import { parseMaybeNumericString } from '../../utils';
 import { usePersistentState } from '../generic/usePersistentState';
 
@@ -13,11 +13,11 @@ export interface ActiveItemState {
   /**
    * The item id (string or number resolved from `item[idProperty]`) of the active item. Null if no item is active.
    */
-  activeItemId: string | number | null;
+  activeItemId: ItemId | null;
   /**
    * Updates the active item by id. Pass null to dismiss the active item.
    */
-  setActiveItemId: (id: string | number | null) => void;
+  setActiveItemId: (id: ItemId | null) => void;
 }
 
 /**
@@ -48,11 +48,7 @@ export const useActiveItemState = <TPersistenceKeyPrefix extends string = string
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456
-  const [activeItemId, setActiveItemId] = usePersistentState<
-    string | number | null,
-    TPersistenceKeyPrefix,
-    'activeItem'
-  >({
+  const [activeItemId, setActiveItemId] = usePersistentState<ItemId | null, TPersistenceKeyPrefix, 'activeItem'>({
     isEnabled: !!isActiveItemEnabled,
     defaultValue: null,
     persistenceKeyPrefix,

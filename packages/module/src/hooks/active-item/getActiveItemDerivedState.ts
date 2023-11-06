@@ -1,4 +1,5 @@
 import { KeyWithValueType } from '../../type-utils';
+import { ItemId } from '../../types';
 import { ActiveItemState } from './useActiveItemState';
 
 /**
@@ -63,7 +64,7 @@ export const getActiveItemDerivedState = <TItem>({
 }: GetActiveItemDerivedStateArgs<TItem>): ActiveItemDerivedState<TItem> => ({
   activeItem: currentPageItems.find((item) => item[idProperty] === activeItemId) || null,
   setActiveItem: (item: TItem | null) => {
-    const itemId = (item?.[idProperty] ?? null) as string | number | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?
+    const itemId = (item?.[idProperty] ?? null) as ItemId | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?
     setActiveItemId(itemId);
   },
   clearActiveItem: () => setActiveItemId(null),
