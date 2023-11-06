@@ -129,7 +129,9 @@ The easiest way to achieve this caching behavior is to use a data fetching libra
 ### Bringing your own state
 
 TODO this example will come in a separate PR
+
 TODO don't use useTableState, but use getClientTableDerivedState
+
 TODO remark on how this may be helpful for incremental adoption
 
 ```js file="./ExampleAdvancedBYOState.tsx"
@@ -139,8 +141,11 @@ TODO remark on how this may be helpful for incremental adoption
 ### Bringing your own client-side filtering/sorting/pagination logic
 
 TODO this example will come in a separate PR
+
 TODO useTableState, but perform filtering/sorting/pagination inline before useTablePropHelpers
+
 TODO remark on how this may be helpful for incremental adoption
+
 TODO remark on how it is similar to the [basic server-side example](#server-side-filteringsortingpagination) except performing the logic in the component instead of on a mock server.
 
 ```js file="./ExampleAdvancedBYOLogic.tsx"
@@ -150,7 +155,9 @@ TODO remark on how it is similar to the [basic server-side example](#server-side
 ### Bringing your own state and logic (use prop helpers only)
 
 TODO this example will come in a separate PR
+
 TODO remark on how all the state management and built-in logic provided by `useTableState` and `useClientTableBatteries` is optional, and if you want your table to handle all its own business logic you can still benefit from useTablePropHelpers to make rendering easier.
+
 TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableState` and then maybe `getClientTableDerivedState` or the full `useClientTableBatteries` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
 
 ```js file="./ExampleAdvancedBYOStateAndLogic.tsx"
@@ -166,7 +173,9 @@ Note that the filtering, sorting and pagination features are special because the
 ### Filtering
 
 TODO this example will come in a separate PR
+
 TODO add a version of the basic client table example with only filtering enabled
+
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureFilter.tsx"
@@ -176,7 +185,9 @@ TODO copy over and rework things from OLD_DOCS.md here
 ### Sorting
 
 TODO this example will come in a separate PR
+
 TODO add a version of the basic client table example with only sorting enabled
+
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureSort.tsx"
@@ -186,7 +197,9 @@ TODO copy over and rework things from OLD_DOCS.md here
 ### Pagination
 
 TODO this example will come in a separate PR
+
 TODO add a version of the basic client table example with only pagination enabled
+
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeaturePagination.tsx"
@@ -196,9 +209,10 @@ TODO copy over and rework things from OLD_DOCS.md here
 ### Selection
 
 TODO this example will come in a separate PR
+
 TODO add a version of the basic client table example with only selection enabled
+
 TODO copy over and rework things from OLD_DOCS.md here
-TODO flesh this out when useSelectionState has been moved to this repo
 
 ```js file="./ExampleFeatureSelection.tsx"
 
@@ -207,7 +221,9 @@ TODO flesh this out when useSelectionState has been moved to this repo
 ### Expansion (single-expand variant)
 
 TODO this example will come in a separate PR
+
 TODO add a version of the basic client table example with only single-expand enabled
+
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureExpansionSingle.tsx"
@@ -217,7 +233,9 @@ TODO copy over and rework things from OLD_DOCS.md here
 ### Expansion (compound-expand variant)
 
 TODO this example will come in a separate PR
+
 TODO add a version of the basic client table example with only compound-expand enabled
+
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureExpansionCompound.tsx"
@@ -227,8 +245,11 @@ TODO copy over and rework things from OLD_DOCS.md here
 ### Active Item
 
 TODO this example will come in a separate PR
+
 TODO add a version of the basic client table example with only active-item enabled
+
 TODO should we copy over PageDrawer code? or just some text with the active item name above the table?
+
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureActiveItem.tsx"
@@ -238,7 +259,9 @@ TODO copy over and rework things from OLD_DOCS.md here
 ### Kitchen sink example (all features enabled)
 
 TODO this example will come in a separate PR
+
 TODO add a version of the basic client table example with all of the above features enabled
+
 TODO copy over and rework things from OLD_DOCS.md here
 
 ```js file="./ExampleKitchenSink.tsx"
