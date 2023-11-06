@@ -41,6 +41,10 @@ export type UseFilterStateArgs<TItem, TFilterCategoryKey extends string> = Discr
      * Definitions of the filters to be used (must include `getItemValue` functions for each category when performing filtering locally)
      */
     filterCategories: FilterCategory<TItem, TFilterCategoryKey>[];
+    /**
+     * Initial filter values to use on first render (optional)
+     */
+    initialFilterValues?: FilterValues<TFilterCategoryKey>;
   }
 >;
 
@@ -54,6 +58,7 @@ export const useFilterState = <TItem, TFilterCategoryKey extends string, TPersis
   args: UseFilterStateArgs<TItem, TFilterCategoryKey> & FeaturePersistenceArgs<TPersistenceKeyPrefix>
 ): FilterState<TFilterCategoryKey> => {
   const { isFilterEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
+  const initialFilterValues: FilterValues<TFilterCategoryKey> = (isFilterEnabled && args.initialFilterValues) || {};
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456
@@ -63,7 +68,7 @@ export const useFilterState = <TItem, TFilterCategoryKey extends string, TPersis
     'filters'
   >({
     isEnabled: !!isFilterEnabled,
-    defaultValue: {},
+    defaultValue: initialFilterValues,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused
     //       (e.g. require the urlParams-specific options when persistTo === "urlParams"),
