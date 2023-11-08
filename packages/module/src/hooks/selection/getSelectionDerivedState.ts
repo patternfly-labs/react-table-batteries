@@ -92,6 +92,8 @@ export const getSelectionDerivedState = <TItem>(
   } = args;
   const isItemSelected = (item: TItem) => selectedItemIds.includes(item[idProperty] as ItemId);
   return {
+    // TODO do we need to turn this into useSelectionDerivedState so we can add the useMemo/useRef/useState cache here?
+    // TODO if so, should we convert all the other get*DerivedState stuff to use*DerivedState and maybe even move the use*Effect calls into there and not the prop helpers hooks?
     selectedItems: [], // TODO get these from currentPageItems via a cache: memoize items for ids we've seen that are not in currentPageItems
     isItemSelected,
     selectItem: (item, isSelecting = true) => {
