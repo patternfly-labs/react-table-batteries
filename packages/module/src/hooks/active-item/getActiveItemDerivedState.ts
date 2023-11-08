@@ -17,7 +17,7 @@ export interface GetActiveItemDerivedStateArgs<TItem> {
   /**
    * The string key/name of a property on the API data item objects that can be used as a unique identifier (string or number)
    */
-  idProperty: KeyWithValueType<TItem, string | number>;
+  idProperty: KeyWithValueType<TItem, ItemId>;
   /**
    * The "source of truth" state for the active item feature (returned by useActiveItemState)
    */

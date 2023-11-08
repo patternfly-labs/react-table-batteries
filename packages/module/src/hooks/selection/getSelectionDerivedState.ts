@@ -1,4 +1,5 @@
 import { KeyWithValueType } from '../../type-utils';
+import { ItemId } from '../../types';
 import { SelectionState } from './useSelectionState';
 
 /**
@@ -12,7 +13,7 @@ export interface GetSelectionDerivedStateArgs<TItem> {
   /**
    * The string key/name of a property on the API data item objects that can be used as a unique identifier (string or number)
    */
-  idProperty: KeyWithValueType<TItem, string | number>;
+  idProperty: KeyWithValueType<TItem, ItemId>;
   /**
    * The "source of truth" state for the selection feature (returned by useSelectionState)
    */
@@ -21,6 +22,14 @@ export interface GetSelectionDerivedStateArgs<TItem> {
    * Callback to determine if a given item is allowed to be selected. Blocks that item from being present in state.
    */
   isItemSelectable?: (item: TItem) => boolean;
+  /**
+   * The current page of API data items after filtering/sorting/pagination
+   */
+  currentPageItems: TItem[];
+  /**
+   * All items in the API collection, if available (client-side tables). Enables selectAll.
+   */
+  items?: TItem[];
 }
 
 /**
@@ -30,9 +39,13 @@ export interface GetSelectionDerivedStateArgs<TItem> {
  */
 export interface SelectionDerivedState<TItem> {
   /**
-   * The selected items on the current pagination page.
+   * The selected items (full API objects from cache).
    */
   selectedItems: TItem[];
+  /**
+   * Returns whether the given item is selected.
+   */
+  isItemSelected: (item: TItem) => boolean;
   /**
    * Toggles selection on one item. Does not select an item that is not selectable (if an isItemSelectable callback is being used).
    */
@@ -42,12 +55,17 @@ export interface SelectionDerivedState<TItem> {
    * - If any items are not selected, isSelecting will default to true.
    * - Does not select an item that is not selectable (if an isItemSelectable callback is being used).
    */
-  selectMultipleItems: (items: TItem[], isSelecting?: boolean) => void;
+  selectItems: (items: TItem[], isSelecting?: boolean) => void;
+  /**
+   * Selects all selectable items in the whole API collection.
+   * - Only works for client-paginated tables where we've passed in the `items` array containing all items (not just the current page).
+   */
+  selectAll: () => void;
   /**
    * Selects all selectable items on the current page.
    * - Does not select an item that is not selectable (if an isItemSelectable callback is being used).
    */
-  selectAll: () => void;
+  selectPage: () => void;
   /**
    * Deselects all items.
    */
@@ -62,4 +80,54 @@ export interface SelectionDerivedState<TItem> {
  * is always local/client-computed, and it is still used when working with server-computed tables
  * (it's not specific to client-only-computed tables like the other `getClient*DerivedState` functions are).
  */
-export const getSelectionDerivedState = () => {};
+export const getSelectionDerivedState = <TItem>(
+  args: GetSelectionDerivedStateArgs<TItem>
+): SelectionDerivedState<TItem> => {
+  const {
+    idProperty,
+    selectionState: { selectedItemIds, setSelectedItemIds },
+    isItemSelectable = () => true,
+    currentPageItems,
+    items
+  } = args;
+  const isItemSelected = (item: TItem) => selectedItemIds.includes(item[idProperty] as ItemId);
+  return {
+    selectedItems: [], // TODO get these from currentPageItems via a cache: memoize items for ids we've seen that are not in currentPageItems
+    isItemSelected,
+    selectItem: (item, isSelecting = true) => {
+      if (isSelecting && !isItemSelected(item) && isItemSelectable(item)) {
+        setSelectedItemIds((selected) => [...selected, item[idProperty] as ItemId]);
+      } else if (!isSelecting) {
+        setSelectedItemIds((selected) => selected.filter((id) => id !== item[idProperty]));
+      }
+    },
+    selectItems: (items, isSelecting = items.some(isItemSelected)) => {
+      const selectingItems = items.filter(isItemSelectable);
+      const selectingItemIds = selectingItems.map((item) => item[idProperty] as ItemId);
+      if (isSelecting && selectingItemIds.length > 0) {
+        setSelectedItemIds((selected) => [
+          ...selected.filter((id) => !selectingItemIds.includes(id)),
+          ...selectingItemIds
+        ]);
+      } else if (!isSelecting) {
+        setSelectedItemIds((selected) => selected.filter((id) => !items.find((item) => item[idProperty] === id)));
+      }
+    },
+    selectAll: () => {
+      if (!items) {
+        // eslint-disable-next-line no-console
+        console.warn(
+          'selectAll called without `items` array argument present - select all only works for client-paginated tables.'
+        );
+        return;
+      }
+      setSelectedItemIds(items.filter(isItemSelectable).map((item) => item[idProperty] as ItemId));
+    },
+    selectPage: () => {
+      setSelectedItemIds(currentPageItems.filter(isItemSelectable).map((item) => item[idProperty] as ItemId));
+    },
+    selectNone: () => {
+      setSelectedItemIds([]);
+    }
+  };
+};

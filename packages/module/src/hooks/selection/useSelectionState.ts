@@ -1,8 +1,6 @@
 import React from 'react';
 import { DiscriminatedArgs } from '../../type-utils';
-import { ItemId, FeaturePersistenceArgs } from '../../types';
-import { parseMaybeNumericString } from '../../utils';
-import { usePersistentState } from '../generic/usePersistentState';
+import { ItemId } from '../../types';
 
 /**
  * The "source of truth" state for the selection feature.
@@ -19,7 +17,7 @@ export interface SelectionState {
   /**
    * Updates the entire list of selected item ids
    */
-  setSelectedItemIds: (ids: ItemId[]) => void;
+  setSelectedItemIds: React.Dispatch<React.SetStateAction<ItemId[]>>;
 }
 
 /**
@@ -42,48 +40,20 @@ export type UseSelectionStateArgs = DiscriminatedArgs<
 >;
 
 /**
- * Provides the "source of truth" state for the sort feature.
+ * Provides the "source of truth" state for the selection feature.
  * - Used internally by useTableState
- * - Takes args defined above as well as optional args for persisting state to a configurable storage target.
+ * - NOTE: usePersistentState is not used here because in order to work correctly,
+ *   selection state cannot be persisted. The `selectedItems` array we get from `getSelectionDerivedState`
+ *   is based on a cache of the API items that have been seen in the current session.
+ *   if we need to restore selection state on a page reload, we no longer have all the selected item data
+ *   in memory. We just use a plain React.useState here and if we have selected items in state we'll
+ *   always have those item objects cached.
  * @see PersistTarget
  */
-export const useSelectionState = <TPersistenceKeyPrefix extends string = string>(
-  args: UseSelectionStateArgs & FeaturePersistenceArgs<TPersistenceKeyPrefix>
-): SelectionState => {
-  const { isSelectionEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
-
+export const useSelectionState = (args: UseSelectionStateArgs): SelectionState => {
+  const { isSelectionEnabled } = args;
   const initialSelectedItemIds = (isSelectionEnabled && args.initialSelectedItemIds) || [];
 
-  // We won't need to pass the latter two type params here if TS adds support for partial inference.
-  // See https://github.com/konveyor/tackle2-ui/issues/1456
-  const [selectedItemIds, setSelectedItemIds] = usePersistentState<ItemId[], TPersistenceKeyPrefix, 'selected'>({
-    isEnabled: !!isSelectionEnabled,
-    defaultValue: initialSelectedItemIds,
-    persistenceKeyPrefix,
-    // Note: For the discriminated union here to work without TypeScript getting confused
-    //       (e.g. require the urlParams-specific options when persistTo === "urlParams"),
-    //       we need to pass persistTo inside each type-narrowed options object instead of outside the ternary.
-    ...(persistTo === 'urlParams'
-      ? {
-          persistTo,
-          keys: ['selected'],
-          serialize: (activeSelection) => ({
-            selected: activeSelection
-              ? activeSelection
-                  .filter(Boolean)
-                  .map((id) => String(id))
-                  .join(',')
-              : null
-          }),
-          deserialize: ({ selected }) =>
-            selected ? (selected.split(',').map(parseMaybeNumericString).filter(Boolean) as ItemId[]) : []
-        }
-      : persistTo === 'localStorage' || persistTo === 'sessionStorage'
-      ? {
-          persistTo,
-          key: 'selected'
-        }
-      : { persistTo })
-  });
+  const [selectedItemIds, setSelectedItemIds] = React.useState<ItemId[]>(initialSelectedItemIds);
   return { selectedItemIds, setSelectedItemIds };
 };

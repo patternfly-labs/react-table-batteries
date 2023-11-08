@@ -1,4 +1,5 @@
 import { KeyWithValueType } from '../../type-utils';
+import { ItemId } from '../../types';
 import { ExpansionState } from './useExpansionState';
 
 /**
@@ -12,7 +13,7 @@ export interface GetExpansionDerivedStateArgs<TItem, TColumnKey extends string> 
   /**
    * The string key/name of a property on the API data item objects that can be used as a unique identifier (string or number)
    */
-  idProperty: KeyWithValueType<TItem, string | number>;
+  idProperty: KeyWithValueType<TItem, ItemId>;
   /**
    * The "source of truth" state for the expansion feature (returned by useExpansionState)
    */
