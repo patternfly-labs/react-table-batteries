@@ -41,11 +41,19 @@ export interface SelectionDerivedState<TItem> {
   /**
    * The selected items (full API objects from cache).
    */
-  selectedItems: TItem[];
+  selectedItems: TItem[]; // TODO do we need to make sure these are in table sort order?
   /**
    * Returns whether the given item is selected.
    */
   isItemSelected: (item: TItem) => boolean;
+  /**
+   * Returns whether all items (based on `totalItemCount` argument) are selected.
+   */
+  allSelected: boolean;
+  /**
+   * Returns whether all items in `currentPageItems` are selected (and only those items).
+   */
+  pageSelected: boolean;
   /**
    * Toggles selection on one item. Does not select an item that is not selectable (if an isItemSelectable callback is being used).
    */
@@ -70,6 +78,10 @@ export interface SelectionDerivedState<TItem> {
    * Deselects all items.
    */
   selectNone: () => void;
+  /**
+   * Selects the given selectable items and deselects all other items.
+   */
+  setSelectedItems: (items: TItem[]) => void;
 }
 
 /**
