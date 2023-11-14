@@ -4,8 +4,9 @@ import { TableBatteries, UseTablePropHelpersArgs } from '../types';
 import { useFilterPropHelpers } from './filtering';
 import { useSortPropHelpers } from './sorting';
 import { usePaginationPropHelpers } from './pagination';
-import { useActiveItemPropHelpers } from './active-item';
+import { useSelectionPropHelpers } from './selection';
 import { useExpansionPropHelpers } from './expansion';
+import { useActiveItemPropHelpers } from './active-item';
 import { handlePropagatedRowClick, objectKeys } from '../utils';
 
 /**
@@ -40,9 +41,7 @@ export const useTablePropHelpers = <
   //       args object is passed to other other helpers which require other parts of it.
   //       For future additions, inspect `args` to see if it has anything more you need.
   const {
-    currentPageItems,
     forceNumRenderedColumns,
-    selectionState: { selectAll, areAllSelected, selectedItems, selectMultiple, toggleItemSelected, isItemSelected },
     columnNames,
     hasActionsColumn = false,
     variant,
@@ -73,6 +72,7 @@ export const useTablePropHelpers = <
   const { filterPropsForToolbar, propsForFilterToolbar } = useFilterPropHelpers(args);
   const { getSortThProps } = useSortPropHelpers({ ...args, columnKeys });
   const { paginationProps, paginationToolbarItemProps } = usePaginationPropHelpers(args);
+  const { selectionDerivedState, toolbarBulkSelectorProps, getSelectCheckboxTdProps } = useSelectionPropHelpers(args); // TODO
   const { expansionDerivedState, getSingleExpandButtonTdProps, getCompoundExpandTdProps, getExpandedContentTdProps } =
     useExpansionPropHelpers({ ...args, columnKeys, numRenderedColumns });
   const { activeItemDerivedState, getActiveItemTrProps } = useActiveItemPropHelpers(args);
@@ -80,16 +80,6 @@ export const useTablePropHelpers = <
   const toolbarProps: PropHelpers['toolbarProps'] = {
     className: variant === 'compact' ? spacing.pt_0 : '',
     ...(isFilterEnabled && filterPropsForToolbar)
-  };
-
-  // TODO move this to a useSelectionPropHelpers when we move selection from lib-ui
-  const toolbarBulkSelectorProps: PropHelpers['toolbarBulkSelectorProps'] = {
-    onSelectAll: selectAll,
-    areAllSelected,
-    selectedRows: selectedItems,
-    paginationProps,
-    currentPageItems,
-    onSelectMultiple: selectMultiple
   };
 
   const tableProps: PropHelpers['tableProps'] = {
@@ -129,22 +119,12 @@ export const useTablePropHelpers = <
     };
   };
 
-  // TODO move this into a useSelectionPropHelpers and make it part of getTdProps once we move selection from lib-ui
-  const getSelectCheckboxTdProps: PropHelpers['getSelectCheckboxTdProps'] = ({ item, rowIndex }) => ({
-    select: {
-      rowIndex,
-      onSelect: (_event, isSelecting) => {
-        toggleItemSelected(item, isSelecting);
-      },
-      isSelected: isItemSelected(item)
-    }
-  });
-
   return {
     ...args,
     numColumnsBeforeData,
     numColumnsAfterData,
     numRenderedColumns,
+    selectionDerivedState,
     expansionDerivedState,
     activeItemDerivedState,
     propHelpers: {

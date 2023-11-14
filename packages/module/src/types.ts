@@ -1,5 +1,4 @@
 import { TableProps, TdProps, ThProps, TrProps } from '@patternfly/react-table';
-import { ISelectionStateArgs, useSelectionState } from '@migtools/lib-ui';
 import {
   UseFilterStateArgs,
   GetClientFilterDerivedStateArgs,
@@ -18,6 +17,12 @@ import {
   UsePaginationPropHelpersExternalArgs,
   PaginationState
 } from './hooks/pagination';
+import {
+  SelectionDerivedState,
+  SelectionState,
+  UseSelectionPropHelpersExternalArgs,
+  UseSelectionStateArgs
+} from './hooks/selection';
 import { ExpansionDerivedState, ExpansionState, UseExpansionStateArgs } from './hooks/expansion';
 import {
   ActiveItemDerivedState,
@@ -37,7 +42,7 @@ import { ToolbarBulkSelectorProps } from './tackle2-ui-legacy/components/Toolbar
 //   TSortableColumnKey - A subset of column keys that have sorting enabled
 //   TFilterCategoryKey - Union type of unique identifier strings for filters (not necessarily the same as column keys)
 //   TPersistenceKeyPrefix - String (must not include a `:` character) used to distinguish persisted state for multiple tables
-// TODO move this to DOCS.md and reference the paragraph here
+// TODO move this to DOCS.md or CONTRIBUTING.md or MDX docs site and reference the paragraph here
 
 /**
  * Identifier for a feature of the table. State concerns are separated by feature.
@@ -122,9 +127,9 @@ export type UseTableStateArgs<
   columnNames: Record<TColumnKey, string>;
 } & UseFilterStateArgs<TItem, TFilterCategoryKey> &
   UseSortStateArgs<TSortableColumnKey> &
-  UsePaginationStateArgs & {
-    isSelectionEnabled?: boolean; // TODO move this into useSelectionState when we move it from lib-ui
-  } & UseExpansionStateArgs &
+  UsePaginationStateArgs &
+  UseSelectionStateArgs &
+  UseExpansionStateArgs &
   UseActiveItemStateArgs &
   TablePersistenceArgs<TPersistenceKeyPrefix>;
 
@@ -158,7 +163,11 @@ export type TableState<
    */
   paginationState: PaginationState;
   /**
-   * State for the expansion feature. Returned by usePaginationState.
+   * State for the selection feature. Returned by useSelectionState.
+   */
+  selectionState: SelectionState;
+  /**
+   * State for the expansion feature. Returned by useExpansionState.
    */
   expansionState: ExpansionState<TColumnKey>;
   /**
@@ -189,8 +198,9 @@ export type GetClientTableDerivedStateArgs<
 > = GetClientFilterDerivedStateArgs<TItem, TFilterCategoryKey> &
   GetClientSortDerivedStateArgs<TItem, TSortableColumnKey> &
   GetClientPaginationDerivedStateArgs<TItem>;
+// There is no ClientSelectionDerivedStateArgs type because selection derived state is always local and internal to useTablePropHelpers
 // There is no ClientExpansionDerivedStateArgs type because expansion derived state is always local and internal to useTablePropHelpers
-// There is no ClientActiveItemDerivedStateArgs type because expansion derived state is always local and internal to useTablePropHelpers
+// There is no ClientActiveItemDerivedStateArgs type because active item derived state is always local and internal to useTablePropHelpers
 
 /**
  * Table-level derived state object
@@ -233,7 +243,7 @@ export type UseTablePropHelpersArgs<
   UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey> &
   UseSortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> &
   UsePaginationPropHelpersExternalArgs &
-  // SelectionPropHelpersExternalArgs // TODO when we move selection from lib-ui
+  UseSelectionPropHelpersExternalArgs<TItem> &
   UseExpansionPropHelpersExternalArgs<TItem, TColumnKey> &
   UseActiveItemPropHelpersExternalArgs<TItem> &
   TableDerivedState<TItem> & {
@@ -254,11 +264,6 @@ export type UseTablePropHelpersArgs<
      * Whether there is a separate column for action buttons/menus at the right side of the table
      */
     hasActionsColumn?: boolean;
-    /**
-     * Selection state
-     * @todo this won't be included here when useSelectionState gets moved from lib-ui. It is separated from the other state temporarily and used only at render time.
-     */
-    selectionState: ReturnType<typeof useSelectionState<TItem>>;
   };
 
 /**
@@ -286,6 +291,10 @@ export type TableBatteries<
    * The total number of columns to be rendered including data and non-data columns.
    */
   numRenderedColumns: number;
+  /**
+   * Values derived at render time from the selection feature state. Includes helper functions for convenience.
+   */
+  selectionDerivedState: SelectionDerivedState<TItem>;
   /**
    * Values derived at render time from the expansion feature state. Includes helper functions for convenience.
    */
@@ -379,6 +388,4 @@ export type UseClientTableBatteriesArgs<
       UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>,
     | keyof TableDerivedState<TItem>
     | keyof TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-    | 'selectionState' // TODO this won't be included here when selection is part of useTableState
-  > &
-  Pick<ISelectionStateArgs<TItem>, 'initialSelected' | 'isItemSelectable'>; // TODO this won't be included here when selection is part of useTableState
+  >;
