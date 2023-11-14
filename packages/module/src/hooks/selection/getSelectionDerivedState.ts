@@ -108,6 +108,8 @@ export const getSelectionDerivedState = <TItem>(
     // TODO if so, should we convert all the other get*DerivedState stuff to use*DerivedState and maybe even move the use*Effect calls into there and not the prop helpers hooks?
     selectedItems: [], // TODO get these from currentPageItems via a cache: memoize items for ids we've seen that are not in currentPageItems
     isItemSelected,
+    allSelected: false, // TODO
+    pageSelected: false, // TODO
     selectItem: (item, isSelecting = true) => {
       if (isSelecting && !isItemSelected(item) && isItemSelectable(item)) {
         setSelectedItemIds((selected) => [...selected, item[idProperty] as ItemId]);
@@ -142,6 +144,9 @@ export const getSelectionDerivedState = <TItem>(
     },
     selectNone: () => {
       setSelectedItemIds([]);
+    },
+    setSelectedItems: (items: TItem[]) => {
+      setSelectedItemIds(items.map((item) => item[idProperty] as ItemId));
     }
   };
 };
