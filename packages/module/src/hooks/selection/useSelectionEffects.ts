@@ -1,11 +1,21 @@
 import React from 'react';
+import { SelectionDerivedState } from './getSelectionDerivedState';
 
-// TODO effects! pass in args, etc.
+// TODO finish implementing effects pattern here!
 
-export const useSelectionEffects = () => {
+export interface UseSelectionEffectsArgs<TItem> {
+  isItemSelectable?: (item: TItem) => boolean;
+  selectionDerivedState: SelectionDerivedState<TItem>;
+}
+
+export const useSelectionEffects = <TItem>(args: UseSelectionEffectsArgs<TItem>) => {
   // If isItemSelectable changes and a selected item is no longer selectable, deselect it
+  const {
+    isItemSelectable,
+    selectionDerivedState: { selectedItems, setSelectedItems }
+  } = args;
   React.useEffect(() => {
-    if (!selectedItems.every(isItemSelectable)) {
+    if (isItemSelectable && !selectedItems.every(isItemSelectable)) {
       setSelectedItems(selectedItems.filter(isItemSelectable));
     }
   }, [isItemSelectable, selectedItems, setSelectedItems]);

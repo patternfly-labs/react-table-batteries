@@ -1,29 +1,8 @@
-// TODO implement that behavior from PF docs where groups of items can be selected by shift+clicking or ctrl+clicking on checkboxes
-
+import { PaginationProps } from '@patternfly/react-core';
+import { ToolbarBulkSelectorProps } from '../../tackle2-ui-legacy/components/ToolbarBulkSelector';
 import { GetSelectionDerivedStateArgs, getSelectionDerivedState } from './getSelectionDerivedState';
-import { SelectionState } from './useSelectionState';
-
-// // TODO move this to a useSelectionPropHelpers when we move selection from lib-ui
-// const toolbarBulkSelectorProps: PropHelpers['toolbarBulkSelectorProps'] = {
-//   onSelectAll: selectAll,
-//   areAllSelected,
-//   selectedRows: selectedItems,
-//   paginationProps,
-//   currentPageItems,
-//   onSelectMultiple: selectMultiple
-// };
-
-// // TODO move this into a useSelectionPropHelpers and make it part of getTdProps once we move selection from lib-ui
-// const getSelectCheckboxTdProps: PropHelpers['getSelectCheckboxTdProps'] = ({ item, rowIndex }) => ({
-//   select: {
-//     rowIndex,
-//     onSelect: (_event, isSelecting) => {
-//       toggleItemSelected(item, isSelecting);
-//     },
-//     isSelected: isItemSelected(item)
-//   }
-// });
-
+import { UseSelectionEffectsArgs, useSelectionEffects } from './useSelectionEffects';
+import { TdProps } from '@patternfly/react-table';
 /**
  * Args for useSelectionPropHelpers that come from outside useTablePropHelpers
  * - Partially satisfied by the object returned by useTableState (TableState)
@@ -31,15 +10,62 @@ import { SelectionState } from './useSelectionState';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export type UseSelectionPropHelpersExternalArgs<TItem> = GetSelectionDerivedStateArgs<TItem> & {
-  /**
-   * The "source of truth" state for the selection feature (returned by useSelectionState)
-   */
-  selectionState: SelectionState;
-};
+export type UseSelectionPropHelpersExternalArgs<TItem> = GetSelectionDerivedStateArgs<TItem> &
+  Omit<UseSelectionEffectsArgs<TItem>, 'selectionDerivedState'> & {
+    /**
+     * The current page of API data items after filtering/sorting/pagination
+     */
+    currentPageItems: TItem[];
+  };
 
-export const useSelectionPropHelpers = <TItem>(args: UseSelectionPropHelpersExternalArgs<TItem>) => {
+/**
+ * Additional args for useSelectionPropHelpers that come from logic inside useTablePropHelpers
+ * @see useTablePropHelpers
+ */
+export interface UseSelectionPropHelpersInternalArgs {
+  /**
+   * Pagination props returned by usePaginationPropHelpers
+   */
+  paginationProps: PaginationProps;
+}
+
+// TODO implement that behavior from PF docs where groups of items can be selected by shift+clicking on checkboxes
+export const useSelectionPropHelpers = <TItem>(
+  args: UseSelectionPropHelpersExternalArgs<TItem> & UseSelectionPropHelpersInternalArgs
+) => {
+  const { paginationProps, currentPageItems } = args;
   const selectionDerivedState = getSelectionDerivedState(args);
-  console.log('TODO!'); // TODO
+  const { selectAll, selectItem, selectItems, selectedItems, isItemSelected, allSelected } = selectionDerivedState;
+
+  useSelectionEffects({ ...args, selectionDerivedState });
+
+  /**
+   * Props for the ToolbarBulkSelector component.
+   */
+  const toolbarBulkSelectorProps: ToolbarBulkSelectorProps<TItem> = {
+    onSelectAll: selectAll,
+    areAllSelected: allSelected,
+    selectedRows: selectedItems,
+    paginationProps,
+    currentPageItems,
+    onSelectMultiple: selectItems
+  };
+
+  /**
+   * Returns props for the Td component used as the checkbox cell for each row when using the selection feature.
+   */
+  const getSelectCheckboxTdProps: (args: { item: TItem; rowIndex: number }) => Omit<TdProps, 'ref'> = ({
+    item,
+    rowIndex
+  }) => ({
+    select: {
+      rowIndex,
+      onSelect: (_event, isSelecting) => {
+        selectItem(item, isSelecting);
+      },
+      isSelected: isItemSelected(item)
+    }
+  });
+
   return { selectionDerivedState, toolbarBulkSelectorProps, getSelectCheckboxTdProps };
 };

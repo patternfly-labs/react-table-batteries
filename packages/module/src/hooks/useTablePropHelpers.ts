@@ -72,7 +72,10 @@ export const useTablePropHelpers = <
   const { filterPropsForToolbar, propsForFilterToolbar } = useFilterPropHelpers(args);
   const { getSortThProps } = useSortPropHelpers({ ...args, columnKeys });
   const { paginationProps, paginationToolbarItemProps } = usePaginationPropHelpers(args);
-  const { selectionDerivedState, toolbarBulkSelectorProps, getSelectCheckboxTdProps } = useSelectionPropHelpers(args); // TODO
+  const { selectionDerivedState, toolbarBulkSelectorProps, getSelectCheckboxTdProps } = useSelectionPropHelpers({
+    ...args,
+    paginationProps
+  });
   const { expansionDerivedState, getSingleExpandButtonTdProps, getCompoundExpandTdProps, getExpandedContentTdProps } =
     useExpansionPropHelpers({ ...args, columnKeys, numRenderedColumns });
   const { activeItemDerivedState, getActiveItemTrProps } = useActiveItemPropHelpers(args);
