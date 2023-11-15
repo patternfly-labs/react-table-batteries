@@ -35,6 +35,7 @@ import {
 useClientTableBatteries,
 useTablePropHelpers,
 useTableState,
+ToolbarBulkSelector,
 TableHeaderContentWithBatteries,
 ConditionalTableBody,
 TableRowContentWithBatteries,
