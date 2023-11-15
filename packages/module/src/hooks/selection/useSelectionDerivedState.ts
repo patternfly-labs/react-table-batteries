@@ -101,7 +101,7 @@ export const useSelectionDerivedState = <TItem>(
 ): SelectionDerivedState<TItem> => {
   const {
     idProperty,
-    selectionState: { selectedItemIds, setSelectedItemIds },
+    selectionState: { selectedItemIds = [], setSelectedItemIds },
     isItemSelectable = () => true,
     currentPageItems,
     totalItemCount,
