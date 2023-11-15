@@ -25,6 +25,7 @@ export const useClientTableBatteries = <
   args: UseClientTableBatteriesArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
 ): TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const state = useTableState(args);
+
   // TODO figure out why the `as` below is necessary, the `{ ...args, ...state }` should be enough for TS to infer the rest
   // TODO do we have an actual issue with types here or is this a limitation of TS inference?
   const derivedState = getClientTableDerivedState({ ...args, ...state } as TableState<
@@ -35,6 +36,12 @@ export const useClientTableBatteries = <
     TPersistenceKeyPrefix
   > &
     GetClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>);
+
+  const argsForGetClientTableDerivedState = { ...args, ...state };
+  const argsForUseTablePropHelpers = { ...args, ...state, ...derivedState };
+  // eslint-disable-next-line no-console
+  console.log({ argsForGetClientTableDerivedState, argsForUseTablePropHelpers });
+
   // TODO figure out why the `as` below is necessary, the `{ ...args, ...state }` should be enough for TS to infer the rest
   // TODO do we have an actual issue with types here or is this a limitation of TS inference?
   return useTablePropHelpers({
