@@ -3,13 +3,13 @@ import { ItemId } from '../../types';
 import { SelectionState } from './useSelectionState';
 
 /**
- * Args for getSelectionDerivedState
+ * Args for useSelectionDerivedState
  * - Partially satisfied by the object returned by useTableState (TableState)
  * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export interface GetSelectionDerivedStateArgs<TItem> {
+export interface UseSelectionDerivedStateArgs<TItem> {
   /**
    * The string key/name of a property on the API data item objects that can be used as a unique identifier (string or number)
    */
@@ -96,8 +96,8 @@ export interface SelectionDerivedState<TItem> {
  * is always local/client-computed, and it is still used when working with server-computed tables
  * (it's not specific to client-only-computed tables like the other `getClient*DerivedState` functions are).
  */
-export const getSelectionDerivedState = <TItem>(
-  args: GetSelectionDerivedStateArgs<TItem>
+export const useSelectionDerivedState = <TItem>(
+  args: UseSelectionDerivedStateArgs<TItem>
 ): SelectionDerivedState<TItem> => {
   const {
     idProperty,

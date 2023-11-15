@@ -2,7 +2,6 @@ import { useTablePropHelpers } from './useTablePropHelpers';
 import { TableBatteries, UseClientTableBatteriesArgs } from '../types';
 import { getClientTableDerivedState } from './getClientTableDerivedState';
 import { useTableState } from './useTableState';
-import { useSelectionState } from '@migtools/lib-ui';
 
 /**
  * Provides all state, derived state, side-effects and prop helpers needed to manage a local/client-computed table.
@@ -20,15 +19,14 @@ export const useClientTableBatteries = <
   args: UseClientTableBatteriesArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
 ): TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const state = useTableState(args);
+  console.log('Compare with properties expected by getClientTableDerivedSDtate: ', { ...args, ...state });
   const derivedState = getClientTableDerivedState({ ...args, ...state });
   return useTablePropHelpers({
     ...args,
     ...state,
-    ...derivedState,
-    // TODO we won't need this here once selection state is part of useTableState
-    selectionState: useSelectionState({
-      ...args,
-      isEqual: (a, b) => a[args.idProperty] === b[args.idProperty]
-    })
+    ...derivedState
   });
 };
+
+// TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+// & GetClientFilterDerivedStateArgs<...> & GetClientSortDerivedStateArgs<...> & GetClientPaginationDerivedStateArgs<...>

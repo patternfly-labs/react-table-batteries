@@ -1,5 +1,5 @@
 import React from 'react';
-import { SelectionDerivedState } from './getSelectionDerivedState';
+import { SelectionDerivedState } from './useSelectionDerivedState';
 
 export interface UseSelectionEffectsArgs<TItem> {
   isItemSelectable?: (item: TItem) => boolean;

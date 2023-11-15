@@ -1,4 +1,4 @@
 export * from './useSelectionState';
 export * from './useSelectionPropHelpers';
-export * from './getSelectionDerivedState';
+export * from './useSelectionDerivedState';
 export * from './useSelectionEffects';

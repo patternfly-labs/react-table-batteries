@@ -1,6 +1,6 @@
 import { PaginationProps } from '@patternfly/react-core';
 import { ToolbarBulkSelectorProps } from '../../tackle2-ui-legacy/components/ToolbarBulkSelector';
-import { GetSelectionDerivedStateArgs, getSelectionDerivedState } from './getSelectionDerivedState';
+import { UseSelectionDerivedStateArgs, useSelectionDerivedState } from './useSelectionDerivedState';
 import { UseSelectionEffectsArgs, useSelectionEffects } from './useSelectionEffects';
 import { TdProps } from '@patternfly/react-table';
 /**
@@ -10,7 +10,7 @@ import { TdProps } from '@patternfly/react-table';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export type UseSelectionPropHelpersExternalArgs<TItem> = GetSelectionDerivedStateArgs<TItem> &
+export type UseSelectionPropHelpersExternalArgs<TItem> = UseSelectionDerivedStateArgs<TItem> &
   Omit<UseSelectionEffectsArgs<TItem>, 'selectionDerivedState'> & {
     /**
      * The current page of API data items after filtering/sorting/pagination
@@ -34,7 +34,7 @@ export const useSelectionPropHelpers = <TItem>(
   args: UseSelectionPropHelpersExternalArgs<TItem> & UseSelectionPropHelpersInternalArgs
 ) => {
   const { paginationProps, currentPageItems } = args;
-  const selectionDerivedState = getSelectionDerivedState(args);
+  const selectionDerivedState = useSelectionDerivedState(args);
   const { selectAll, selectItem, selectItems, selectedItems, isItemSelected, allSelected } = selectionDerivedState;
 
   useSelectionEffects({ ...args, selectionDerivedState });
