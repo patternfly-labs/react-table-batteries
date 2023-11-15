@@ -11,12 +11,7 @@ import { TdProps } from '@patternfly/react-table';
  * @see UseTablePropHelpersArgs
  */
 export type UseSelectionPropHelpersExternalArgs<TItem> = UseSelectionDerivedStateArgs<TItem> &
-  Omit<UseSelectionEffectsArgs<TItem>, 'selectionDerivedState'> & {
-    /**
-     * The current page of API data items after filtering/sorting/pagination
-     */
-    currentPageItems: TItem[];
-  };
+  Omit<UseSelectionEffectsArgs<TItem>, 'selectionDerivedState'>;
 
 /**
  * Additional args for useSelectionPropHelpers that come from logic inside useTablePropHelpers

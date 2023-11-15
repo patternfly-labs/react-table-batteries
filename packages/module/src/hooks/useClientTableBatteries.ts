@@ -1,5 +1,11 @@
 import { useTablePropHelpers } from './useTablePropHelpers';
-import { TableBatteries, UseClientTableBatteriesArgs } from '../types';
+import {
+  GetClientTableDerivedStateArgs,
+  TableBatteries,
+  TableState,
+  UseClientTableBatteriesArgs,
+  UseTablePropHelpersArgs
+} from '../types';
 import { getClientTableDerivedState } from './getClientTableDerivedState';
 import { useTableState } from './useTableState';
 
@@ -19,14 +25,21 @@ export const useClientTableBatteries = <
   args: UseClientTableBatteriesArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
 ): TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const state = useTableState(args);
-  console.log('Compare with properties expected by getClientTableDerivedSDtate: ', { ...args, ...state });
-  const derivedState = getClientTableDerivedState({ ...args, ...state });
+  // TODO figure out why the `as` below is necessary, the `{ ...args, ...state }` should be enough for TS to infer the rest
+  // TODO do we have an actual issue with types here or is this a limitation of TS inference?
+  const derivedState = getClientTableDerivedState({ ...args, ...state } as TableState<
+    TItem,
+    TColumnKey,
+    TSortableColumnKey,
+    TFilterCategoryKey,
+    TPersistenceKeyPrefix
+  > &
+    GetClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>);
+  // TODO figure out why the `as` below is necessary, the `{ ...args, ...state }` should be enough for TS to infer the rest
+  // TODO do we have an actual issue with types here or is this a limitation of TS inference?
   return useTablePropHelpers({
     ...args,
     ...state,
     ...derivedState
-  });
+  } as UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>);
 };
-
-// TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-// & GetClientFilterDerivedStateArgs<...> & GetClientSortDerivedStateArgs<...> & GetClientPaginationDerivedStateArgs<...>
