@@ -30,7 +30,7 @@ export const useSelectionPropHelpers = <TItem>(
 ) => {
   const { paginationProps, currentPageItems } = args;
   const selectionDerivedState = useSelectionDerivedState(args);
-  const { selectAll, selectItem, selectItems, selectedItems, isItemSelected, allSelected } = selectionDerivedState;
+  const { selectPage, selectItem, selectItems, selectedItems, isItemSelected, allSelected } = selectionDerivedState;
 
   useSelectionEffects({ ...args, selectionDerivedState });
 
@@ -38,7 +38,7 @@ export const useSelectionPropHelpers = <TItem>(
    * Props for the ToolbarBulkSelector component.
    */
   const toolbarBulkSelectorProps: ToolbarBulkSelectorProps<TItem> = {
-    onSelectAll: selectAll,
+    onSelectAll: selectPage,
     areAllSelected: allSelected,
     selectedRows: selectedItems,
     paginationProps,

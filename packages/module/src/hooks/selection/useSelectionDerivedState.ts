@@ -77,7 +77,7 @@ export interface SelectionDerivedState<TItem> {
    * Selects all selectable items on the current page.
    * - Does not select an item that is not selectable (if an isItemSelectable callback is being used).
    */
-  selectPage: () => void;
+  selectPage: (selecting?: boolean) => void;
   /**
    * Deselects all items.
    */
@@ -147,8 +147,12 @@ export const useSelectionDerivedState = <TItem>(
       }
       setSelectedItemIds(items.filter(isItemSelectable).map((item) => item[idProperty] as ItemId));
     },
-    selectPage: () => {
-      setSelectedItemIds(currentPageItems.filter(isItemSelectable).map((item) => item[idProperty] as ItemId));
+    selectPage: (selecting = true) => {
+      if (selecting) {
+        setSelectedItemIds(currentPageItems.filter(isItemSelectable).map((item) => item[idProperty] as ItemId));
+      } else {
+        setSelectedItemIds([]);
+      }
     },
     selectNone: () => {
       setSelectedItemIds([]);
