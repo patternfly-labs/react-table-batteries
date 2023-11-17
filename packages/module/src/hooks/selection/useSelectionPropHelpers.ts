@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { PaginationProps } from '@patternfly/react-core';
 import { ToolbarBulkSelectorProps } from '../../tackle2-ui-legacy/components/ToolbarBulkSelector';
 import { UseSelectionDerivedStateArgs, useSelectionDerivedState } from './useSelectionDerivedState';
@@ -24,7 +25,6 @@ export interface UseSelectionPropHelpersInternalArgs {
   paginationProps: PaginationProps;
 }
 
-// TODO implement that behavior from PF docs where groups of items can be selected by shift+clicking on checkboxes
 export const useSelectionPropHelpers = <TItem>(
   args: UseSelectionPropHelpersExternalArgs<TItem> & UseSelectionPropHelpersInternalArgs
 ) => {
@@ -34,6 +34,31 @@ export const useSelectionPropHelpers = <TItem>(
     selectionDerivedState;
 
   useSelectionEffects({ ...args, selectionDerivedState });
+
+  // State for shift+click multi-select behavior
+  const [lastSelectedRowIndex, setLastSelectedRowIndex] = React.useState<number | null>(null);
+  React.useEffect(() => {
+    setLastSelectedRowIndex(null);
+  }, [paginationProps.page]);
+  const [isShiftKeyHeld, setIsShiftKeyHeld] = React.useState(false);
+  React.useEffect(() => {
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        setIsShiftKeyHeld(true);
+      }
+    };
+    const onKeyUp = (e: KeyboardEvent) => {
+      if (e.key === 'Shift') {
+        setIsShiftKeyHeld(false);
+      }
+    };
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+    return () => {
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keyup', onKeyUp);
+    };
+  }, []);
 
   /**
    * Props for the ToolbarBulkSelector component.
@@ -58,7 +83,19 @@ export const useSelectionPropHelpers = <TItem>(
     select: {
       rowIndex,
       onSelect: (_event, isSelecting) => {
-        selectItem(item, isSelecting);
+        if (isShiftKeyHeld && lastSelectedRowIndex !== null) {
+          const numberSelected = rowIndex - lastSelectedRowIndex;
+          const intermediateIndexes =
+            numberSelected > 0
+              ? Array.from(new Array(numberSelected + 1), (_x, i) => i + lastSelectedRowIndex)
+              : Array.from(new Array(Math.abs(numberSelected) + 1), (_x, i) => i + rowIndex);
+          intermediateIndexes.forEach(
+            (index) => currentPageItems[index] && selectItem(currentPageItems[index] as TItem, isSelecting)
+          );
+        } else {
+          selectItem(item, isSelecting);
+        }
+        setLastSelectedRowIndex(rowIndex);
       },
       isSelected: isItemSelected(item),
       isDisabled: isItemSelectable && !isItemSelectable(item)
