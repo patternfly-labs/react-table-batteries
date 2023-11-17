@@ -115,8 +115,12 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       getThProps,
       getTrProps,
       getTdProps
-    }
+    },
+    selectionDerivedState: { selectedItems }
   } = tableBatteries;
+
+  // eslint-disable-next-line no-console
+  console.log('Do something with selected items:', selectedItems);
 
   return (
     <>

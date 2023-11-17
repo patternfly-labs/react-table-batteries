@@ -209,11 +209,7 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ### Selection
 
-TODO this example will come in a separate PR
-
-TODO add a version of the basic client table example with only selection enabled
-
-TODO copy over and rework things from OLD_DOCS.md here
+TODO copy over and rework notes from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureSelection.tsx"
 
