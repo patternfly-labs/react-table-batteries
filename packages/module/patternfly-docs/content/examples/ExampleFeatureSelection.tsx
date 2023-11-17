@@ -38,7 +38,7 @@ const fetchMockData = () =>
       const mockData: Thing[] = [
         { id: 1, name: 'Thing 01', description: 'Something from the API' },
         { id: 2, name: 'Thing 02', description: 'Something else from the API' },
-        { id: 3, name: 'Thing 03', description: 'Another API object' },
+        { id: 3, name: 'Thing 03', description: 'Another API object. This one is not selectable!' },
         { id: 4, name: 'Thing 04', description: 'We have more than 10 things here' },
         { id: 5, name: 'Thing 05', description: 'So you can try the "select page" behavior' },
         { id: 6, name: 'Thing 06', description: 'These all need descriptions' },
