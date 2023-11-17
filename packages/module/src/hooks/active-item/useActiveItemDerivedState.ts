@@ -1,5 +1,6 @@
 import { KeyWithValueType } from '../../type-utils';
 import { ItemId } from '../../types';
+import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
 import { ActiveItemState } from './useActiveItemState';
 
 /**
@@ -9,7 +10,7 @@ import { ActiveItemState } from './useActiveItemState';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export interface UseActiveItemDerivedStateArgs<TItem> {
+export type UseActiveItemDerivedStateArgs<TItem> = Omit<UseActiveItemEffectsArgs<TItem>, 'activeItemDerivedState'> & {
   /**
    * The current page of API data items after filtering/sorting/pagination
    */
@@ -22,7 +23,7 @@ export interface UseActiveItemDerivedStateArgs<TItem> {
    * The "source of truth" state for the active item feature (returned by useActiveItemState)
    */
   activeItemState: ActiveItemState;
-}
+};
 
 /**
  * Derived state for the active item feature
@@ -52,21 +53,29 @@ export interface ActiveItemDerivedState<TItem> {
 /**
  * Given the "source of truth" state for the active item feature and additional arguments, returns "derived state" values and convenience functions.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
+ * - Also triggers side effects to prevent invalid state
  *
  * NOTE: Unlike `useClient[Filter|Sort|Pagination]DerivedState`, this is not named `useClientActiveItemDerivedState` because it
  * is always local/client-computed, and it is still used when working with server-computed tables
  * (it's not specific to client-only-computed tables like the other `useClient*DerivedState` functions are).
  */
-export const useActiveItemDerivedState = <TItem>({
-  currentPageItems,
-  idProperty,
-  activeItemState: { activeItemId, setActiveItemId }
-}: UseActiveItemDerivedStateArgs<TItem>): ActiveItemDerivedState<TItem> => ({
-  activeItem: currentPageItems.find((item) => item[idProperty] === activeItemId) || null,
-  setActiveItem: (item: TItem | null) => {
-    const itemId = (item?.[idProperty] ?? null) as ItemId | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?
-    setActiveItemId(itemId);
-  },
-  clearActiveItem: () => setActiveItemId(null),
-  isActiveItem: (item) => item[idProperty] === activeItemId
-});
+export const useActiveItemDerivedState = <TItem>(
+  args: UseActiveItemDerivedStateArgs<TItem>
+): ActiveItemDerivedState<TItem> => {
+  const {
+    currentPageItems,
+    idProperty,
+    activeItemState: { activeItemId, setActiveItemId }
+  } = args;
+  const activeItemDerivedState: ActiveItemDerivedState<TItem> = {
+    activeItem: currentPageItems.find((item) => item[idProperty] === activeItemId) || null,
+    setActiveItem: (item: TItem | null) => {
+      const itemId = (item?.[idProperty] ?? null) as ItemId | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?
+      setActiveItemId(itemId);
+    },
+    clearActiveItem: () => setActiveItemId(null),
+    isActiveItem: (item) => item[idProperty] === activeItemId
+  };
+  useActiveItemEffects({ ...args, activeItemDerivedState });
+  return activeItemDerivedState;
+};
