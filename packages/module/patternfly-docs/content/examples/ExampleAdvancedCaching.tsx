@@ -161,19 +161,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
     isLoading: isLoadingMockData,
     currentPageItems: mockFetchResponse?.data || [],
     totalItemCount: mockFetchResponse?.totalItemCount || 0,
-    // TODO this shouldn't be necessary once we refactor useSelectionState to fit the rest of the table-batteries pattern.
-    // Due to an unresolved issue, the `selectionState` is required here even though we're not using selection.
-    // As a temporary workaround we pass stub values for these properties.
-    selectionState: {
-      selectedItems: [],
-      isItemSelected: () => false,
-      isItemSelectable: () => false,
-      toggleItemSelected: () => {},
-      selectMultiple: () => {},
-      areAllSelected: false,
-      selectAll: () => {},
-      setSelectedItems: () => {}
-    }
+    variant: 'compact'
   });
 
   // Everything below is the same as in the basic client-side example!

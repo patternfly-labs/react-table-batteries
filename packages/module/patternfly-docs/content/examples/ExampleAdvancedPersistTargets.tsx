@@ -94,7 +94,8 @@ export const ExampleAdvancedPersistTargets: React.FunctionComponent = () => {
       description: thing.description || ''
     }),
     initialSort: { columnKey: 'name', direction: 'asc' },
-    isLoading: isLoadingMockData
+    isLoading: isLoadingMockData,
+    variant: 'compact'
   });
 
   // Here we destructure some of the properties from `tableBatteries` for rendering.

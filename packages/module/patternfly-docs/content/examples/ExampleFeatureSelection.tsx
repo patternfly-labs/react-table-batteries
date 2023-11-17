@@ -37,7 +37,17 @@ const fetchMockData = () =>
     setTimeout(() => {
       const mockData: Thing[] = [
         { id: 1, name: 'Thing 01', description: 'Something from the API' },
-        { id: 2, name: 'Thing 02', description: 'Something else from the API' }
+        { id: 2, name: 'Thing 02', description: 'Something else from the API' },
+        { id: 3, name: 'Thing 03', description: 'Another API object' },
+        { id: 4, name: 'Thing 04', description: 'We have more than 10 things here' },
+        { id: 5, name: 'Thing 05', description: 'So you can try the "select page" behavior' },
+        { id: 6, name: 'Thing 06', description: 'These all need descriptions' },
+        { id: 7, name: 'Thing 07', description: 'But there is nothing else to say' },
+        { id: 8, name: 'Thing 08', description: "I hope you're enjoying these examples" },
+        { id: 9, name: 'Thing 09', description: 'Some pretty cool stuff if I do say so myself' },
+        { id: 10, name: 'Thing 10', description: 'See you later' },
+        { id: 11, name: 'Thing 11', description: 'Oh hey you made it to page 2' },
+        { id: 12, name: 'Thing 12', description: 'Nice work' }
       ];
       resolve({ data: mockData });
     }, 1000);
@@ -92,7 +102,8 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       description: thing.description || ''
     }),
     initialSort: { columnKey: 'name', direction: 'asc' },
-    isLoading: isLoadingMockData
+    isLoading: isLoadingMockData,
+    variant: 'compact'
   });
 
   // Here we destructure some of the properties from `tableBatteries` for rendering.
