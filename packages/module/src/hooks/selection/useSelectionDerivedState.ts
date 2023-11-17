@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { KeyWithValueType } from '../../type-utils';
 import { ItemId } from '../../types';
 import { SelectionState } from './useSelectionState';
@@ -88,6 +89,8 @@ export interface SelectionDerivedState<TItem> {
   setSelectedItems: (items: TItem[]) => void;
 }
 
+// TODO should we convert all the other get*DerivedState stuff to use*DerivedState and maybe even move the use*Effect calls into there and not the prop helpers hooks?
+
 /**
  * Given the "source of truth" state for the selection feature and additional arguments, returns "derived state" values and convenience functions.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
@@ -107,11 +110,21 @@ export const useSelectionDerivedState = <TItem>(
     totalItemCount,
     items
   } = args;
-  const selectedItems: TItem[] = []; // TODO get these from currentPageItems via a cache: memoize items for ids we've seen that are not in currentPageItems
+  // We memoize any item objects we've seen that match selectedItemIds, even if they are no longer in currentPageItems.
+  const selectedItemCacheRef = React.useRef<Record<ItemId, TItem>>({});
+  const selectedItems: TItem[] = React.useMemo(() => {
+    currentPageItems.forEach((item) => {
+      const itemId = item[idProperty] as ItemId;
+      if (selectedItemCacheRef.current[itemId] !== item && selectedItemIds.includes(itemId)) {
+        selectedItemCacheRef.current[itemId] = item;
+      }
+    });
+    // This assertion is safe because the cache should always include all items that have ever been present in selectedItemIds in the current session.
+    return selectedItemIds.map((id) => selectedItemCacheRef.current[id] as TItem);
+  }, [currentPageItems, idProperty, selectedItemIds]);
+
   const isItemSelected = (item: TItem) => selectedItemIds.includes(item[idProperty] as ItemId);
   return {
-    // TODO do we need to turn this into useSelectionDerivedState so we can add the useMemo/useRef/useState cache here?
-    // TODO if so, should we convert all the other get*DerivedState stuff to use*DerivedState and maybe even move the use*Effect calls into there and not the prop helpers hooks?
     selectedItems,
     isItemSelected,
     allSelected: selectedItemIds.length === totalItemCount,
