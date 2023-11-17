@@ -1,4 +1,4 @@
 export * from './usePaginationState';
-export * from './getClientPaginationDerivedState';
+export * from './useClientPaginationDerivedState';
 export * from './usePaginationPropHelpers';
 export * from './usePaginationEffects';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ActiveItemDerivedState } from './getActiveItemDerivedState';
+import { ActiveItemDerivedState } from './useActiveItemDerivedState';
 import { ActiveItemState } from './useActiveItemState';
 
 /**
@@ -17,7 +17,7 @@ export interface UseActiveItemEffectsArgs<TItem> {
    */
   activeItemState: ActiveItemState;
   /**
-   * The "derived state" for the active item feature (returned by getActiveItemDerivedState)
+   * The "derived state" for the active item feature (returned by useActiveItemDerivedState)
    */
   activeItemDerivedState: ActiveItemDerivedState<TItem>;
 }

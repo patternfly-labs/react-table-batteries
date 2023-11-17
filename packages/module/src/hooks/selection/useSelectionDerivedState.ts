@@ -89,15 +89,13 @@ export interface SelectionDerivedState<TItem> {
   setSelectedItems: (items: TItem[]) => void;
 }
 
-// TODO should we convert all the other get*DerivedState stuff to use*DerivedState and maybe even move the use*Effect calls into there and not the prop helpers hooks?
-
 /**
  * Given the "source of truth" state for the selection feature and additional arguments, returns "derived state" values and convenience functions.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  *
- * NOTE: Unlike `getClient[Filter|Sort|Pagination]DerivedState`, this is not named `getClientSelectionDerivedState` because it
+ * NOTE: Unlike `useClient[Filter|Sort|Pagination]DerivedState`, this is not named `useClientSelectionDerivedState` because it
  * is always local/client-computed, and it is still used when working with server-computed tables
- * (it's not specific to client-only-computed tables like the other `getClient*DerivedState` functions are).
+ * (it's not specific to client-only-computed tables like the other `useClient*DerivedState` functions are).
  */
 export const useSelectionDerivedState = <TItem>(
   args: UseSelectionDerivedStateArgs<TItem>

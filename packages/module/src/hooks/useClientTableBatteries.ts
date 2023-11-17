@@ -1,6 +1,6 @@
 import { useTablePropHelpers } from './useTablePropHelpers';
 import { TableBatteries, TableDerivedState, TableState, UseClientTableBatteriesArgs } from '../types';
-import { getClientTableDerivedState } from './getClientTableDerivedState';
+import { useClientTableDerivedState } from './useClientTableDerivedState';
 import { useTableState } from './useTableState';
 
 /**
@@ -31,7 +31,7 @@ export const useClientTableBatteries = <
 
   // TODO figure out why the `as` below is necessary, the `{ ...args, ...state }` should be enough for TS to infer the rest
   // TODO do we have an actual issue with types here or is this a limitation of TS inference?
-  const derivedState = getClientTableDerivedState({ ...args, ...state } as Args & State);
+  const derivedState = useClientTableDerivedState({ ...args, ...state } as Args & State);
 
   // TODO figure out why the `as` below is necessary, the `{ ...args, ...state }` should be enough for TS to infer the rest
   // TODO do we have an actual issue with types here or is this a limitation of TS inference?

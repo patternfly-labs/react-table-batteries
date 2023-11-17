@@ -1,5 +1,5 @@
 import { ExpansionState } from './useExpansionState';
-import { getExpansionDerivedState } from './getExpansionDerivedState';
+import { useExpansionDerivedState } from './useExpansionDerivedState';
 import { TdProps } from '@patternfly/react-table';
 import { KeyWithValueType } from '../../type-utils';
 import { ItemId } from '../../types';
@@ -62,7 +62,7 @@ export const useExpansionPropHelpers = <TItem, TColumnKey extends string>(
     expansionState: { expandedCells }
   } = args;
 
-  const expansionDerivedState = getExpansionDerivedState(args);
+  const expansionDerivedState = useExpansionDerivedState(args);
   const { isCellExpanded, setCellExpanded } = expansionDerivedState;
 
   /**

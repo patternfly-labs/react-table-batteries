@@ -1,5 +1,5 @@
 import { TrProps } from '@patternfly/react-table';
-import { GetActiveItemDerivedStateArgs, getActiveItemDerivedState } from './getActiveItemDerivedState';
+import { UseActiveItemDerivedStateArgs, useActiveItemDerivedState } from './useActiveItemDerivedState';
 import { ActiveItemState } from './useActiveItemState';
 import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
 
@@ -10,7 +10,7 @@ import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemE
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export type UseActiveItemPropHelpersExternalArgs<TItem> = GetActiveItemDerivedStateArgs<TItem> &
+export type UseActiveItemPropHelpersExternalArgs<TItem> = UseActiveItemDerivedStateArgs<TItem> &
   Omit<UseActiveItemEffectsArgs<TItem>, 'activeItemDerivedState'> & {
     /**
      * Whether the table data is loading
@@ -30,7 +30,7 @@ export type UseActiveItemPropHelpersExternalArgs<TItem> = GetActiveItemDerivedSt
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const useActiveItemPropHelpers = <TItem>(args: UseActiveItemPropHelpersExternalArgs<TItem>) => {
-  const activeItemDerivedState = getActiveItemDerivedState(args);
+  const activeItemDerivedState = useActiveItemDerivedState(args);
   const { isActiveItem, setActiveItem, clearActiveItem } = activeItemDerivedState;
 
   useActiveItemEffects({ ...args, activeItemDerivedState });

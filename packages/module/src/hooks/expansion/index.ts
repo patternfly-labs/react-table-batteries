@@ -1,3 +1,3 @@
 export * from './useExpansionState';
-export * from './getExpansionDerivedState';
+export * from './useExpansionDerivedState';
 export * from './useExpansionPropHelpers';

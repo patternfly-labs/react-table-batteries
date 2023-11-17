@@ -11,14 +11,14 @@ import { handlePropagatedRowClick, objectKeys } from '../utils';
 
 /**
  * Returns derived state and prop helpers for all features. Used to make rendering the table components easier.
- * - Takes "source of truth" state and table-level derived state (derived either on the server or in getClientTableDerivedState)
+ * - Takes "source of truth" state and table-level derived state (derived either on the server or in useClientTableDerivedState)
  *   along with API data and additional args.
  * - Also triggers side-effects for some features to prevent invalid state.
  * - If you aren't using server-side filtering/sorting/pagination, call this via the shorthand hook useClientTableBatteries.
  * - If you are using server-side filtering/sorting/pagination, call this last after calling useTableState and fetching your API data.
  * @see useClientTableBatteries
  * @see useTableState
- * @see getClientTableDerivedState
+ * @see useClientTableDerivedState
  */
 export const useTablePropHelpers = <
   TItem,

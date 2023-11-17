@@ -1,13 +1,13 @@
 import { SortState } from './useSortState';
 
 /**
- * Args for getClientSortDerivedState
+ * Args for useClientSortDerivedState
  * - Partially satisfied by the object returned by useTableState (TableState)
- * - Makes up part of the arguments object taken by getClientTableDerivedState (GetClientTableDerivedStateArgs)
+ * - Makes up part of the arguments object taken by useClientTableDerivedState (UseClientTableDerivedStateArgs)
  * @see TableState
- * @see GetClientTableDerivedStateArgs
+ * @see UseClientTableDerivedStateArgs
  */
-export interface GetClientSortDerivedStateArgs<TItem, TSortableColumnKey extends string> {
+export interface UseClientSortDerivedStateArgs<TItem, TSortableColumnKey extends string> {
   /**
    * The API data items before sorting
    */
@@ -33,11 +33,11 @@ export interface GetClientSortDerivedStateArgs<TItem, TSortableColumnKey extends
  * - For local/client-computed tables only. Performs the actual sorting logic, which is done on the server for server-computed tables.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const getClientSortDerivedState = <TItem, TSortableColumnKey extends string>({
+export const useClientSortDerivedState = <TItem, TSortableColumnKey extends string>({
   items,
   getSortValues,
   sortState: { activeSort }
-}: GetClientSortDerivedStateArgs<TItem, TSortableColumnKey>) => {
+}: UseClientSortDerivedStateArgs<TItem, TSortableColumnKey>) => {
   if (!getSortValues || !activeSort) {
     return { sortedItems: items };
   }

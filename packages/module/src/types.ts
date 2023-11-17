@@ -1,19 +1,19 @@
 import { TableProps, TdProps, ThProps, TrProps } from '@patternfly/react-table';
 import {
   UseFilterStateArgs,
-  GetClientFilterDerivedStateArgs,
+  UseClientFilterDerivedStateArgs,
   UseFilterPropHelpersExternalArgs,
   FilterState
 } from './hooks/filtering';
 import {
-  GetClientSortDerivedStateArgs,
+  UseClientSortDerivedStateArgs,
   UseSortPropHelpersExternalArgs,
   SortState,
   UseSortStateArgs
 } from './hooks/sorting';
 import {
   UsePaginationStateArgs,
-  GetClientPaginationDerivedStateArgs,
+  UseClientPaginationDerivedStateArgs,
   UsePaginationPropHelpersExternalArgs,
   PaginationState
 } from './hooks/pagination';
@@ -185,19 +185,19 @@ export type TableState<
  * Table-level local derived state configuration arguments
  * - "Local derived state" refers to the results of client-side filtering/sorting/pagination. This is not used for server-paginated tables.
  * - Made up of the combined feature-level local derived state argument objects.
- * - Used by getClientTableDerivedState.
- *   - getClientTableDerivedState also requires the return values from useTableState.
+ * - Used by useClientTableDerivedState.
+ *   - useClientTableDerivedState also requires the return values from useTableState.
  * - Also used indirectly by the useClientTableBatteries shorthand hook.
  * - Requires state and API data in scope (or just API data if using useClientTableBatteries).
  */
-export type GetClientTableDerivedStateArgs<
+export type UseClientTableDerivedStateArgs<
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string
-> = GetClientFilterDerivedStateArgs<TItem, TFilterCategoryKey> &
-  GetClientSortDerivedStateArgs<TItem, TSortableColumnKey> &
-  GetClientPaginationDerivedStateArgs<TItem>;
+> = UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey> &
+  UseClientSortDerivedStateArgs<TItem, TSortableColumnKey> &
+  UseClientPaginationDerivedStateArgs<TItem>;
 // There is no ClientSelectionDerivedStateArgs type because selection derived state is always local and internal to useTablePropHelpers
 // There is no ClientExpansionDerivedStateArgs type because expansion derived state is always local and internal to useTablePropHelpers
 // There is no ClientActiveItemDerivedStateArgs type because active item derived state is always local and internal to useTablePropHelpers
@@ -207,7 +207,7 @@ export type GetClientTableDerivedStateArgs<
  * - "Derived state" here refers to the results of filtering/sorting/pagination performed either on the client or the server.
  * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
  * - Provided by either:
- *   - Return values of getClientTableDerivedState (client-side filtering/sorting/pagination)
+ *   - Return values of useClientTableDerivedState (client-side filtering/sorting/pagination)
  *   - The consumer directly (server-side filtering/sorting/pagination)
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
@@ -229,7 +229,7 @@ export interface TableDerivedState<TItem> {
  * - Requires state and API data in scope
  * - Combines all args for useTableState with the return values of useTableState, args used only for rendering, and args derived from either:
  *   - Server-side filtering/sorting/pagination provided by the consumer
- *   - getClientTableDerivedState (client-side filtering/sorting/pagination)
+ *   - useClientTableDerivedState (client-side filtering/sorting/pagination)
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
  */
@@ -267,7 +267,7 @@ export type UseTablePropHelpersArgs<
   };
 
 /**
- * Table controls object
+ * Table batteries object
  * - The object used for rendering. Includes everything you need to return JSX for your table.
  * - Returned by useTablePropHelpers and useClientTableBatteries
  * - Includes all args and return values from useTableState and useTablePropHelpers (configuration, state, derived state and propHelpers).
@@ -374,7 +374,7 @@ export type TableBatteries<
 /**
  * Combined configuration arguments for client-paginated tables
  * - Used by useClientTableBatteries shorthand hook
- * - Combines args for useTableState, getClientTableDerivedState and useTablePropHelpers, omitting args for any of these that come from return values of the others.
+ * - Combines args for useTableState, useClientTableDerivedState and useTablePropHelpers, omitting args for any of these that come from return values of the others.
  */
 export type UseClientTableBatteriesArgs<
   TItem,
@@ -384,7 +384,7 @@ export type UseClientTableBatteriesArgs<
   TPersistenceKeyPrefix extends string = string
 > = UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
   Omit<
-    GetClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey> &
+    UseClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey> &
       UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>,
     | keyof TableDerivedState<TItem>
     | keyof TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>

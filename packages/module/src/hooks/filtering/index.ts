@@ -1,4 +1,4 @@
 export * from './useFilterState';
-export * from './getClientFilterDerivedState';
+export * from './useClientFilterDerivedState';
 export * from './useFilterPropHelpers';
 export * from './helpers';
