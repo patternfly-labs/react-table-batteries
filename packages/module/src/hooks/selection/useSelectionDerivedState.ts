@@ -46,7 +46,7 @@ export interface SelectionDerivedState<TItem> {
   /**
    * The selected items (full API objects from cache).
    */
-  selectedItems: TItem[]; // TODO do we need to make sure these are in table sort order?
+  selectedItems: TItem[];
   /**
    * Returns whether the given item is selected.
    */
@@ -111,15 +111,14 @@ export const useSelectionDerivedState = <TItem>(
   // We memoize any item objects we've seen that match selectedItemIds, even if they are no longer in currentPageItems.
   const selectedItemCacheRef = React.useRef<Record<ItemId, TItem>>({});
   const selectedItems: TItem[] = React.useMemo(() => {
-    currentPageItems.forEach((item) => {
+    (items || currentPageItems).forEach((item) => {
       const itemId = item[idProperty] as ItemId;
       if (selectedItemCacheRef.current[itemId] !== item && selectedItemIds.includes(itemId)) {
         selectedItemCacheRef.current[itemId] = item;
       }
     });
-    // This assertion is safe because the cache should always include all items that have ever been present in selectedItemIds in the current session.
-    return selectedItemIds.map((id) => selectedItemCacheRef.current[id] as TItem);
-  }, [currentPageItems, idProperty, selectedItemIds]);
+    return selectedItemIds.map((id) => selectedItemCacheRef.current[id]).filter(Boolean) as TItem[];
+  }, [currentPageItems, items, idProperty, selectedItemIds]);
 
   const isItemSelected = (item: TItem) => selectedItemIds.includes(item[idProperty] as ItemId);
   return {
