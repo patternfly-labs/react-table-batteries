@@ -102,6 +102,7 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       description: thing.description || ''
     }),
     initialSort: { columnKey: 'name', direction: 'asc' },
+    isItemSelectable: (item) => item.id !== 3, // Testing the non-selectable item behavior
     isLoading: isLoadingMockData,
     variant: 'compact'
   });

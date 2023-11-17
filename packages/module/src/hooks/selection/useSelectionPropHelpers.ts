@@ -28,7 +28,7 @@ export interface UseSelectionPropHelpersInternalArgs {
 export const useSelectionPropHelpers = <TItem>(
   args: UseSelectionPropHelpersExternalArgs<TItem> & UseSelectionPropHelpersInternalArgs
 ) => {
-  const { paginationProps, currentPageItems, items } = args;
+  const { paginationProps, currentPageItems, items, isItemSelectable } = args;
   const selectionDerivedState = useSelectionDerivedState(args);
   const { selectItem, selectItems, selectAll, selectNone, selectedItems, isItemSelected, allSelected } =
     selectionDerivedState;
@@ -60,7 +60,8 @@ export const useSelectionPropHelpers = <TItem>(
       onSelect: (_event, isSelecting) => {
         selectItem(item, isSelecting);
       },
-      isSelected: isItemSelected(item)
+      isSelected: isItemSelected(item),
+      isDisabled: isItemSelectable && !isItemSelectable(item)
     }
   });
 
