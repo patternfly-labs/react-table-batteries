@@ -1,7 +1,8 @@
 import { ExpansionState } from './useExpansionState';
-import { getExpansionDerivedState } from './getExpansionDerivedState';
+import { useExpansionDerivedState } from './useExpansionDerivedState';
 import { TdProps } from '@patternfly/react-table';
 import { KeyWithValueType } from '../../type-utils';
+import { ItemId } from '../../types';
 
 /**
  * Args for useExpansionPropHelpers that come from outside useTablePropHelpers
@@ -20,7 +21,7 @@ export interface UseExpansionPropHelpersExternalArgs<TItem, TColumnKey extends s
   /**
    * The string key/name of a property on the API data item objects that can be used as a unique identifier (string or number)
    */
-  idProperty: KeyWithValueType<TItem, string | number>;
+  idProperty: KeyWithValueType<TItem, ItemId>;
   /**
    * The "source of truth" state for the expansion feature (returned by useExpansionState)
    */
@@ -61,7 +62,7 @@ export const useExpansionPropHelpers = <TItem, TColumnKey extends string>(
     expansionState: { expandedCells }
   } = args;
 
-  const expansionDerivedState = getExpansionDerivedState(args);
+  const expansionDerivedState = useExpansionDerivedState(args);
   const { isCellExpanded, setCellExpanded } = expansionDerivedState;
 
   /**

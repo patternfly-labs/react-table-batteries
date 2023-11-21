@@ -1,13 +1,13 @@
 import { PaginationState } from './usePaginationState';
 
 /**
- * Args for getClientPaginationDerivedState
+ * Args for useClientPaginationDerivedState
  * - Partially satisfied by the object returned by useTableState (TableState)
- * - Makes up part of the arguments object taken by getClientTableDerivedState (GetClientTableDerivedStateArgs)
+ * - Makes up part of the arguments object taken by useClientTableDerivedState (UseClientTableDerivedStateArgs)
  * @see TableState
- * @see GetClientTableDerivedStateArgs
+ * @see UseClientTableDerivedStateArgs
  */
-export interface GetClientPaginationDerivedStateArgs<TItem> {
+export interface UseClientPaginationDerivedStateArgs<TItem> {
   /**
    * The API data items before pagination (but after filtering)
    */
@@ -23,10 +23,10 @@ export interface GetClientPaginationDerivedStateArgs<TItem> {
  * - For local/client-computed tables only. Performs the actual pagination logic, which is done on the server for server-computed tables.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const getClientPaginationDerivedState = <TItem>({
+export const useClientPaginationDerivedState = <TItem>({
   items,
   paginationState: { pageNumber, itemsPerPage }
-}: GetClientPaginationDerivedStateArgs<TItem>) => {
+}: UseClientPaginationDerivedStateArgs<TItem>) => {
   const pageStartIndex = (pageNumber - 1) * itemsPerPage;
   const currentPageItems = items.slice(pageStartIndex, pageStartIndex + itemsPerPage);
   return { currentPageItems };

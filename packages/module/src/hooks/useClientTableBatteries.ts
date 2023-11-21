@@ -1,8 +1,7 @@
 import { useTablePropHelpers } from './useTablePropHelpers';
-import { TableBatteries, UseClientTableBatteriesArgs } from '../types';
-import { getClientTableDerivedState } from './getClientTableDerivedState';
+import { TableBatteries, TableDerivedState, TableState, UseClientTableBatteriesArgs } from '../types';
+import { useClientTableDerivedState } from './useClientTableDerivedState';
 import { useTableState } from './useTableState';
-import { useSelectionState } from '@migtools/lib-ui';
 
 /**
  * Provides all state, derived state, side-effects and prop helpers needed to manage a local/client-computed table.
@@ -20,15 +19,21 @@ export const useClientTableBatteries = <
   args: UseClientTableBatteriesArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
 ): TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const state = useTableState(args);
-  const derivedState = getClientTableDerivedState({ ...args, ...state });
-  return useTablePropHelpers({
-    ...args,
-    ...state,
-    ...derivedState,
-    // TODO we won't need this here once selection state is part of useTableState
-    selectionState: useSelectionState({
-      ...args,
-      isEqual: (a, b) => a[args.idProperty] === b[args.idProperty]
-    })
-  });
+
+  type Args = UseClientTableBatteriesArgs<
+    TItem,
+    TColumnKey,
+    TSortableColumnKey,
+    TFilterCategoryKey,
+    TPersistenceKeyPrefix
+  >;
+  type State = TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>;
+
+  // TODO figure out why the `as` below is necessary, the `{ ...args, ...state }` should be enough for TS to infer the rest
+  // TODO do we have an actual issue with types here or is this a limitation of TS inference?
+  const derivedState = useClientTableDerivedState({ ...args, ...state } as Args & State);
+
+  // TODO figure out why the `as` below is necessary, the `{ ...args, ...state }` should be enough for TS to infer the rest
+  // TODO do we have an actual issue with types here or is this a limitation of TS inference?
+  return useTablePropHelpers({ ...args, ...state, ...derivedState } as Args & State & TableDerivedState<TItem>);
 };

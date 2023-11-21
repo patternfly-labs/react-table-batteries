@@ -4,6 +4,7 @@ import { useSortState } from './sorting';
 import { usePaginationState } from './pagination';
 import { useActiveItemState } from './active-item';
 import { useExpansionState } from './expansion';
+import { useSelectionState } from './selection';
 
 /**
  * Provides the "source of truth" state for all table features.
@@ -40,6 +41,7 @@ export const useTableState = <
     ...args,
     persistTo: getPersistTo('pagination')
   });
+  const selectionState = useSelectionState(args);
   const expansionState = useExpansionState<TColumnKey, TPersistenceKeyPrefix>({
     ...args,
     persistTo: getPersistTo('expansion')
@@ -57,6 +59,7 @@ export const useTableState = <
     filterState,
     sortState,
     paginationState,
+    selectionState,
     expansionState,
     activeItemState,
     cacheKey

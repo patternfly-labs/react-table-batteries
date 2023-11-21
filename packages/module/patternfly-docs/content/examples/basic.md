@@ -35,6 +35,7 @@ import {
 useClientTableBatteries,
 useTablePropHelpers,
 useTableState,
+ToolbarBulkSelector,
 TableHeaderContentWithBatteries,
 ConditionalTableBody,
 TableRowContentWithBatteries,
@@ -130,7 +131,7 @@ The easiest way to achieve this caching behavior is to use a data fetching libra
 
 TODO this example will come in a separate PR
 
-TODO don't use useTableState, but use getClientTableDerivedState
+TODO don't use useTableState, but use useClientTableDerivedState
 
 TODO remark on how this may be helpful for incremental adoption
 
@@ -158,7 +159,7 @@ TODO this example will come in a separate PR
 
 TODO remark on how all the state management and built-in logic provided by `useTableState` and `useClientTableBatteries` is optional, and if you want your table to handle all its own business logic you can still benefit from useTablePropHelpers to make rendering easier.
 
-TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableState` and then maybe `getClientTableDerivedState` or the full `useClientTableBatteries` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
+TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableState` and then maybe `useClientTableDerivedState` or the full `useClientTableBatteries` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
 
 ```js file="./ExampleAdvancedBYOStateAndLogic.tsx"
 
@@ -208,11 +209,7 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ### Selection
 
-TODO this example will come in a separate PR
-
-TODO add a version of the basic client table example with only selection enabled
-
-TODO copy over and rework things from OLD_DOCS.md here
+TODO copy over and rework notes from OLD_DOCS.md here
 
 ```js file="./ExampleFeatureSelection.tsx"
 
@@ -285,7 +282,7 @@ If your API does not support these parameters or you need to have the entire col
 In most cases, you'll only need to use these higher-level hooks and helpers to build a table:
 
 - For client-paginated tables: `useClientTableBatteries` is all you need.
-  - Internally it uses `useTableState`, `useTablePropHelpers` and the `getClientTableDerivedState` helper. The config arguments object is a combination of the arguments required by `useTableState` and `useTablePropHelpers`.
+  - Internally it uses `useTableState`, `useTablePropHelpers` and the `useClientTableDerivedState` helper. The config arguments object is a combination of the arguments required by `useTableState` and `useTablePropHelpers`.
   - The return value (an object we generally name `tableBatteries`) has everything you need to render your table. Give it a `console.log` to see what is available.
 - For server-paginated tables: `useTableState`, `getHubRequestParams`, and `useTablePropHelpers`.
   - Choose whether you want to use React state (default), URL params (recommended), localStorage or sessionStorage as the source of truth, and call `useTableState` with the appropriate `persistTo` option and optional `persistenceKeyPrefix` (to namespace persisted state for multiple tables on the same page).

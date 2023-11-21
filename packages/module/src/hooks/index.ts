@@ -1,6 +1,6 @@
 export * from './useTableState';
 export * from './useTablePropHelpers';
-export * from './getClientTableDerivedState';
+export * from './useClientTableDerivedState';
 export * from './useClientTableBatteries';
 export * from './generic';
 export * from './filtering';

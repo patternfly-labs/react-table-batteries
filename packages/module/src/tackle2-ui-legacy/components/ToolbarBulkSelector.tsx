@@ -16,8 +16,9 @@ import AngleRightIcon from '@patternfly/react-icons/dist/esm/icons/angle-right-i
 export interface ToolbarBulkSelectorProps<T> {
   areAllSelected: boolean;
   areAllExpanded?: boolean;
-  onSelectAll: (flag: boolean) => void;
-  onExpandAll?: (flag: boolean) => void;
+  onSelectAll?: (flag?: boolean) => void;
+  onSelectNone: () => void;
+  onExpandAll?: (flag?: boolean) => void;
   selectedRows: T[];
   onSelectMultiple: (items: T[], isSelecting: boolean) => void;
   currentPageItems: T[];
@@ -29,6 +30,7 @@ export const ToolbarBulkSelector = <T,>({
   currentPageItems,
   areAllSelected,
   onSelectAll,
+  onSelectNone,
   onExpandAll,
   areAllExpanded,
   selectedRows,
@@ -65,8 +67,14 @@ export const ToolbarBulkSelector = <T,>({
     return state;
   };
   const handleSelectAll = (checked: boolean) => {
-    onSelectAll(!!checked);
+    onSelectAll?.(!!checked);
   };
+
+  const selectPage = () =>
+    onSelectMultiple(
+      currentPageItems.map((item: T) => item),
+      true
+    );
 
   // TODO support i18n / custom text for items below
 
@@ -74,6 +82,7 @@ export const ToolbarBulkSelector = <T,>({
     <DropdownItem
       onClick={() => {
         handleSelectAll(false);
+        setIsOpen(false);
       }}
       data-action="none"
       key="select-none"
@@ -83,10 +92,8 @@ export const ToolbarBulkSelector = <T,>({
     </DropdownItem>,
     <DropdownItem
       onClick={() => {
-        onSelectMultiple(
-          currentPageItems.map((item: T) => item),
-          true
-        );
+        selectPage();
+        setIsOpen(false);
       }}
       data-action="page"
       key="select-page"
@@ -94,16 +101,21 @@ export const ToolbarBulkSelector = <T,>({
     >
       Select page ({currentPageItems.length} items)
     </DropdownItem>,
-    <DropdownItem
-      onClick={() => {
-        handleSelectAll(true);
-      }}
-      data-action="all"
-      key="select-all"
-      component="button"
-    >
-      Select all ({paginationProps.itemCount})
-    </DropdownItem>
+    ...(onSelectAll
+      ? [
+          <DropdownItem
+            onClick={() => {
+              handleSelectAll(true);
+              setIsOpen(false);
+            }}
+            data-action="all"
+            key="select-all"
+            component="button"
+          >
+            Select all ({paginationProps.itemCount})
+          </DropdownItem>
+        ]
+      : [])
   ];
 
   return (
@@ -116,6 +128,7 @@ export const ToolbarBulkSelector = <T,>({
             <MenuToggle
               ref={toggleRef}
               onClick={() => setIsOpen(!isOpen)}
+              aria-label="Bulk selection menu toggle"
               splitButtonOptions={{
                 items: [
                   <MenuToggleCheckbox
@@ -124,9 +137,13 @@ export const ToolbarBulkSelector = <T,>({
                     aria-label="Select all"
                     onChange={() => {
                       if (getBulkSelectState() !== false) {
-                        onSelectAll(false);
+                        onSelectNone();
                       } else {
-                        onSelectAll(true);
+                        if (onSelectAll) {
+                          onSelectAll(true);
+                        } else {
+                          selectPage();
+                        }
                       }
                     }}
                     isChecked={getBulkSelectState()}

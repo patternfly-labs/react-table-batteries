@@ -3,13 +3,13 @@ import { objectKeys } from '../../utils';
 import { FilterState } from './useFilterState';
 
 /**
- * Args for getClientFilterDerivedState
+ * Args for useClientFilterDerivedState
  * - Partially satisfied by the object returned by useTableState (TableState)
- * - Makes up part of the arguments object taken by getClientTableDerivedState (GetClientTableDerivedStateArgs)
+ * - Makes up part of the arguments object taken by useClientTableDerivedState (UseClientTableDerivedStateArgs)
  * @see TableState
- * @see GetClientTableDerivedStateArgs
+ * @see UseClientTableDerivedStateArgs
  */
-export interface GetClientFilterDerivedStateArgs<TItem, TFilterCategoryKey extends string> {
+export interface UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey extends string> {
   /**
    * The API data items before filtering
    */
@@ -29,11 +29,11 @@ export interface GetClientFilterDerivedStateArgs<TItem, TFilterCategoryKey exten
  * - For local/client-computed tables only. Performs the actual filtering logic, which is done on the server for server-computed tables.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const getClientFilterDerivedState = <TItem, TFilterCategoryKey extends string>({
+export const useClientFilterDerivedState = <TItem, TFilterCategoryKey extends string>({
   items,
   filterCategories = [],
   filterState: { filterValues }
-}: GetClientFilterDerivedStateArgs<TItem, TFilterCategoryKey>) => {
+}: UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey>) => {
   const filteredItems = items.filter((item) =>
     objectKeys(filterValues).every((categoryKey) => {
       const values = filterValues[categoryKey];

@@ -1,14 +1,15 @@
 import { KeyWithValueType } from '../../type-utils';
+import { ItemId } from '../../types';
 import { ActiveItemState } from './useActiveItemState';
 
 /**
- * Args for getActiveItemDerivedState
+ * Args for useActiveItemDerivedState
  * - Partially satisfied by the object returned by useTableState (TableState)
  * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export interface GetActiveItemDerivedStateArgs<TItem> {
+export interface UseActiveItemDerivedStateArgs<TItem> {
   /**
    * The current page of API data items after filtering/sorting/pagination
    */
@@ -16,7 +17,7 @@ export interface GetActiveItemDerivedStateArgs<TItem> {
   /**
    * The string key/name of a property on the API data item objects that can be used as a unique identifier (string or number)
    */
-  idProperty: KeyWithValueType<TItem, string | number>;
+  idProperty: KeyWithValueType<TItem, ItemId>;
   /**
    * The "source of truth" state for the active item feature (returned by useActiveItemState)
    */
@@ -52,18 +53,18 @@ export interface ActiveItemDerivedState<TItem> {
  * Given the "source of truth" state for the active item feature and additional arguments, returns "derived state" values and convenience functions.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  *
- * NOTE: Unlike `getClient[Filter|Sort|Pagination]DerivedState`, this is not named `getClientActiveItemDerivedState` because it
+ * NOTE: Unlike `useClient[Filter|Sort|Pagination]DerivedState`, this is not named `useClientActiveItemDerivedState` because it
  * is always local/client-computed, and it is still used when working with server-computed tables
- * (it's not specific to client-only-computed tables like the other `getClient*DerivedState` functions are).
+ * (it's not specific to client-only-computed tables like the other `useClient*DerivedState` functions are).
  */
-export const getActiveItemDerivedState = <TItem>({
+export const useActiveItemDerivedState = <TItem>({
   currentPageItems,
   idProperty,
   activeItemState: { activeItemId, setActiveItemId }
-}: GetActiveItemDerivedStateArgs<TItem>): ActiveItemDerivedState<TItem> => ({
+}: UseActiveItemDerivedStateArgs<TItem>): ActiveItemDerivedState<TItem> => ({
   activeItem: currentPageItems.find((item) => item[idProperty] === activeItemId) || null,
   setActiveItem: (item: TItem | null) => {
-    const itemId = (item?.[idProperty] ?? null) as string | number | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?
+    const itemId = (item?.[idProperty] ?? null) as ItemId | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?
     setActiveItemId(itemId);
   },
   clearActiveItem: () => setActiveItemId(null),
