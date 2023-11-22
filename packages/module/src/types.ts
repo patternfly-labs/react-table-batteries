@@ -1,4 +1,4 @@
-import { TableProps, TdProps, ThProps, TrProps } from '@patternfly/react-table';
+import { Table, TableProps, TdProps, ThProps, TrProps } from '@patternfly/react-table';
 import {
   UseFilterStateArgs,
   UseClientFilterDerivedStateArgs,
@@ -59,6 +59,45 @@ export type TableFeature = 'filter' | 'sort' | 'pagination' | 'selection' | 'exp
 export type PersistTarget = 'state' | 'urlParams' | 'localStorage' | 'sessionStorage';
 
 export type ItemId = string | number;
+
+////////////////// TODO experiments below this line
+
+export interface TableFeatureStateArgs {
+  filter: { a: string };
+  sort: {};
+  pagination: {};
+  selection: {};
+  expansion: {};
+  activeItem: {};
+}
+
+// Maybe don't need this?
+export interface TableFeatureDerivedStateArgs {
+  filter: { b: string };
+  sort: {};
+  pagination: {};
+  selection: {};
+  expansion: {};
+  activeItem: {};
+}
+
+export interface TableFeaturePropHelpersArgs {
+  filter: { c: string };
+  sort: {};
+  pagination: {};
+  selection: {};
+  expansion: {};
+  activeItem: {};
+}
+
+// TODO this is basically the feature part of UseClientTableBatteriesArgs right?
+export type TableFeatureAllArgs = {
+  [key in TableFeature]: TableFeatureStateArgs[key] &
+    TableFeatureDerivedStateArgs[key] &
+    TableFeaturePropHelpersArgs[key];
+};
+
+////////////////// TODO experiments above this line
 
 /**
  * Common persistence-specific args
