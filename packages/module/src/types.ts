@@ -90,6 +90,8 @@ export interface TableFeaturePropHelpersArgs {
   activeItem: {};
 }
 
+// TODO a mapped type for the feature objects as they stand with state attached and with derived state attached - use these in the TableState and TableStateWithDerived(?) types - maybe we don't need a standalone type for the latter but we want to include those additional properties on the full batteries object
+
 // TODO this is basically the feature part of UseClientTableBatteriesArgs right?
 export type TableFeatureAllArgs = {
   [key in TableFeature]: TableFeatureStateArgs[key] &
