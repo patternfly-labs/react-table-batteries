@@ -1,5 +1,5 @@
 import React from 'react';
-import { TABLE_FEATURES, TableFeature } from './types';
+import { TABLE_FEATURES, TableBatteries, TableFeature } from './types';
 
 /**
  * Works around problems caused by event propagation when handling a clickable element that contains other clickable elements.
@@ -53,3 +53,51 @@ export const mergeFeatureSubObjects = <
   });
   return merged;
 };
+
+// TODO finish this
+export const getFeatureDefaults = <
+  TItem,
+  TColumnKey extends string,
+  TSortableColumnKey extends TColumnKey,
+  TFilterCategoryKey extends string = string,
+  TPersistenceKeyPrefix extends string = string
+>(): {
+  [key in TableFeature]: Partial<
+    TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>[key]
+  >;
+} => ({
+  filter: {
+    filterCategories: []
+  },
+  sort: {},
+  pagination: {},
+  selection: {},
+  expansion: {},
+  activeItem: {}
+});
+
+// TODO fill in defaults for a full batteries object here
+// TODO this could probably be a loop over TABLE_FEATURES using the defaults object above
+export const withFeatureDefaults = <
+  TPartialBatteries extends Partial<
+    TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+  >,
+  TItem,
+  TColumnKey extends string,
+  TSortableColumnKey extends TColumnKey,
+  TFilterCategoryKey extends string = string,
+  TPersistenceKeyPrefix extends string = string
+>(
+  partialBatteries: TPartialBatteries
+): TPartialBatteries & Required<Pick<TPartialBatteries, TableFeature>> => ({
+  ...partialBatteries,
+  filter: {
+    filterCategories: [],
+    ...partialBatteries.filter
+  },
+  sort: {},
+  pagination: {},
+  selection: {},
+  expansion: {},
+  activeItem: {}
+});
