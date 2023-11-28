@@ -31,11 +31,11 @@ export interface UseActiveItemDerivedStateArgs<TItem> {
  */
 export interface ActiveItemDerivedState<TItem> {
   /**
-   * The API data object matching the `activeItemId` in `activeItemState`
+   * The API data object matching the `activeItemId` in state
    */
   activeItem: TItem | null;
   /**
-   * Updates the active item (sets `activeItemId` in `activeItemState` to the id of the given item).
+   * Updates the active item (sets `activeItemId` in state to the id of the given item).
    * - Pass null to dismiss the active item.
    */
   setActiveItem: (item: TItem | null) => void;
@@ -44,7 +44,7 @@ export interface ActiveItemDerivedState<TItem> {
    */
   clearActiveItem: () => void;
   /**
-   * Returns whether the given item matches the `activeItemId` in `activeItemState`.
+   * Returns whether the given item matches the `activeItemId` in state.
    */
   isActiveItem: (item: TItem) => boolean;
 }
