@@ -49,7 +49,8 @@ export type ItemId = string | number;
 /**
  * Identifier for a feature of the table. State concerns are separated by feature.
  */
-export type TableFeature = 'filter' | 'sort' | 'pagination' | 'selection' | 'expansion' | 'activeItem';
+export const TABLE_FEATURES = ['filter', 'sort', 'pagination', 'selection', 'expansion', 'activeItem'] as const;
+export type TableFeature = (typeof TABLE_FEATURES)[number];
 
 /**
  * Identifier for where to persist state for a single table feature or for all table features.
@@ -201,8 +202,6 @@ export interface TableFeaturePropHelpersArgs {
   expansion: {};
   activeItem: {};
 }
-
-////////////////// TODO experiments above this line
 
 /**
  * Table-level local derived state configuration arguments
@@ -405,10 +404,23 @@ export type UseClientTableBatteriesArgs<
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> = UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
-  Omit<
-    UseClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey> &
-      UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>,
-    | keyof TableDerivedState<TItem>
-    | keyof TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-  >;
+> =
+  // Include all args for useTableState
+  UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
+    // Include args for useClientTableDerivedState that aren't under feature sub-objects
+    Omit<UseClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>, TableFeature> &
+    // Include args for useTablePropHelpers that aren't under feature sub-objects or provided by useClientTableDerivedState
+    Omit<
+      UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
+      TableFeature | keyof TableDerivedState<TItem>
+    > &
+    // Include feature sub-objects with args needed for useClientTableDerivedState and useTablePropHelpers but not provided by useTableState or useClientTableDerivedState
+    Partial<{
+      [key in TableFeature]: Omit<
+        (key extends 'filter' | 'sort' | 'pagination'
+          ? UseClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key]
+          : Record<string, never>) &
+          UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key],
+        keyof TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>[key]
+      >;
+    }>;

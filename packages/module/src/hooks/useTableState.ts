@@ -5,6 +5,7 @@ import { usePaginationState } from './pagination';
 import { useActiveItemState } from './active-item';
 import { useExpansionState } from './expansion';
 import { useSelectionState } from './selection';
+import { mergeFeatureSubObjects } from '../utils';
 
 /**
  * Provides the "source of truth" state for all table features.
@@ -24,24 +25,19 @@ export const useTableState = <
 >(
   args: UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
 ): TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
-  const filterState = useFilterState<TItem, TFilterCategoryKey, TPersistenceKeyPrefix>(args);
-  const sortState = useSortState<TSortableColumnKey, TPersistenceKeyPrefix>(args);
-  const paginationState = usePaginationState<TPersistenceKeyPrefix>(args);
-  const selectionState = useSelectionState(args);
-  const expansionState = useExpansionState<TColumnKey, TPersistenceKeyPrefix>(args);
-  const activeItemState = useActiveItemState<TPersistenceKeyPrefix>(args);
-  const { filterValues } = filterState;
-  const { activeSort } = sortState;
-  const { pageNumber, itemsPerPage } = paginationState;
-  const cacheKey = JSON.stringify({ filterValues, activeSort, pageNumber, itemsPerPage });
-  return {
-    ...args,
-    filter: args.filter ? { ...args.filter, ...filterState } : undefined,
-    sort: args.sort ? { ...args.sort, ...sortState } : undefined,
-    pagination: args.pagination ? { ...args.pagination, ...paginationState } : undefined,
-    selection: args.selection ? { ...args.selection, ...selectionState } : undefined,
-    expansion: args.expansion ? { ...args.expansion, ...expansionState } : undefined,
-    activeItem: args.activeItem ? { ...args.activeItem, ...activeItemState } : undefined,
-    cacheKey
+  const state = {
+    filter: useFilterState<TItem, TFilterCategoryKey, TPersistenceKeyPrefix>(args),
+    sort: useSortState<TSortableColumnKey, TPersistenceKeyPrefix>(args),
+    pagination: usePaginationState<TPersistenceKeyPrefix>(args),
+    selection: useSelectionState(args),
+    expansion: useExpansionState<TColumnKey, TPersistenceKeyPrefix>(args),
+    activeItem: useActiveItemState<TPersistenceKeyPrefix>(args)
   };
+  const {
+    filter: { filterValues },
+    sort: { activeSort },
+    pagination: { pageNumber, itemsPerPage }
+  } = state;
+  const cacheKey = JSON.stringify({ filterValues, activeSort, pageNumber, itemsPerPage });
+  return { ...mergeFeatureSubObjects(args, state), cacheKey };
 };

@@ -1,4 +1,5 @@
 import React from 'react';
+import { TABLE_FEATURES, TableFeature } from './types';
 
 /**
  * Works around problems caused by event propagation when handling a clickable element that contains other clickable elements.
@@ -35,4 +36,20 @@ export const parseMaybeNumericString = (numOrStr: string | undefined | null): st
   }
   const num = Number(numOrStr);
   return isNaN(num) ? numOrStr : num;
+};
+
+export const mergeFeatureSubObjects = <
+  A extends Partial<Record<TableFeature, object>>,
+  B extends Partial<Record<TableFeature, object>>
+>(
+  a: A,
+  b: B
+): Omit<A, TableFeature> & Omit<B, TableFeature> & Partial<{ [key in TableFeature]: A[key] & B[key] }> => {
+  const merged = { ...a, ...b };
+  TABLE_FEATURES.forEach((feature) => {
+    if (b[feature]) {
+      merged[feature] = { ...a[feature], ...b[feature] };
+    }
+  });
+  return merged;
 };

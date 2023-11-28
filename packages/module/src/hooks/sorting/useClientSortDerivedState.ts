@@ -23,7 +23,7 @@ export interface UseClientSortDerivedStateArgs<TItem, TSortableColumnKey extends
      *   - to easily sorted primitive values (string | number | boolean) for this item's value in that column
      */
     // TODO how is this passed in? Should it be an optional part of the sort args in useTableState? Does the consumer need to spread it into the existing sort sub-object?
-    getSortValues: (item: TItem) => Record<TSortableColumnKey, string | number | boolean>;
+    getSortValues?: (item: TItem) => Record<TSortableColumnKey, string | number | boolean>;
   };
 }
 
