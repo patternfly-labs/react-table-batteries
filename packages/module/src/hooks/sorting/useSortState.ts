@@ -22,7 +22,7 @@ export interface ActiveSort<TSortableColumnKey extends string> {
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface SortStateArgs<TSortableColumnKey extends string> extends CommonPersistenceArgs {
+export interface SortStateArgs<TItem, TSortableColumnKey extends string> extends CommonPersistenceArgs {
   /**
    * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
    */
@@ -31,6 +31,15 @@ export interface SortStateArgs<TSortableColumnKey extends string> extends Common
    * The sort column and direction that should be applied by default when the table first loads
    */
   initialSort?: ActiveSort<TSortableColumnKey> | null;
+  /**
+   * A callback function to return, for a given API data item, a record of sortable primitives for that item's sortable columns
+   * - The record maps:
+   *   - from `columnKey` values (the keys of the `columnNames` object passed to useTableState)
+   *   - to easily sorted primitive values (string | number | boolean) for this item's value in that column
+   * Added here even though it's not used in useSortState so args can be passed all at once. Actually used only in useClientSortDerivedState.
+   * @see useClientSortDerivedState
+   */
+  getSortValues?: (item: TItem) => Record<TSortableColumnKey, string | number | boolean>;
 }
 
 /**
@@ -58,8 +67,8 @@ export interface SortState<TSortableColumnKey extends string> {
  * - Omit the `sort` object arg to disable the sorting feature.
  * @see PersistTarget
  */
-export const useSortState = <TSortableColumnKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: { sort?: SortStateArgs<TSortableColumnKey> } & TablePersistenceArgs<TPersistenceKeyPrefix>
+export const useSortState = <TItem, TSortableColumnKey extends string, TPersistenceKeyPrefix extends string = string>(
+  args: { sort?: SortStateArgs<TItem, TSortableColumnKey> } & TablePersistenceArgs<TPersistenceKeyPrefix>
 ): SortState<TSortableColumnKey> => {
   const { persistenceKeyPrefix } = args;
   const persistTo = args.sort?.persistTo || args.persistTo || 'state';

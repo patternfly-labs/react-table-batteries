@@ -60,7 +60,7 @@ export const useTablePropHelpers = <
   const numRenderedColumns = forceNumRenderedColumns || columnKeys.length + numColumnsBeforeData + numColumnsAfterData;
 
   const { filterPropsForToolbar, propsForFilterToolbar } = useFilterPropHelpers(args);
-  const { getSortThProps } = useSortPropHelpers({ ...args, columnKeys });
+  const { getSortThProps } = useSortPropHelpers<TItem, TColumnKey, TSortableColumnKey>({ ...args, columnKeys });
   const { paginationProps, paginationToolbarItemProps } = usePaginationPropHelpers(args);
   const { selectionDerivedState, toolbarBulkSelectorProps, getSelectCheckboxTdProps } = useSelectionPropHelpers({
     ...args,

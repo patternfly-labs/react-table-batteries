@@ -8,11 +8,15 @@ import { SortState, SortStateArgs } from './useSortState';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export interface UseSortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
+export interface UseSortPropHelpersExternalArgs<
+  TItem,
+  TColumnKey extends string,
+  TSortableColumnKey extends TColumnKey
+> {
   /**
    * A subset of the `TableState` object's `sort` property with the state itself and relevant state args
    */
-  sort?: SortState<TSortableColumnKey> & Pick<SortStateArgs<TSortableColumnKey>, 'sortableColumns'>;
+  sort?: SortState<TSortableColumnKey> & Pick<SortStateArgs<TItem, TSortableColumnKey>, 'sortableColumns'>;
 }
 
 /**
@@ -32,8 +36,9 @@ export interface UseSortPropHelpersInternalArgs<TColumnKey extends string> {
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const useSortPropHelpers = <TColumnKey extends string, TSortableColumnKey extends TColumnKey>(
-  args: UseSortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> & UseSortPropHelpersInternalArgs<TColumnKey>
+export const useSortPropHelpers = <TItem, TColumnKey extends string, TSortableColumnKey extends TColumnKey>(
+  args: UseSortPropHelpersExternalArgs<TItem, TColumnKey, TSortableColumnKey> &
+    UseSortPropHelpersInternalArgs<TColumnKey>
 ) => {
   const { columnKeys } = args;
   const { activeSort = null, setActiveSort = () => {}, sortableColumns = [] } = args.sort ?? {};

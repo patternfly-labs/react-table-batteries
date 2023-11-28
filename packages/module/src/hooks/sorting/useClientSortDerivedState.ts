@@ -1,4 +1,4 @@
-import { SortState } from './useSortState';
+import { SortState, SortStateArgs } from './useSortState';
 
 /**
  * Args for useClientSortDerivedState
@@ -15,16 +15,7 @@ export interface UseClientSortDerivedStateArgs<TItem, TSortableColumnKey extends
   /**
    * Feature-specific args: A subset of the `TableState` object's `sort` property with the state itself and relevant state args
    */
-  sort?: SortState<TSortableColumnKey> & {
-    /**
-     * A callback function to return, for a given API data item, a record of sortable primitives for that item's sortable columns
-     * - The record maps:
-     *   - from `columnKey` values (the keys of the `columnNames` object passed to useTableState)
-     *   - to easily sorted primitive values (string | number | boolean) for this item's value in that column
-     */
-    // TODO how is this passed in? Should it be an optional part of the sort args in useTableState? Does the consumer need to spread it into the existing sort sub-object?
-    getSortValues?: (item: TItem) => Record<TSortableColumnKey, string | number | boolean>;
-  };
+  sort?: SortState<TSortableColumnKey> & Pick<SortStateArgs<TItem, TSortableColumnKey>, 'getSortValues'>;
 }
 
 /**

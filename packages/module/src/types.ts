@@ -100,7 +100,7 @@ export interface TableFeatureStateArgs<
   /**
    * State arguments for the sort feature.
    */
-  sort: SortStateArgs<TSortableColumnKey>;
+  sort: SortStateArgs<TItem, TSortableColumnKey>;
   /**
    * State arguments for the pagination feature.
    */
@@ -248,7 +248,7 @@ export type PropHelpersFeatureExternalArgs<
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string
 > = UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey> &
-  UseSortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> &
+  UseSortPropHelpersExternalArgs<TItem, TColumnKey, TSortableColumnKey> &
   UsePaginationPropHelpersExternalArgs &
   UseSelectionPropHelpersExternalArgs<TItem> &
   UseExpansionPropHelpersExternalArgs<TItem, TColumnKey> &

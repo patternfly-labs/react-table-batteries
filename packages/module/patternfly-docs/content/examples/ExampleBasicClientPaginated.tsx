@@ -64,25 +64,28 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       name: 'Name',
       description: 'Description'
     },
-    isFilterEnabled: true,
+    filter: {
+      filterCategories: [
+        {
+          key: 'name',
+          title: 'Name',
+          type: FilterType.search,
+          placeholderText: 'Filter by name...',
+          getItemValue: (thing) => thing.name || ''
+        },
+        {
+          key: 'description',
+          title: 'Description',
+          type: FilterType.search,
+          placeholderText: 'Filter by description...'
+        }
+      ]
+    },
+    sort: {
+      sortableColumns: ['name', 'description'],  
+    }
     isSortEnabled: true,
     isPaginationEnabled: true,
-    // Because isFilterEnabled is true, TypeScript will require these filterCategories:
-    filterCategories: [
-      {
-        key: 'name',
-        title: 'Name',
-        type: FilterType.search,
-        placeholderText: 'Filter by name...',
-        getItemValue: (thing) => thing.name || ''
-      },
-      {
-        key: 'description',
-        title: 'Description',
-        type: FilterType.search,
-        placeholderText: 'Filter by description...'
-      }
-    ],
     // Because isSortEnabled is true, TypeScript will require these sort-related properties:
     sortableColumns: ['name', 'description'],
     getSortValues: (thing) => ({

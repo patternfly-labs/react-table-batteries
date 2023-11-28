@@ -27,7 +27,7 @@ export const useTableState = <
 ): TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const state = {
     filter: useFilterState<TItem, TFilterCategoryKey, TPersistenceKeyPrefix>(args),
-    sort: useSortState<TSortableColumnKey, TPersistenceKeyPrefix>(args),
+    sort: useSortState<TItem, TSortableColumnKey, TPersistenceKeyPrefix>(args),
     pagination: usePaginationState<TPersistenceKeyPrefix>(args),
     selection: useSelectionState(args),
     expansion: useExpansionState<TColumnKey, TPersistenceKeyPrefix>(args),
