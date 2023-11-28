@@ -1,4 +1,3 @@
-import { DiscriminatedArgs } from '../../type-utils';
 import { FeaturePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 
@@ -17,8 +16,22 @@ export interface ActivePagination {
 }
 
 /**
+ * Feature-specific args for usePaginationState
+ * - Used as the `pagination` sub-object in args of both usePaginationState and useTableState as a whole
+ * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see TableBatteries
+ */
+export interface PaginationStateArgs {
+  /**
+   * The initial value of the "items per page" setting on the user's pagination controls (defaults to 10)
+   */
+  initialItemsPerPage?: number;
+  // TODO maybe make this required so we don't have the confusion of passing `pagination: {}` to enable pagination
+}
+
+/**
  * The "source of truth" state for the pagination feature.
- * - Included in the object returned by useTableState (TableState) under the `paginationState` property.
+ * - Included in the `TableState` object returned by useTableState under the `pagination` sub-object (combined with args above).
  * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableState
  * @see TableBatteries
@@ -35,35 +48,17 @@ export interface PaginationState extends ActivePagination {
 }
 
 /**
- * Args for usePaginationState
- * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)
- * - The properties defined here are only required by useTableState if isPaginationEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see UseTableStateArgs
- * @see DiscriminatedArgs
- * @see TableBatteries
- */
-export type UsePaginationStateArgs = DiscriminatedArgs<
-  'isPaginationEnabled',
-  {
-    /**
-     * The initial value of the "items per page" setting on the user's pagination controls (defaults to 10)
-     */
-    initialItemsPerPage?: number;
-  }
->;
-
-/**
  * Provides the "source of truth" state for the pagination feature.
  * - Used internally by useTableState
  * - Takes args defined above as well as optional args for persisting state to a configurable storage target.
+ * - Omit the `pagination` object arg to disable the pagination feature.
  * @see PersistTarget
  */
 export const usePaginationState = <TPersistenceKeyPrefix extends string = string>(
-  args: UsePaginationStateArgs & FeaturePersistenceArgs<TPersistenceKeyPrefix>
+  args: { pagination?: PaginationStateArgs } & FeaturePersistenceArgs<TPersistenceKeyPrefix>
 ): PaginationState => {
-  const { isPaginationEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
-  const initialItemsPerPage = (isPaginationEnabled && args.initialItemsPerPage) || 10;
+  const { persistTo = 'state', persistenceKeyPrefix } = args;
+  const initialItemsPerPage = args.pagination?.initialItemsPerPage || 10;
 
   const defaultValue: ActivePagination = {
     pageNumber: 1,
@@ -77,7 +72,7 @@ export const usePaginationState = <TPersistenceKeyPrefix extends string = string
     TPersistenceKeyPrefix,
     'pageNumber' | 'itemsPerPage'
   >({
-    isEnabled: !!isPaginationEnabled,
+    isEnabled: !!args.pagination, // TODO do we really want to only enable it if we're passing an args object since we have no required args for pagination? Is it a problem if it's just always enabled?
     defaultValue,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused

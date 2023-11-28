@@ -1,11 +1,28 @@
 import React from 'react';
-import { DiscriminatedArgs } from '../../type-utils';
 import { ItemId } from '../../types';
 
 /**
- * The "source of truth" state for the selection feature.
- * - Included in the object returned by useTableState (TableState) under the `selectionState` property.
+ * Feature-specific args for useSelectionState
+ * - Used as the `selection` sub-object in args of both useSelectionState and useTableState as a whole
  * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see UseTableStateArgs
+ * @see TableBatteries
+ */
+export interface SelectionStateArgs {
+  /**
+   * Ids of items to have pre-selected on first render
+   */
+  initialSelectedItemIds?: ItemId[];
+  // TODO how do we avoid the confusion of passing `selection: {}` to enable selection?
+  // TODO it doesn't make sense to require initialSelectedItemIds. Maybe we do need an `enabled: true`?
+  // TODO or can we have `selection: true` as a possible way to pass it and still inherit things the way we want to?
+}
+
+/**
+ * The "source of truth" state for the selection feature.
+ * - Included in the `TableState` object returned by useTableState under the `selection` sub-object (combined with args above).
+ * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * - Omit the `selection` object arg to disable the selection feature.
  * @see TableState
  * @see TableBatteries
  */
@@ -21,25 +38,6 @@ export interface SelectionState {
 }
 
 /**
- * Args for useSelectionState
- * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)
- * - The properties defined here are only required by useTableState if isSelectionEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see UseTableStateArgs
- * @see DiscriminatedArgs
- * @see TableBatteries
- */
-export type UseSelectionStateArgs = DiscriminatedArgs<
-  'isSelectionEnabled',
-  {
-    /**
-     * Ids of items to have pre-selected on first render
-     */
-    initialSelectedItemIds?: ItemId[];
-  }
->;
-
-/**
  * Provides the "source of truth" state for the selection feature.
  * - Used internally by useTableState
  * - NOTE: usePersistentState is not used here because in order to work correctly,
@@ -50,10 +48,8 @@ export type UseSelectionStateArgs = DiscriminatedArgs<
  *   always have those item objects cached.
  * @see PersistTarget
  */
-export const useSelectionState = (args: UseSelectionStateArgs): SelectionState => {
-  const { isSelectionEnabled } = args;
-  const initialSelectedItemIds = (isSelectionEnabled && args.initialSelectedItemIds) || [];
-
+export const useSelectionState = (args: { selection?: SelectionStateArgs }): SelectionState => {
+  const initialSelectedItemIds = args.selection?.initialSelectedItemIds || [];
   const [selectedItemIds, setSelectedItemIds] = React.useState<ItemId[]>(initialSelectedItemIds);
   return { selectedItemIds, setSelectedItemIds };
 };

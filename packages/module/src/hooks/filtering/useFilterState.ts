@@ -1,13 +1,29 @@
 import { FilterValues, FilterCategory } from '../../tackle2-ui-legacy/components/FilterToolbar';
-import { DiscriminatedArgs } from '../../type-utils';
 import { FeaturePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 import { serializeFilterUrlParams } from './helpers';
 import { deserializeFilterUrlParams } from './helpers';
 
 /**
+ * Feature-specific args for useFilterState
+ * - Used as the `filter` sub-object in args of both useFilterState and useTableState as a whole
+ * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see TableBatteries
+ */
+export interface FilterStateArgs<TItem, TFilterCategoryKey extends string> {
+  /**
+   * Definitions of the filters to be used (must include `getItemValue` functions for each category when performing filtering locally)
+   */
+  filterCategories: FilterCategory<TItem, TFilterCategoryKey>[];
+  /**
+   * Initial filter values to use on first render (optional)
+   */
+  initialFilterValues?: FilterValues<TFilterCategoryKey>;
+}
+
+/**
  * The "source of truth" state for the filter feature.
- * - Included in the object returned by useTableState (TableState) under the `filterState` property.
+ * - Included in the `TableState` object returned by useTableState under the `filter` sub-object (combined with args above).
  * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableState
  * @see TableBatteries
@@ -26,39 +42,17 @@ export interface FilterState<TFilterCategoryKey extends string> {
 }
 
 /**
- * Args for useFilterState
- * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)
- * - The properties defined here are only required by useTableState if isFilterEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see UseTableStateArgs
- * @see DiscriminatedArgs
- * @see TableBatteries
- */
-export type UseFilterStateArgs<TItem, TFilterCategoryKey extends string> = DiscriminatedArgs<
-  'isFilterEnabled',
-  {
-    /**
-     * Definitions of the filters to be used (must include `getItemValue` functions for each category when performing filtering locally)
-     */
-    filterCategories: FilterCategory<TItem, TFilterCategoryKey>[];
-    /**
-     * Initial filter values to use on first render (optional)
-     */
-    initialFilterValues?: FilterValues<TFilterCategoryKey>;
-  }
->;
-
-/**
  * Provides the "source of truth" state for the filter feature.
  * - Used internally by useTableState
  * - Takes args defined above as well as optional args for persisting state to a configurable storage target.
+ * - Omit the `filter` object arg to disable the filtering feature.
  * @see PersistTarget
  */
 export const useFilterState = <TItem, TFilterCategoryKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: UseFilterStateArgs<TItem, TFilterCategoryKey> & FeaturePersistenceArgs<TPersistenceKeyPrefix>
+  args: { filter?: FilterStateArgs<TItem, TFilterCategoryKey> } & FeaturePersistenceArgs<TPersistenceKeyPrefix>
 ): FilterState<TFilterCategoryKey> => {
-  const { isFilterEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
-  const initialFilterValues: FilterValues<TFilterCategoryKey> = (isFilterEnabled && args.initialFilterValues) || {};
+  const { persistTo = 'state', persistenceKeyPrefix } = args;
+  const initialFilterValues: FilterValues<TFilterCategoryKey> = args.filter?.initialFilterValues || {};
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456
@@ -67,7 +61,7 @@ export const useFilterState = <TItem, TFilterCategoryKey extends string, TPersis
     TPersistenceKeyPrefix,
     'filters'
   >({
-    isEnabled: !!isFilterEnabled,
+    isEnabled: !!args.filter,
     defaultValue: initialFilterValues,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused

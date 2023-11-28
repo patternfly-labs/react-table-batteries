@@ -1,4 +1,3 @@
-import { DiscriminatedArgs } from '../../type-utils';
 import { FeaturePersistenceArgs } from '../../types';
 import { objectKeys } from '../../utils';
 import { usePersistentState } from '../generic/usePersistentState';
@@ -13,8 +12,24 @@ import { usePersistentState } from '../generic/usePersistentState';
 export type ExpandedCells<TColumnKey extends string> = Record<string, TColumnKey | boolean>;
 
 /**
+ * Feature-specific args for useExpansionState
+ * - Used as the `expansion` sub-object in args of both useExpansionState and useTableState as a whole
+ * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see UseTableStateArgs
+ * @see TableBatteries
+ */
+export interface ExpansionStateArgs {
+  /**
+   * Whether to use single-expand or compound-expand behavior
+   * - "single" for the entire row to be expandable with one toggle.
+   * - "compound" for multiple cells in a row to be expandable with individual toggles.
+   */
+  variant: 'single' | 'compound';
+}
+
+/**
  * The "source of truth" state for the expansion feature.
- * - Included in the object returned by useTableState (TableState) under the `expansionState` property.
+ * - Included in the `TableState` object returned by useTableState under the `expansion` sub-object (combined with args above).
  * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableState
  * @see TableBatteries
@@ -34,36 +49,16 @@ export interface ExpansionState<TColumnKey extends string> {
 }
 
 /**
- * Args for useExpansionState
- * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)
- * - The properties defined here are only required by useTableState if isExpansionEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see UseTableStateArgs
- * @see DiscriminatedArgs
- * @see TableBatteries
- */
-export type UseExpansionStateArgs = DiscriminatedArgs<
-  'isExpansionEnabled',
-  {
-    /**
-     * Whether to use single-expand or compound-expand behavior
-     * - "single" for the entire row to be expandable with one toggle.
-     * - "compound" for multiple cells in a row to be expandable with individual toggles.
-     */
-    expandableVariant: 'single' | 'compound';
-  }
->;
-
-/**
  * Provides the "source of truth" state for the expansion feature.
  * - Used internally by useTableState
  * - Takes args defined above as well as optional args for persisting state to a configurable storage target.
+ * - Omit the `expansion` object arg to disable the expansion feature.
  * @see PersistTarget
  */
 export const useExpansionState = <TColumnKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: UseExpansionStateArgs & FeaturePersistenceArgs<TPersistenceKeyPrefix> = {}
+  args: { expansion?: ExpansionStateArgs } & FeaturePersistenceArgs<TPersistenceKeyPrefix> = {}
 ): ExpansionState<TColumnKey> => {
-  const { isExpansionEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
+  const { persistTo = 'state', persistenceKeyPrefix } = args;
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456
@@ -72,7 +67,7 @@ export const useExpansionState = <TColumnKey extends string, TPersistenceKeyPref
     TPersistenceKeyPrefix,
     'expandedCells'
   >({
-    isEnabled: !!isExpansionEnabled,
+    isEnabled: !!args.expansion, // TODO do we really want to have to pass `expansion: {}`? can we have some `expansion: true` thing that works?
     defaultValue: {},
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused

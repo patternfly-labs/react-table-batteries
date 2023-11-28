@@ -1,39 +1,45 @@
-import { Table, TableProps, TdProps, ThProps, TrProps } from '@patternfly/react-table';
+import { TableProps, TdProps, ThProps, TrProps } from '@patternfly/react-table';
 import {
   UseFilterStateArgs,
   UseClientFilterDerivedStateArgs,
   UseFilterPropHelpersExternalArgs,
-  FilterState
+  FilterState,
+  FilterStateArgs
 } from './hooks/filtering';
 import {
   UseClientSortDerivedStateArgs,
   UseSortPropHelpersExternalArgs,
   SortState,
-  UseSortStateArgs
+  UseSortStateArgs,
+  ActiveSort,
+  SortStateArgs
 } from './hooks/sorting';
 import {
   UsePaginationStateArgs,
   UseClientPaginationDerivedStateArgs,
   UsePaginationPropHelpersExternalArgs,
-  PaginationState
+  PaginationState,
+  PaginationStateArgs
 } from './hooks/pagination';
 import {
   SelectionDerivedState,
   SelectionState,
+  SelectionStateArgs,
   UseSelectionPropHelpersExternalArgs,
   UseSelectionStateArgs
 } from './hooks/selection';
-import { ExpansionDerivedState, ExpansionState, UseExpansionStateArgs } from './hooks/expansion';
+import { ExpansionDerivedState, ExpansionState, ExpansionStateArgs, UseExpansionStateArgs } from './hooks/expansion';
 import {
   ActiveItemDerivedState,
   UseActiveItemPropHelpersExternalArgs,
   ActiveItemState,
-  UseActiveItemStateArgs
+  UseActiveItemStateArgs,
+  ActiveItemStateArgs
 } from './hooks/active-item';
 import { PaginationProps, ToolbarItemProps, ToolbarProps } from '@patternfly/react-core';
 import { UseExpansionPropHelpersExternalArgs } from './hooks/expansion/useExpansionPropHelpers';
 import { DisallowCharacters, DiscriminatedArgs } from './type-utils';
-import { FilterToolbarProps } from './tackle2-ui-legacy/components/FilterToolbar';
+import { FilterCategory, FilterToolbarProps, FilterValues } from './tackle2-ui-legacy/components/FilterToolbar';
 import { ToolbarBulkSelectorProps } from './tackle2-ui-legacy/components/ToolbarBulkSelector';
 
 // Generic type params used here:
@@ -62,13 +68,25 @@ export type ItemId = string | number;
 
 ////////////////// TODO experiments below this line
 
-export interface TableFeatureStateArgs {
-  filter: { a: string };
-  sort: {};
-  pagination: {};
-  selection: {};
-  expansion: {};
-  activeItem: {};
+/**
+ * Feature-specific args for useTableState
+ * - TODO better description here
+ * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see TableBatteries
+ */
+export interface UseTableStateArgs<
+  TItem,
+  TColumnKey extends string,
+  TSortableColumnKey extends TColumnKey,
+  TFilterCategoryKey extends string = string,
+  TPersistenceKeyPrefix extends string = string
+> extends FeaturePersistenceArgs<TPersistenceKeyPrefix> {
+  filter?: FilterStateArgs<TItem, TFilterCategoryKey>;
+  sort?: SortStateArgs<TSortableColumnKey>;
+  pagination?: PaginationStateArgs;
+  selection?: SelectionStateArgs;
+  expansion?: ExpansionStateArgs;
+  activeItem?: ActiveItemStateArgs;
 }
 
 // Maybe don't need this?
@@ -141,6 +159,7 @@ export type TablePersistenceArgs<TPersistenceKeyPrefix extends string = string> 
     /**
      * Where to persist state for this table. Can either be a single target for all features or an object mapping individual features to different targets.
      */
+    // TODO get rid of this and instead have a persistTo in each feature sub-object
     persistTo?: PersistTarget | Partial<Record<TableFeature | 'default', PersistTarget>>;
   };
 
@@ -153,6 +172,8 @@ export type TablePersistenceArgs<TPersistenceKeyPrefix extends string = string> 
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
  */
+// TODO this is being replaced? move the docs?
+/*
 export type UseTableStateArgs<
   TItem,
   TColumnKey extends string,
@@ -173,6 +194,7 @@ export type UseTableStateArgs<
   UseExpansionStateArgs &
   UseActiveItemStateArgs &
   TablePersistenceArgs<TPersistenceKeyPrefix>;
+  */
 
 /**
  * Table-level state object

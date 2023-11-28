@@ -1,4 +1,3 @@
-import { DiscriminatedArgs } from '../../type-utils';
 import { FeaturePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 
@@ -17,8 +16,26 @@ export interface ActiveSort<TSortableColumnKey extends string> {
 }
 
 /**
+ * Feature-specific args for useSortState
+ * - Used as the `sort` sub-object in args of both useSortState and useTableState as a whole
+ * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see UseTableStateArgs
+ * @see TableBatteries
+ */
+export interface SortStateArgs<TSortableColumnKey extends string> {
+  /**
+   * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
+   */
+  sortableColumns: TSortableColumnKey[];
+  /**
+   * The sort column and direction that should be applied by default when the table first loads
+   */
+  initialSort?: ActiveSort<TSortableColumnKey> | null;
+}
+
+/**
  * The "source of truth" state for the sort feature.
- * - Included in the object returned by useTableState (TableState) under the `sortState` property.
+ * - Included in the `TableState` object returned by useTableState under the `sort` sub-object (combined with args above).
  * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableState
  * @see TableBatteries
@@ -35,39 +52,17 @@ export interface SortState<TSortableColumnKey extends string> {
 }
 
 /**
- * Args for useSortState
- * - Makes up part of the arguments object taken by useTableState (UseTableStateArgs)
- * - The properties defined here are only required by useTableState if isSortEnabled is true (see DiscriminatedArgs)
- * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see UseTableStateArgs
- * @see DiscriminatedArgs
- * @see TableBatteries
- */
-export type UseSortStateArgs<TSortableColumnKey extends string> = DiscriminatedArgs<
-  'isSortEnabled',
-  {
-    /**
-     * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
-     */
-    sortableColumns: TSortableColumnKey[];
-    /**
-     * The sort column and direction that should be applied by default when the table first loads
-     */
-    initialSort?: ActiveSort<TSortableColumnKey> | null;
-  }
->;
-
-/**
  * Provides the "source of truth" state for the sort feature.
  * - Used internally by useTableState
  * - Takes args defined above as well as optional args for persisting state to a configurable storage target.
+ * - Omit the `sort` object arg to disable the sorting feature.
  * @see PersistTarget
  */
 export const useSortState = <TSortableColumnKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: UseSortStateArgs<TSortableColumnKey> & FeaturePersistenceArgs<TPersistenceKeyPrefix>
+  args: { sort?: SortStateArgs<TSortableColumnKey> } & FeaturePersistenceArgs<TPersistenceKeyPrefix>
 ): SortState<TSortableColumnKey> => {
-  const { isSortEnabled, persistTo = 'state', persistenceKeyPrefix } = args;
-  const sortableColumns = (isSortEnabled && args.sortableColumns) || [];
+  const { persistTo = 'state', persistenceKeyPrefix } = args;
+  const sortableColumns = args.sort?.sortableColumns || [];
   const initialSort: ActiveSort<TSortableColumnKey> | null = sortableColumns[0]
     ? { columnKey: sortableColumns[0], direction: 'asc' }
     : null;
@@ -79,7 +74,7 @@ export const useSortState = <TSortableColumnKey extends string, TPersistenceKeyP
     TPersistenceKeyPrefix,
     'sortColumn' | 'sortDirection'
   >({
-    isEnabled: !!isSortEnabled,
+    isEnabled: !!args.sort,
     defaultValue: initialSort,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused
