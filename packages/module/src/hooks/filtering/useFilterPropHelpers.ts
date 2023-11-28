@@ -1,5 +1,5 @@
-import { FilterCategory, FilterToolbarProps } from '../../tackle2-ui-legacy/components/FilterToolbar';
-import { FilterState } from './useFilterState';
+import { FilterToolbarProps, FilterValues } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { FilterState, FilterStateArgs } from './useFilterState';
 import { ToolbarProps } from '@patternfly/react-core';
 
 /**
@@ -11,13 +11,9 @@ import { ToolbarProps } from '@patternfly/react-core';
  */
 export interface UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey extends string> {
   /**
-   * The "source of truth" state for the filter feature (returned by useFilterState)
+   * A subset of the `TableState` object's `filter` property with the state itself and relevant state args
    */
-  filterState: FilterState<TFilterCategoryKey>;
-  /**
-   * Definitions of the filters to be used (must include `getItemValue` functions for each category when performing filtering locally)
-   */
-  filterCategories?: FilterCategory<TItem, TFilterCategoryKey>[];
+  filter?: FilterState<TFilterCategoryKey> & Pick<FilterStateArgs<TItem, TFilterCategoryKey>, 'filterCategories'>;
 }
 
 /**
@@ -30,9 +26,10 @@ export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
   args: UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>
 ) => {
   const {
-    filterState: { filterValues, setFilterValues },
+    filterValues = {} as FilterValues<TFilterCategoryKey>,
+    setFilterValues = () => {},
     filterCategories = []
-  } = args;
+  } = args.filter ?? {};
 
   /**
    * Filter-related props for the PF Toolbar component

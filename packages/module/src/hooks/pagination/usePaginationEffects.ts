@@ -7,9 +7,17 @@ import { PaginationState } from './usePaginationState';
  * - Makes up part of the arguments object taken by useTablePropHelpers (UseTablePropHelpersArgs)
  */
 export interface UsePaginationEffectsArgs {
-  isPaginationEnabled?: boolean;
-  paginationState: PaginationState;
+  /**
+   * A subset of the `TableState` object's `pagination` property - here we only need the state itself.
+   */
+  pagination?: PaginationState;
+  /**
+    The total number of items in the entire un-filtered, un-paginated table (the size of the entire API collection being tabulated).
+   */
   totalItemCount: number;
+  /**
+   * Whether the table data is loading
+   */
   isLoading?: boolean;
 }
 
@@ -19,17 +27,14 @@ export interface UsePaginationEffectsArgs {
  * - The effect: When API data updates, if there are fewer total items and the current page no longer exists
  *   (e.g. you were on page 11 and now the last page is 10), move to the last page of data.
  */
-export const usePaginationEffects = ({
-  isPaginationEnabled,
-  paginationState: { itemsPerPage, pageNumber, setPageNumber },
-  totalItemCount,
-  isLoading = false
-}: UsePaginationEffectsArgs) => {
+export const usePaginationEffects = (args: UsePaginationEffectsArgs) => {
+  const { pageNumber = 1, itemsPerPage = 10 } = args.pagination ?? {};
+  const { totalItemCount, isLoading } = args;
   // When items are removed, make sure the current page still exists
   const lastPageNumber = Math.max(Math.ceil(totalItemCount / itemsPerPage), 1);
   React.useEffect(() => {
-    if (isPaginationEnabled && pageNumber > lastPageNumber && !isLoading) {
-      setPageNumber(lastPageNumber);
+    if (args.pagination && pageNumber > lastPageNumber && !isLoading) {
+      args.pagination?.setPageNumber(lastPageNumber);
     }
-  }, [isLoading, isPaginationEnabled, itemsPerPage, lastPageNumber, pageNumber, setPageNumber, totalItemCount]);
+  }, [args.pagination, isLoading, lastPageNumber, pageNumber]);
 };

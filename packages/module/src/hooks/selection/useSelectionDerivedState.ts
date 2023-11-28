@@ -16,14 +16,6 @@ export interface UseSelectionDerivedStateArgs<TItem> {
    */
   idProperty: KeyWithValueType<TItem, ItemId>;
   /**
-   * The "source of truth" state for the selection feature (returned by useSelectionState)
-   */
-  selectionState: SelectionState;
-  /**
-   * Callback to determine if a given item is allowed to be selected. Blocks that item from being present in state.
-   */
-  isItemSelectable?: (item: TItem) => boolean;
-  /**
    * The current page of API data items after filtering/sorting/pagination
    */
   currentPageItems: TItem[];
@@ -35,6 +27,15 @@ export interface UseSelectionDerivedStateArgs<TItem> {
    * All items in the API collection, if available (client-side tables). Enables selectAll.
    */
   items?: TItem[];
+  /**
+   * Feature-specific args: A subset of the `TableState` object's `selection` property with the state itself and relevant state args
+   */
+  selection?: SelectionState & {
+    /**
+     * Callback to determine if a given item is allowed to be selected. Blocks that item from being present in state.
+     */
+    isItemSelectable?: (item: TItem) => boolean;
+  };
 }
 
 /**
@@ -100,14 +101,8 @@ export interface SelectionDerivedState<TItem> {
 export const useSelectionDerivedState = <TItem>(
   args: UseSelectionDerivedStateArgs<TItem>
 ): SelectionDerivedState<TItem> => {
-  const {
-    idProperty,
-    selectionState: { selectedItemIds = [], setSelectedItemIds },
-    isItemSelectable = () => true,
-    currentPageItems,
-    totalItemCount,
-    items
-  } = args;
+  const { idProperty, currentPageItems, totalItemCount, items } = args;
+  const { selectedItemIds = [], setSelectedItemIds = () => {}, isItemSelectable = () => true } = args.selection ?? {};
   // We memoize any item objects we've seen that match selectedItemIds, even if they are no longer in currentPageItems.
   const selectedItemCacheRef = React.useRef<Record<ItemId, TItem>>({});
   const selectedItems: TItem[] = React.useMemo(() => {

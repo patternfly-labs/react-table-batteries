@@ -11,9 +11,9 @@ import { UsePaginationEffectsArgs, usePaginationEffects } from './usePaginationE
  */
 export type UsePaginationPropHelpersExternalArgs = UsePaginationEffectsArgs & {
   /**
-   * The "source of truth" state for the pagination feature (returned by usePaginationState)
+   * A subset of the `TableState` object's `pagination` property - here we only need the state itself.
    */
-  paginationState: PaginationState;
+  pagination?: PaginationState;
   /**
     The total number of items in the entire un-filtered, un-paginated table (the size of the entire API collection being tabulated).
    */
@@ -27,10 +27,8 @@ export type UsePaginationPropHelpersExternalArgs = UsePaginationEffectsArgs & {
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const usePaginationPropHelpers = (args: UsePaginationPropHelpersExternalArgs) => {
-  const {
-    totalItemCount,
-    paginationState: { itemsPerPage, pageNumber, setPageNumber, setItemsPerPage }
-  } = args;
+  const { totalItemCount } = args;
+  const { pageNumber = 1, itemsPerPage = 10, setPageNumber, setItemsPerPage } = args.pagination ?? {};
 
   usePaginationEffects(args);
 
@@ -41,10 +39,10 @@ export const usePaginationPropHelpers = (args: UsePaginationPropHelpersExternalA
     itemCount: totalItemCount,
     perPage: itemsPerPage,
     page: pageNumber,
-    onSetPage: (_event, pageNumber) => setPageNumber(pageNumber),
+    onSetPage: (_event, pageNumber) => setPageNumber?.(pageNumber),
     onPerPageSelect: (_event, perPage) => {
-      setPageNumber(1);
-      setItemsPerPage(perPage);
+      setPageNumber?.(1);
+      setItemsPerPage?.(perPage);
     }
   };
 

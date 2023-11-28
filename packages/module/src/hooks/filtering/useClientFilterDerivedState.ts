@@ -29,8 +29,7 @@ export const useClientFilterDerivedState = <TItem, TFilterCategoryKey extends st
   args: UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey>
 ) => {
   const { items } = args;
-  const filterCategories = args.filter?.filterCategories || [];
-  const filterValues: FilterValues<TFilterCategoryKey> = args.filter?.filterValues || {};
+  const { filterCategories = [], filterValues = {} as FilterValues<TFilterCategoryKey> } = args.filter ?? {};
   const filteredItems = items.filter((item) =>
     objectKeys(filterValues).every((categoryKey) => {
       const values = filterValues[categoryKey];

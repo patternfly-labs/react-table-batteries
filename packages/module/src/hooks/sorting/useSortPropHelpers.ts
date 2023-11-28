@@ -1,5 +1,5 @@
 import { ThProps } from '@patternfly/react-table';
-import { SortState } from './useSortState';
+import { SortState, SortStateArgs } from './useSortState';
 
 /**
  * Args for useSortPropHelpers that come from outside useTablePropHelpers
@@ -10,13 +10,9 @@ import { SortState } from './useSortState';
  */
 export interface UseSortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
   /**
-   * The "source of truth" state for the sort feature (returned by useSortState)
+   * A subset of the `TableState` object's `sort` property with the state itself and relevant state args
    */
-  sortState: SortState<TSortableColumnKey>;
-  /**
-   * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
-   */
-  sortableColumns?: TSortableColumnKey[];
+  sort?: SortState<TSortableColumnKey> & Pick<SortStateArgs<TSortableColumnKey>, 'sortableColumns'>;
 }
 
 /**
@@ -39,11 +35,8 @@ export interface UseSortPropHelpersInternalArgs<TColumnKey extends string> {
 export const useSortPropHelpers = <TColumnKey extends string, TSortableColumnKey extends TColumnKey>(
   args: UseSortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> & UseSortPropHelpersInternalArgs<TColumnKey>
 ) => {
-  const {
-    sortState: { activeSort, setActiveSort },
-    sortableColumns = [],
-    columnKeys
-  } = args;
+  const { columnKeys } = args;
+  const { activeSort = null, setActiveSort = () => {}, sortableColumns = [] } = args.sort ?? {};
 
   /**
    * Returns props for the Th component for a column with sorting enabled.

@@ -2,8 +2,9 @@ import * as React from 'react';
 import { PaginationProps } from '@patternfly/react-core';
 import { ToolbarBulkSelectorProps } from '../../tackle2-ui-legacy/components/ToolbarBulkSelector';
 import { UseSelectionDerivedStateArgs, useSelectionDerivedState } from './useSelectionDerivedState';
-import { UseSelectionEffectsArgs, useSelectionEffects } from './useSelectionEffects';
+import { useSelectionEffects } from './useSelectionEffects';
 import { TdProps } from '@patternfly/react-table';
+import { mergeFeatureSubObjects } from '../../utils';
 /**
  * Args for useSelectionPropHelpers that come from outside useTablePropHelpers
  * - Partially satisfied by the object returned by useTableState (TableState)
@@ -11,8 +12,7 @@ import { TdProps } from '@patternfly/react-table';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export type UseSelectionPropHelpersExternalArgs<TItem> = UseSelectionDerivedStateArgs<TItem> &
-  Omit<UseSelectionEffectsArgs<TItem>, 'selectionDerivedState'>;
+export type UseSelectionPropHelpersExternalArgs<TItem> = UseSelectionDerivedStateArgs<TItem>;
 
 /**
  * Additional args for useSelectionPropHelpers that come from logic inside useTablePropHelpers
@@ -28,12 +28,13 @@ export interface UseSelectionPropHelpersInternalArgs {
 export const useSelectionPropHelpers = <TItem>(
   args: UseSelectionPropHelpersExternalArgs<TItem> & UseSelectionPropHelpersInternalArgs
 ) => {
-  const { paginationProps, currentPageItems, items, isItemSelectable } = args;
+  const { paginationProps, currentPageItems, items } = args;
+  const { isItemSelectable = () => true } = args.selection ?? {};
   const selectionDerivedState = useSelectionDerivedState(args);
   const { selectItem, selectItems, selectAll, selectNone, selectedItems, isItemSelected, allSelected } =
     selectionDerivedState;
 
-  useSelectionEffects({ ...args, selectionDerivedState });
+  useSelectionEffects(mergeFeatureSubObjects(args, { selection: selectionDerivedState }));
 
   // State for shift+click multi-select behavior
   const [lastSelectedRowIndex, setLastSelectedRowIndex] = React.useState<number | null>(null);

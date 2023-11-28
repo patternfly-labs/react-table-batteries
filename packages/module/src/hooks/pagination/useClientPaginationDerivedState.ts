@@ -25,7 +25,7 @@ export interface UseClientPaginationDerivedStateArgs<TItem> {
  */
 export const useClientPaginationDerivedState = <TItem>(args: UseClientPaginationDerivedStateArgs<TItem>) => {
   const { items } = args;
-  const { pageNumber = 1, itemsPerPage = 10 } = args.pagination || {};
+  const { pageNumber = 1, itemsPerPage = 10 } = args.pagination ?? {};
   const pageStartIndex = (pageNumber - 1) * itemsPerPage;
   const currentPageItems = items.slice(pageStartIndex, pageStartIndex + itemsPerPage);
   return { currentPageItems: args.pagination ? currentPageItems : items };

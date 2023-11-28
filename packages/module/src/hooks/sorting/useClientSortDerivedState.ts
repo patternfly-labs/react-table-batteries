@@ -36,7 +36,7 @@ export const useClientSortDerivedState = <TItem, TSortableColumnKey extends stri
   args: UseClientSortDerivedStateArgs<TItem, TSortableColumnKey>
 ) => {
   const { items } = args;
-  const { getSortValues, activeSort } = args?.sort || {};
+  const { getSortValues, activeSort } = args?.sort ?? {};
   if (!getSortValues || !activeSort) {
     return { sortedItems: items };
   }
