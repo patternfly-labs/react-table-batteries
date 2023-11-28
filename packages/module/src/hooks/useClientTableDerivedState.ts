@@ -19,7 +19,7 @@ export const useClientTableDerivedState = <
   args: TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
     UseClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>
 ): TableDerivedState<TItem> => {
-  const { items, isPaginationEnabled = true } = args;
+  const { items } = args;
   const { filteredItems } = useClientFilterDerivedState({
     ...args,
     items
@@ -34,6 +34,6 @@ export const useClientTableDerivedState = <
   });
   return {
     totalItemCount: items.length,
-    currentPageItems: isPaginationEnabled ? currentPageItems : sortedItems
+    currentPageItems
   };
 };

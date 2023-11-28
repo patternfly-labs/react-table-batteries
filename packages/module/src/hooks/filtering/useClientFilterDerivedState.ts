@@ -1,6 +1,6 @@
-import { FilterCategory, getFilterLogicOperator } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { FilterValues, getFilterLogicOperator } from '../../tackle2-ui-legacy/components/FilterToolbar';
 import { objectKeys } from '../../utils';
-import { FilterState } from './useFilterState';
+import { FilterState, FilterStateArgs } from './useFilterState';
 
 /**
  * Args for useClientFilterDerivedState
@@ -15,13 +15,9 @@ export interface UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey exten
    */
   items: TItem[];
   /**
-   * Definitions of the filters to be used (must include `getItemValue` functions for each category when performing filtering locally)
+   * Feature-specific args: A subset of the `TableState` object's `filter` property with the state itself and relevant state args
    */
-  filterCategories?: FilterCategory<TItem, TFilterCategoryKey>[];
-  /**
-   * The "source of truth" state for the filter feature (returned by useFilterState)
-   */
-  filterState: FilterState<TFilterCategoryKey>;
+  filter?: FilterState<TFilterCategoryKey> & Pick<FilterStateArgs<TItem, TFilterCategoryKey>, 'filterCategories'>;
 }
 
 /**
@@ -29,11 +25,12 @@ export interface UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey exten
  * - For local/client-computed tables only. Performs the actual filtering logic, which is done on the server for server-computed tables.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const useClientFilterDerivedState = <TItem, TFilterCategoryKey extends string>({
-  items,
-  filterCategories = [],
-  filterState: { filterValues }
-}: UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey>) => {
+export const useClientFilterDerivedState = <TItem, TFilterCategoryKey extends string>(
+  args: UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey>
+) => {
+  const { items } = args;
+  const filterCategories = args.filter?.filterCategories || [];
+  const filterValues: FilterValues<TFilterCategoryKey> = args.filter?.filterValues || {};
   const filteredItems = items.filter((item) =>
     objectKeys(filterValues).every((categoryKey) => {
       const values = filterValues[categoryKey];

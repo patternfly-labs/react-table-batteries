@@ -69,8 +69,10 @@ export type ItemId = string | number;
 ////////////////// TODO experiments below this line
 
 /**
- * Feature-specific args for useTableState
- * - TODO better description here
+ * Table-level state configuration arguments
+ * - Taken by useTableState
+ * - Made up of the combined feature-level state configuration argument objects.
+ * - Does not require any state or API data in scope (can be called at the top of your component).
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
  */
@@ -81,22 +83,85 @@ export interface UseTableStateArgs<
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 > extends FeaturePersistenceArgs<TPersistenceKeyPrefix> {
+  /**
+   * An ordered mapping of unique keys to human-readable column name strings.
+   * - Keys of this object are used as unique identifiers for columns (`columnKey`).
+   * - Values of this object are rendered in the column headers by default (can be overridden by passing children to <Th>) and used as `dataLabel` for cells in the column.
+   */
+  columnNames: Record<TColumnKey, string>;
+  /**
+   * Arguments for the filter feature. Omit to disable this feature.
+   */
   filter?: FilterStateArgs<TItem, TFilterCategoryKey>;
+  /**
+   * Arguments for the sort feature. Omit to disable this feature.
+   */
   sort?: SortStateArgs<TSortableColumnKey>;
+  /**
+   * Arguments for the pagination feature. Omit to disable this feature.
+   */
   pagination?: PaginationStateArgs;
+  /**
+   * Arguments for the selection feature. Omit to disable this feature.
+   */
   selection?: SelectionStateArgs;
+  /**
+   * Arguments for the expansion feature. Omit to disable this feature.
+   */
   expansion?: ExpansionStateArgs;
+  /**
+   * Arguments for the active item feature. Omit to disable this feature.
+   */
   activeItem?: ActiveItemStateArgs;
 }
 
-// Maybe don't need this?
-export interface TableFeatureDerivedStateArgs {
-  filter: { b: string };
-  sort: {};
-  pagination: {};
-  selection: {};
-  expansion: {};
-  activeItem: {};
+/**
+ * Table-level state object
+ * - Returned by useTableState
+ * - Provides persisted "source of truth" state for all table features.
+ * - Also includes all of useTableState's arguments for convenience, since useTablePropHelpers requires them along with the state itself.
+ * - The state and arguments objects for each feature are merged here as we build up to the full batteries object.
+ * - Note that this only contains the "source of truth" state and does not include "derived state" which is computed at render time.
+ *   - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
+ * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * @see TableBatteries
+ */
+export interface TableState<
+  TItem,
+  TColumnKey extends string,
+  TSortableColumnKey extends TColumnKey,
+  TFilterCategoryKey extends string = string,
+  TPersistenceKeyPrefix extends string = string
+> extends UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> {
+  /**
+   * An object combining the state and state args for the filter feature.
+   */
+  filter?: FilterStateArgs<TItem, TFilterCategoryKey> & FilterState<TFilterCategoryKey>;
+  /**
+   * An object combining the state and state args for the sort feature.
+   */
+  sort?: SortStateArgs<TSortableColumnKey> & SortState<TSortableColumnKey>;
+  /**
+   * An object combining the state and state args for the pagination feature.
+   */
+  pagination?: PaginationStateArgs & PaginationState;
+  /**
+   * An object combining the state and state args for the selection feature.
+   */
+  selection?: SelectionStateArgs & SelectionState;
+  /**
+   * An object combining the state and state args for the expansion feature.
+   */
+  expansion?: ExpansionStateArgs & ExpansionState<TColumnKey>;
+  /**
+   * An object combining the state and state args for the active item feature.
+   */
+  activeItem?: ActiveItemStateArgs & ActiveItemState;
+  /**
+   * A string that changes whenever state changes that should result in a data refetch if this is a server-filtered/sorted/paginated table.
+   * For use as a useEffect dependency, react-query key, or other value that will trigger an API refetch when it changes.
+   */
+  cacheKey: string;
 }
 
 export interface TableFeaturePropHelpersArgs {
@@ -162,87 +227,6 @@ export type TablePersistenceArgs<TPersistenceKeyPrefix extends string = string> 
     // TODO get rid of this and instead have a persistTo in each feature sub-object
     persistTo?: PersistTarget | Partial<Record<TableFeature | 'default', PersistTarget>>;
   };
-
-/**
- * Table-level state configuration arguments
- * - Taken by useTableState
- * - Made up of the combined feature-level state configuration argument objects.
- * - Does not require any state or API data in scope (can be called at the top of your component).
- * - Requires/disallows feature-specific args based on `is[Feature]Enabled` booleans via discriminated unions (see individual [Feature]StateArgs types)
- * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see TableBatteries
- */
-// TODO this is being replaced? move the docs?
-/*
-export type UseTableStateArgs<
-  TItem,
-  TColumnKey extends string,
-  TSortableColumnKey extends TColumnKey,
-  TFilterCategoryKey extends string = string,
-  TPersistenceKeyPrefix extends string = string
-> = {
-  /**
-   * An ordered mapping of unique keys to human-readable column name strings.
-   * - Keys of this object are used as unique identifiers for columns (`columnKey`).
-   * - Values of this object are rendered in the column headers by default (can be overridden by passing children to <Th>) and used as `dataLabel` for cells in the column.
-   */
-  columnNames: Record<TColumnKey, string>;
-} & UseFilterStateArgs<TItem, TFilterCategoryKey> &
-  UseSortStateArgs<TSortableColumnKey> &
-  UsePaginationStateArgs &
-  UseSelectionStateArgs &
-  UseExpansionStateArgs &
-  UseActiveItemStateArgs &
-  TablePersistenceArgs<TPersistenceKeyPrefix>;
-  */
-
-/**
- * Table-level state object
- * - Returned by useTableState
- * - Provides persisted "source of truth" state for all table features.
- * - Also includes all of useTableState's arguments for convenience, since useTablePropHelpers requires them along with the state itself.
- * - Note that this only contains the "source of truth" state and does not include "derived state" which is computed at render time.
- *   - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
- * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
- * @see TableBatteries
- */
-export type TableState<
-  TItem,
-  TColumnKey extends string,
-  TSortableColumnKey extends TColumnKey,
-  TFilterCategoryKey extends string = string,
-  TPersistenceKeyPrefix extends string = string
-> = UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> & {
-  /**
-   * State for the filter feature. Returned by useFilterState.
-   */
-  filterState: FilterState<TFilterCategoryKey>;
-  /**
-   * State for the sort feature. Returned by useSortState.
-   */
-  sortState: SortState<TSortableColumnKey>;
-  /**
-   * State for the pagination feature. Returned by usePaginationState.
-   */
-  paginationState: PaginationState;
-  /**
-   * State for the selection feature. Returned by useSelectionState.
-   */
-  selectionState: SelectionState;
-  /**
-   * State for the expansion feature. Returned by useExpansionState.
-   */
-  expansionState: ExpansionState<TColumnKey>;
-  /**
-   * State for the active item feature. Returned by useActiveItemState.
-   */
-  activeItemState: ActiveItemState;
-  /**
-   * A string that changes whenever state changes that should result in a data refetch if this is a server-filtered/sorted/paginated table.
-   * For use as a useEffect dependency, react-query key, or other value that will trigger an API refetch when it changes.
-   */
-  cacheKey: string;
-};
 
 /**
  * Table-level local derived state configuration arguments
