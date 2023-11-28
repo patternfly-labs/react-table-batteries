@@ -137,6 +137,12 @@ export interface TableFeatureState<
   activeItem: ActiveItemState;
 }
 
+export interface TableFeatureDerivedState<TItem, TColumnKey extends string> {
+  selection: SelectionDerivedState<TItem>;
+  expansion: ExpansionDerivedState<TItem, TColumnKey>;
+  activeItem: ActiveItemDerivedState<TItem>;
+}
+
 /**
  * Table-level state configuration arguments
  * - Taken by useTableState
@@ -194,15 +200,6 @@ export interface TableState<
   cacheKey: string;
 }
 
-export interface TableFeaturePropHelpersArgs {
-  filter: { c: string };
-  sort: {};
-  pagination: {};
-  selection: {};
-  expansion: {};
-  activeItem: {};
-}
-
 /**
  * Table-level local derived state configuration arguments
  * - "Local derived state" refers to the results of client-side filtering/sorting/pagination. This is not used for server-paginated tables.
@@ -245,6 +242,18 @@ export interface TableDerivedState<TItem> {
   totalItemCount: number;
 }
 
+export type PropHelpersFeatureExternalArgs<
+  TItem,
+  TColumnKey extends string,
+  TSortableColumnKey extends TColumnKey,
+  TFilterCategoryKey extends string
+> = UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey> &
+  UseSortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> &
+  UsePaginationPropHelpersExternalArgs &
+  UseSelectionPropHelpersExternalArgs<TItem> &
+  UseExpansionPropHelpersExternalArgs<TItem, TColumnKey> &
+  UseActiveItemPropHelpersExternalArgs<TItem>;
+
 /**
  * Rendering configuration arguments
  * - Used by only useTablePropHelpers
@@ -261,32 +270,42 @@ export type UseTablePropHelpersArgs<
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> = UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
-  UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey> &
-  UseSortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> &
-  UsePaginationPropHelpersExternalArgs &
-  UseSelectionPropHelpersExternalArgs<TItem> &
-  UseExpansionPropHelpersExternalArgs<TItem, TColumnKey> &
-  UseActiveItemPropHelpersExternalArgs<TItem> &
-  TableDerivedState<TItem> & {
-    /**
-     * Whether the table data is loading
-     */
-    isLoading?: boolean;
-    /**
-     * Override the `numRenderedColumns` value used internally. This should be equal to the colSpan of a cell that takes the full width of the table.
-     * - Optional: when omitted, the value used is based on the number of `columnNames` and whether features are enabled that insert additional columns (like checkboxes for selection, a kebab for actions, etc).
-     */
-    forceNumRenderedColumns?: number;
-    /**
-     * The variant of the table. Affects some spacing. Gets included in `propHelpers.tableProps`.
-     */
-    variant?: TableProps['variant'];
-    /**
-     * Whether there is a separate column for action buttons/menus at the right side of the table
-     */
-    hasActionsColumn?: boolean;
-  };
+> =
+  // Include properties from TableState that aren't under a feature sub-object
+  Omit<TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>, TableFeature> &
+    // Include args for feature-specific use*PropHelpers hooks that aren't under a feature sub-object
+    Omit<PropHelpersFeatureExternalArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>, TableFeature> &
+    // For each feature, include a merged object with all state args, state, and external args for that feature.
+    Partial<{
+      [key in TableFeature]: UseTableStateArgs<
+        TItem,
+        TColumnKey,
+        TSortableColumnKey,
+        TFilterCategoryKey,
+        TPersistenceKeyPrefix
+      >[key] &
+        TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>[key] &
+        PropHelpersFeatureExternalArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key];
+    }> &
+    TableDerivedState<TItem> & {
+      /**
+       * Whether the table data is loading
+       */
+      isLoading?: boolean;
+      /**
+       * Override the `numRenderedColumns` value used internally. This should be equal to the colSpan of a cell that takes the full width of the table.
+       * - Optional: when omitted, the value used is based on the number of `columnNames` and whether features are enabled that insert additional columns (like checkboxes for selection, a kebab for actions, etc).
+       */
+      forceNumRenderedColumns?: number;
+      /**
+       * The variant of the table. Affects some spacing. Gets included in `propHelpers.tableProps`.
+       */
+      variant?: TableProps['variant'];
+      /**
+       * Whether there is a separate column for action buttons/menus at the right side of the table
+       */
+      hasActionsColumn?: boolean;
+    };
 
 /**
  * Table batteries object
@@ -300,98 +319,110 @@ export type TableBatteries<
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> = UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> & {
-  /**
-   * The number of extra non-data columns that appear before the data in each row. Based on whether selection and single-expansion features are enabled.
-   */
-  numColumnsBeforeData: number;
-  /**
-   * The number of extra non-data columns that appear after the data in each row. Based on `hasActionsColumn`.
-   */
-  numColumnsAfterData: number;
-  /**
-   * The total number of columns to be rendered including data and non-data columns.
-   */
-  numRenderedColumns: number;
-  /**
-   * Values derived at render time from the selection feature state. Includes helper functions for convenience.
-   */
-  selectionDerivedState: SelectionDerivedState<TItem>;
-  /**
-   * Values derived at render time from the expansion feature state. Includes helper functions for convenience.
-   */
-  expansionDerivedState: ExpansionDerivedState<TItem, TColumnKey>;
-  /**
-   * Values derived at render time from the active-item feature state. Includes helper functions for convenience.
-   */
-  activeItemDerivedState: ActiveItemDerivedState<TItem>;
-  /**
-   * Prop helpers: where it all comes together.
-   * These objects and functions provide props for specific PatternFly components in your table derived from the state and arguments above.
-   * As much of the prop passing as possible is abstracted away via these helpers, which are to be used with spread syntax (e.g. <Td {...getTdProps({ columnKey: "foo" })}/>).
-   * Any props included here can be overridden by simply passing additional props after spreading the helper onto a component.
-   */
-  propHelpers: {
-    /**
-     * Props for the Toolbar component.
-     * Includes spacing based on the table variant and props related to filtering.
-     */
-    toolbarProps: Omit<ToolbarProps, 'ref'>;
-    /**
-     * Props for the Table component.
-     */
-    tableProps: Omit<TableProps, 'ref'>;
-    /**
-     * Returns props for the Th component for a specific column.
-     * Includes default children (column name) and props related to sorting.
-     */
-    getThProps: (args: { columnKey: TColumnKey }) => Omit<ThProps, 'ref'>;
-    /**
-     * Returns props for the Tr component for a specific data item.
-     * Includes props related to the active-item feature.
-     */
-    getTrProps: (args: { item: TItem; onRowClick?: TrProps['onRowClick'] }) => Omit<TrProps, 'ref'>;
-    /**
-     * Returns props for the Td component for a specific column.
-     * Includes default `dataLabel` (column name) and props related to compound expansion.
-     * If this cell is a toggle for a compound-expandable row, pass `isCompoundExpandToggle: true`.
-     * @param args - `columnKey` is always required. If `isCompoundExpandToggle` is passed, `item` and `rowIndex` are also required.
-     */
-    getTdProps: (
-      args: { columnKey: TColumnKey } & DiscriminatedArgs<'isCompoundExpandToggle', { item: TItem; rowIndex: number }>
-    ) => Omit<TdProps, 'ref'>;
-    /**
-     * Props for the FilterToolbar component. Omits the id prop so you must pass it by hand when rendering FilterToolbar.
-     */
-    filterToolbarProps: Omit<FilterToolbarProps<TItem, TFilterCategoryKey>, 'id'>;
-    /**
-     * Props for the Pagination component.
-     */
-    paginationProps: PaginationProps;
-    /**
-     * Props for the ToolbarItem component containing the Pagination component above the table.
-     */
-    paginationToolbarItemProps: ToolbarItemProps;
-    /**
-     * Props for the ToolbarBulkSelector component.
-     */
-    toolbarBulkSelectorProps: ToolbarBulkSelectorProps<TItem>;
-    /**
-     * Returns props for the Td component used as the checkbox cell for each row when using the selection feature.
-     */
-    getSelectCheckboxTdProps: (args: { item: TItem; rowIndex: number }) => Omit<TdProps, 'ref'>;
-    /**
-     * Returns props for the Td component used as the expand toggle when using the single-expand variant of the expansion feature.
-     */
-    getSingleExpandButtonTdProps: (args: { item: TItem; rowIndex: number }) => Omit<TdProps, 'ref'>;
-    /**
-     * Returns props for the Td component used to contain the expanded content when using the expansion feature.
-     * The Td rendered with these props should be the only child of its Tr, which should be directly after the Tr of the row being expanded.
-     * The two Trs for the expandable row and expanded content row should be contained in a Tbody with no other Tr components.
-     */
-    getExpandedContentTdProps: (args: { item: TItem }) => Omit<TdProps, 'ref'>;
-  };
-};
+> =
+  // Include all properties from useTableState (both args and return values) that aren't under feature sub-objects
+  Omit<TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>, TableFeature> &
+    // Include all args for useTablePropHelpers that aren't under feature sub-objects
+    Omit<
+      UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
+      TableFeature
+    > &
+    // For each feature, include merged sub-objects including all args, state and derived state for that feature.
+    Partial<{
+      [key in TableFeature]: TableState<
+        TItem,
+        TColumnKey,
+        TSortableColumnKey,
+        TFilterCategoryKey,
+        TPersistenceKeyPrefix
+      >[key] &
+        UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>[key] &
+        (key extends keyof TableFeatureDerivedState<TItem, TColumnKey>
+          ? TableFeatureDerivedState<TItem, TColumnKey>[key]
+          : unknown);
+    }> & {
+      /**
+       * The number of extra non-data columns that appear before the data in each row. Based on whether selection and single-expansion features are enabled.
+       */
+      numColumnsBeforeData: number;
+      /**
+       * The number of extra non-data columns that appear after the data in each row. Based on `hasActionsColumn`.
+       */
+      numColumnsAfterData: number;
+      /**
+       * The total number of columns to be rendered including data and non-data columns.
+       */
+      numRenderedColumns: number;
+      /**
+       * Prop helpers: where it all comes together.
+       * These objects and functions provide props for specific PatternFly components in your table derived from the state and arguments above.
+       * As much of the prop passing as possible is abstracted away via these helpers, which are to be used with spread syntax (e.g. <Td {...getTdProps({ columnKey: "foo" })}/>).
+       * Any props included here can be overridden by simply passing additional props after spreading the helper onto a component.
+       */
+      propHelpers: {
+        /**
+         * Props for the Toolbar component.
+         * Includes spacing based on the table variant and props related to filtering.
+         */
+        toolbarProps: Omit<ToolbarProps, 'ref'>;
+        /**
+         * Props for the Table component.
+         */
+        tableProps: Omit<TableProps, 'ref'>;
+        /**
+         * Returns props for the Th component for a specific column.
+         * Includes default children (column name) and props related to sorting.
+         */
+        getThProps: (args: { columnKey: TColumnKey }) => Omit<ThProps, 'ref'>;
+        /**
+         * Returns props for the Tr component for a specific data item.
+         * Includes props related to the active-item feature.
+         */
+        getTrProps: (args: { item: TItem; onRowClick?: TrProps['onRowClick'] }) => Omit<TrProps, 'ref'>;
+        /**
+         * Returns props for the Td component for a specific column.
+         * Includes default `dataLabel` (column name) and props related to compound expansion.
+         * If this cell is a toggle for a compound-expandable row, pass `isCompoundExpandToggle: true`.
+         * @param args - `columnKey` is always required. If `isCompoundExpandToggle` is passed, `item` and `rowIndex` are also required.
+         */
+        getTdProps: (
+          args: { columnKey: TColumnKey } & DiscriminatedArgs<
+            'isCompoundExpandToggle',
+            { item: TItem; rowIndex: number }
+          >
+        ) => Omit<TdProps, 'ref'>;
+        /**
+         * Props for the FilterToolbar component. Omits the id prop so you must pass it by hand when rendering FilterToolbar.
+         */
+        filterToolbarProps: Omit<FilterToolbarProps<TItem, TFilterCategoryKey>, 'id'>;
+        /**
+         * Props for the Pagination component.
+         */
+        paginationProps: PaginationProps;
+        /**
+         * Props for the ToolbarItem component containing the Pagination component above the table.
+         */
+        paginationToolbarItemProps: ToolbarItemProps;
+        /**
+         * Props for the ToolbarBulkSelector component.
+         */
+        toolbarBulkSelectorProps: ToolbarBulkSelectorProps<TItem>;
+        /**
+         * Returns props for the Td component used as the checkbox cell for each row when using the selection feature.
+         */
+        getSelectCheckboxTdProps: (args: { item: TItem; rowIndex: number }) => Omit<TdProps, 'ref'>;
+        /**
+         * Returns props for the Td component used as the expand toggle when using the single-expand variant of the expansion feature.
+         */
+        getSingleExpandButtonTdProps: (args: { item: TItem; rowIndex: number }) => Omit<TdProps, 'ref'>;
+        /**
+         * Returns props for the Td component used to contain the expanded content when using the expansion feature.
+         * The Td rendered with these props should be the only child of its Tr, which should be directly after the Tr of the row being expanded.
+         * The two Trs for the expandable row and expanded content row should be contained in a Tbody with no other Tr components.
+         */
+        getExpandedContentTdProps: (args: { item: TItem }) => Omit<TdProps, 'ref'>;
+      };
+    };
 
 /**
  * Combined configuration arguments for client-paginated tables
@@ -419,7 +450,7 @@ export type UseClientTableBatteriesArgs<
       [key in TableFeature]: Omit<
         (key extends 'filter' | 'sort' | 'pagination'
           ? UseClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key]
-          : Record<string, never>) &
+          : unknown) &
           UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key],
         keyof TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>[key]
       >;
