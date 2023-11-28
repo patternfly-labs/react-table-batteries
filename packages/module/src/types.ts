@@ -440,10 +440,12 @@ export type UseClientTableBatteriesArgs<
   UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> &
     // Include args for useClientTableDerivedState that aren't under feature sub-objects
     Omit<UseClientTableDerivedStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>, TableFeature> &
-    // Include args for useTablePropHelpers that aren't under feature sub-objects or provided by useClientTableDerivedState
+    // Include args for useTablePropHelpers that aren't under feature sub-objects or provided by useTableState or useClientTableDerivedState
     Omit<
       UseTablePropHelpersArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
-      TableFeature | keyof TableDerivedState<TItem>
+      | TableFeature
+      | keyof TableDerivedState<TItem>
+      | keyof TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
     > &
     // Include feature sub-objects with args needed for useClientTableDerivedState and useTablePropHelpers but not provided by useTableState or useClientTableDerivedState
     Partial<{

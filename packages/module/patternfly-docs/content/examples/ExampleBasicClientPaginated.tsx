@@ -82,17 +82,14 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       ]
     },
     sort: {
-      sortableColumns: ['name', 'description'],  
-    }
-    isSortEnabled: true,
-    isPaginationEnabled: true,
-    // Because isSortEnabled is true, TypeScript will require these sort-related properties:
-    sortableColumns: ['name', 'description'],
-    getSortValues: (thing) => ({
-      name: thing.name || '',
-      description: thing.description || ''
-    }),
-    initialSort: { columnKey: 'name', direction: 'asc' },
+      sortableColumns: ['name', 'description'],
+      getSortValues: (thing) => ({
+        name: thing.name || '',
+        description: thing.description || ''
+      }),
+      initialSort: { columnKey: 'name', direction: 'asc' }
+    },
+    pagination: {}, // TODO there has to be a better way here
     isLoading: isLoadingMockData,
     variant: 'compact'
   });
