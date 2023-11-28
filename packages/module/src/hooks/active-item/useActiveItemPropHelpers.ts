@@ -1,6 +1,6 @@
 import { TrProps } from '@patternfly/react-table';
 import { UseActiveItemDerivedStateArgs, useActiveItemDerivedState } from './useActiveItemDerivedState';
-import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
+import { useActiveItemEffects } from './useActiveItemEffects';
 import { mergeFeatureSubObjects } from '../../utils';
 
 /**
@@ -10,8 +10,7 @@ import { mergeFeatureSubObjects } from '../../utils';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export type UseActiveItemPropHelpersExternalArgs<TItem> = UseActiveItemDerivedStateArgs<TItem> &
-  UseActiveItemEffectsArgs<TItem>;
+export type UseActiveItemPropHelpersExternalArgs<TItem> = UseActiveItemDerivedStateArgs<TItem>;
 
 /**
  * Given "source of truth" state for the active item feature, returns derived state and `propHelpers`.

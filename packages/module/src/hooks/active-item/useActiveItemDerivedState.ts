@@ -19,9 +19,9 @@ export interface UseActiveItemDerivedStateArgs<TItem> {
    */
   idProperty: KeyWithValueType<TItem, ItemId>;
   /**
-   * The "source of truth" state for the active item feature (returned by useActiveItemState)
+   * A subset of the `TableState` object's `activeItem` property - here we only need the state itself.
    */
-  activeItemState: ActiveItemState;
+  activeItem?: ActiveItemState;
 }
 
 /**
@@ -57,16 +57,18 @@ export interface ActiveItemDerivedState<TItem> {
  * is always local/client-computed, and it is still used when working with server-computed tables
  * (it's not specific to client-only-computed tables like the other `useClient*DerivedState` functions are).
  */
-export const useActiveItemDerivedState = <TItem>({
-  currentPageItems,
-  idProperty,
-  activeItemState: { activeItemId, setActiveItemId }
-}: UseActiveItemDerivedStateArgs<TItem>): ActiveItemDerivedState<TItem> => ({
-  activeItem: currentPageItems.find((item) => item[idProperty] === activeItemId) || null,
-  setActiveItem: (item: TItem | null) => {
-    const itemId = (item?.[idProperty] ?? null) as ItemId | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?
-    setActiveItemId(itemId);
-  },
-  clearActiveItem: () => setActiveItemId(null),
-  isActiveItem: (item) => item[idProperty] === activeItemId
-});
+export const useActiveItemDerivedState = <TItem>(
+  args: UseActiveItemDerivedStateArgs<TItem>
+): ActiveItemDerivedState<TItem> => {
+  const { currentPageItems, idProperty } = args;
+  const { activeItemId = null, setActiveItemId = () => {} } = args.activeItem ?? {};
+  return {
+    activeItem: currentPageItems.find((item) => item[idProperty] === activeItemId) || null,
+    setActiveItem: (item: TItem | null) => {
+      const itemId = (item?.[idProperty] ?? null) as ItemId | null; // TODO Assertion shouldn't be necessary here but TS isn't fully inferring item[idProperty]?
+      setActiveItemId(itemId);
+    },
+    clearActiveItem: () => setActiveItemId(null),
+    isActiveItem: (item) => item[idProperty] === activeItemId
+  };
+};
