@@ -1,4 +1,4 @@
-import { FeaturePersistenceArgs } from '../../types';
+import { CommonPersistenceArgs, TablePersistenceArgs } from '../../types';
 import { objectKeys } from '../../utils';
 import { usePersistentState } from '../generic/usePersistentState';
 
@@ -18,7 +18,7 @@ export type ExpandedCells<TColumnKey extends string> = Record<string, TColumnKey
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface ExpansionStateArgs {
+export interface ExpansionStateArgs extends CommonPersistenceArgs {
   /**
    * Whether to use single-expand or compound-expand behavior
    * - "single" for the entire row to be expandable with one toggle.
@@ -56,9 +56,10 @@ export interface ExpansionState<TColumnKey extends string> {
  * @see PersistTarget
  */
 export const useExpansionState = <TColumnKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: { expansion?: ExpansionStateArgs } & FeaturePersistenceArgs<TPersistenceKeyPrefix> = {}
+  args: { expansion?: ExpansionStateArgs } & TablePersistenceArgs<TPersistenceKeyPrefix> = {}
 ): ExpansionState<TColumnKey> => {
-  const { persistTo = 'state', persistenceKeyPrefix } = args;
+  const { persistenceKeyPrefix } = args;
+  const persistTo = args.expansion?.persistTo || args.persistTo || 'state';
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456

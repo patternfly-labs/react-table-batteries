@@ -44,6 +44,8 @@ import { ToolbarBulkSelectorProps } from './tackle2-ui-legacy/components/Toolbar
 //   TPersistenceKeyPrefix - String (must not include a `:` character) used to distinguish persisted state for multiple tables
 // TODO move this to DOCS.md or CONTRIBUTING.md or MDX docs site and reference the paragraph here
 
+export type ItemId = string | number;
+
 /**
  * Identifier for a feature of the table. State concerns are separated by feature.
  */
@@ -58,11 +60,7 @@ export type TableFeature = 'filter' | 'sort' | 'pagination' | 'selection' | 'exp
  */
 export type PersistTarget = 'state' | 'urlParams' | 'localStorage' | 'sessionStorage';
 
-export type ItemId = string | number;
-
-////////////////// TODO experiments below this line
-
-export interface PersistenceArgs {
+export interface CommonPersistenceArgs {
   /**
    * Where to persist state.
    * When passed at the root level to useTableState, defines the default for all features.
@@ -70,6 +68,17 @@ export interface PersistenceArgs {
    * Optional: Defaults to "state" (React state with no persistence).
    */
   persistTo?: PersistTarget;
+}
+
+export interface TablePersistenceArgs<TPersistenceKeyPrefix extends string> extends CommonPersistenceArgs {
+  /**
+   * A short string uniquely identifying a specific table. Automatically prepended to any key used in state persistence (e.g. in a URL parameter or localStorage).
+   * - Optional: Only omit if this table will not be rendered at the same time as any other tables.
+   * - Allows multiple tables to be used on the same page with the same PersistTarget.
+   * - Cannot contain a `:` character since this is used as the delimiter in the prefixed key.
+   * - Should be short, especially when using the "urlParams" PersistTarget.
+   */
+  persistenceKeyPrefix?: DisallowCharacters<TPersistenceKeyPrefix, ':'>;
 }
 
 /**
@@ -86,27 +95,27 @@ export interface TableFeatureStateArgs<
   /**
    * State arguments for the filter feature.
    */
-  filter: FilterStateArgs<TItem, TFilterCategoryKey> & PersistenceArgs;
+  filter: FilterStateArgs<TItem, TFilterCategoryKey>;
   /**
    * State arguments for the sort feature.
    */
-  sort: SortStateArgs<TSortableColumnKey> & PersistenceArgs;
+  sort: SortStateArgs<TSortableColumnKey>;
   /**
    * State arguments for the pagination feature.
    */
-  pagination: PaginationStateArgs & PersistenceArgs;
+  pagination: PaginationStateArgs;
   /**
    * State arguments for the selection feature.
    */
-  selection: SelectionStateArgs & PersistenceArgs;
+  selection: SelectionStateArgs;
   /**
    * State arguments for the expansion feature.
    */
-  expansion: ExpansionStateArgs & PersistenceArgs;
+  expansion: ExpansionStateArgs;
   /**
    * State arguments for the active item feature.
    */
-  activeItem: ActiveItemStateArgs & PersistenceArgs;
+  activeItem: ActiveItemStateArgs;
 }
 
 /**
@@ -130,7 +139,7 @@ export interface TableFeatureState<
 /**
  * Table-level state configuration arguments
  * - Taken by useTableState
- * - Made up of the combined feature-level state configuration argument objects.
+ * - Made up of the combined feature-level state configuration argument objects (all optional - omit a feature's args to disable it).
  * - Does not require any state or API data in scope (can be called at the top of your component).
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
@@ -141,16 +150,8 @@ export interface UseTableStateArgs<
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> extends PersistenceArgs,
+> extends TablePersistenceArgs<TPersistenceKeyPrefix>,
     Partial<TableFeatureStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>> {
-  /**
-   * A short string uniquely identifying a specific table. Automatically prepended to any key used in state persistence (e.g. in a URL parameter or localStorage).
-   * - Optional: Only omit if this table will not be rendered at the same time as any other tables.
-   * - Allows multiple tables to be used on the same page with the same PersistTarget.
-   * - Cannot contain a `:` character since this is used as the delimiter in the prefixed key.
-   * - Should be short, especially when using the "urlParams" PersistTarget.
-   */
-  persistenceKeyPrefix?: DisallowCharacters<TPersistenceKeyPrefix, ':'>;
   /**
    * An ordered mapping of unique keys to human-readable column name strings.
    * - Keys of this object are used as unique identifiers for columns (`columnKey`).
@@ -178,8 +179,9 @@ export interface TableState<
   TPersistenceKeyPrefix extends string = string
 > extends Omit<
       UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
-      TableFeature
+      TableFeature // Extend the top-level args without the feature sub-objects
     >,
+    // Include optional properties that combine arg and state sub-objects for each feature
     Partial<{
       [key in TableFeature]: TableFeatureStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key] &
         TableFeatureState<TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key];
@@ -199,15 +201,6 @@ export interface TableFeaturePropHelpersArgs {
   expansion: {};
   activeItem: {};
 }
-
-// TODO a mapped type for the feature objects as they stand with state attached and with derived state attached - use these in the TableState and TableStateWithDerived(?) types - maybe we don't need a standalone type for the latter but we want to include those additional properties on the full batteries object
-
-// TODO this is basically the feature part of UseClientTableBatteriesArgs right?
-export type TableFeatureAllArgs = {
-  [key in TableFeature]: TableFeatureStateArgs[key] &
-    TableFeatureDerivedStateArgs[key] &
-    TableFeaturePropHelpersArgs[key];
-};
 
 ////////////////// TODO experiments above this line
 

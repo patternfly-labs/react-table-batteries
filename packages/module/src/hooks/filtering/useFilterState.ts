@@ -1,5 +1,5 @@
 import { FilterValues, FilterCategory } from '../../tackle2-ui-legacy/components/FilterToolbar';
-import { FeaturePersistenceArgs } from '../../types';
+import { CommonPersistenceArgs, TablePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 import { serializeFilterUrlParams } from './helpers';
 import { deserializeFilterUrlParams } from './helpers';
@@ -10,7 +10,7 @@ import { deserializeFilterUrlParams } from './helpers';
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
  */
-export interface FilterStateArgs<TItem, TFilterCategoryKey extends string> {
+export interface FilterStateArgs<TItem, TFilterCategoryKey extends string> extends CommonPersistenceArgs {
   /**
    * Definitions of the filters to be used (must include `getItemValue` functions for each category when performing filtering locally)
    */
@@ -49,9 +49,11 @@ export interface FilterState<TFilterCategoryKey extends string> {
  * @see PersistTarget
  */
 export const useFilterState = <TItem, TFilterCategoryKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: { filter?: FilterStateArgs<TItem, TFilterCategoryKey> } & FeaturePersistenceArgs<TPersistenceKeyPrefix>
+  args: { filter?: FilterStateArgs<TItem, TFilterCategoryKey> } & TablePersistenceArgs<TPersistenceKeyPrefix>
 ): FilterState<TFilterCategoryKey> => {
-  const { persistTo = 'state', persistenceKeyPrefix } = args;
+  const { persistenceKeyPrefix } = args;
+  const persistTo = args.filter?.persistTo || args.persistTo || 'state';
+
   const initialFilterValues: FilterValues<TFilterCategoryKey> = args.filter?.initialFilterValues || {};
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.

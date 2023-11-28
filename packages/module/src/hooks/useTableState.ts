@@ -1,4 +1,4 @@
-import { TableState, UseTableStateArgs, PersistTarget, TableFeature } from '../types';
+import { TableState, UseTableStateArgs } from '../types';
 import { useFilterState } from './filtering';
 import { useSortState } from './sorting';
 import { usePaginationState } from './pagination';
@@ -24,44 +24,24 @@ export const useTableState = <
 >(
   args: UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
 ): TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
-  const getPersistTo = (feature: TableFeature): PersistTarget | undefined =>
-    !args.persistTo || typeof args.persistTo === 'string'
-      ? args.persistTo
-      : args.persistTo[feature] || args.persistTo.default;
-
-  const filterState = useFilterState<TItem, TFilterCategoryKey, TPersistenceKeyPrefix>({
-    ...args,
-    persistTo: getPersistTo('filter')
-  });
-  const sortState = useSortState<TSortableColumnKey, TPersistenceKeyPrefix>({
-    ...args,
-    persistTo: getPersistTo('sort')
-  });
-  const paginationState = usePaginationState<TPersistenceKeyPrefix>({
-    ...args,
-    persistTo: getPersistTo('pagination')
-  });
+  const filterState = useFilterState<TItem, TFilterCategoryKey, TPersistenceKeyPrefix>(args);
+  const sortState = useSortState<TSortableColumnKey, TPersistenceKeyPrefix>(args);
+  const paginationState = usePaginationState<TPersistenceKeyPrefix>(args);
   const selectionState = useSelectionState(args);
-  const expansionState = useExpansionState<TColumnKey, TPersistenceKeyPrefix>({
-    ...args,
-    persistTo: getPersistTo('expansion')
-  });
-  const activeItemState = useActiveItemState<TPersistenceKeyPrefix>({
-    ...args,
-    persistTo: getPersistTo('activeItem')
-  });
+  const expansionState = useExpansionState<TColumnKey, TPersistenceKeyPrefix>(args);
+  const activeItemState = useActiveItemState<TPersistenceKeyPrefix>(args);
   const { filterValues } = filterState;
   const { activeSort } = sortState;
   const { pageNumber, itemsPerPage } = paginationState;
   const cacheKey = JSON.stringify({ filterValues, activeSort, pageNumber, itemsPerPage });
   return {
     ...args,
-    filterState,
-    sortState,
-    paginationState,
-    selectionState,
-    expansionState,
-    activeItemState,
+    filter: args.filter ? { ...args.filter, ...filterState } : undefined,
+    sort: args.sort ? { ...args.sort, ...sortState } : undefined,
+    pagination: args.pagination ? { ...args.pagination, ...paginationState } : undefined,
+    selection: args.selection ? { ...args.selection, ...selectionState } : undefined,
+    expansion: args.expansion ? { ...args.expansion, ...expansionState } : undefined,
+    activeItem: args.activeItem ? { ...args.activeItem, ...activeItemState } : undefined,
     cacheKey
   };
 };

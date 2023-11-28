@@ -1,4 +1,4 @@
-import { FeaturePersistenceArgs, ItemId } from '../../types';
+import { CommonPersistenceArgs, ItemId, TablePersistenceArgs } from '../../types';
 import { parseMaybeNumericString } from '../../utils';
 import { usePersistentState } from '../generic/usePersistentState';
 
@@ -9,8 +9,7 @@ import { usePersistentState } from '../generic/usePersistentState';
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface ActiveItemStateArgs {}
-// TODO there are currently no args here, but we'll probably want the optional `persistTo` in every feature.
+export interface ActiveItemStateArgs extends CommonPersistenceArgs {}
 // TODO this is another case where we'd benefit from the `activeItem: true` option if we can make that work.
 
 /**
@@ -39,9 +38,10 @@ export interface ActiveItemState {
  * @see PersistTarget
  */
 export const useActiveItemState = <TPersistenceKeyPrefix extends string = string>(
-  args: { activeItem?: ActiveItemStateArgs } & FeaturePersistenceArgs<TPersistenceKeyPrefix> = {}
+  args: { activeItem?: ActiveItemStateArgs } & TablePersistenceArgs<TPersistenceKeyPrefix> = {}
 ): ActiveItemState => {
-  const { persistTo, persistenceKeyPrefix } = args;
+  const { persistenceKeyPrefix } = args;
+  const persistTo = args?.activeItem?.persistTo || args.persistTo || 'state';
 
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456

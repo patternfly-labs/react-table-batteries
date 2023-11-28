@@ -1,4 +1,4 @@
-import { FeaturePersistenceArgs } from '../../types';
+import { CommonPersistenceArgs, TablePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 
 /**
@@ -21,7 +21,7 @@ export interface ActivePagination {
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
  */
-export interface PaginationStateArgs {
+export interface PaginationStateArgs extends CommonPersistenceArgs {
   /**
    * The initial value of the "items per page" setting on the user's pagination controls (defaults to 10)
    */
@@ -55,9 +55,11 @@ export interface PaginationState extends ActivePagination {
  * @see PersistTarget
  */
 export const usePaginationState = <TPersistenceKeyPrefix extends string = string>(
-  args: { pagination?: PaginationStateArgs } & FeaturePersistenceArgs<TPersistenceKeyPrefix>
+  args: { pagination?: PaginationStateArgs } & TablePersistenceArgs<TPersistenceKeyPrefix>
 ): PaginationState => {
-  const { persistTo = 'state', persistenceKeyPrefix } = args;
+  const { persistenceKeyPrefix } = args;
+  const persistTo = args.pagination?.persistTo || args.persistTo || 'state';
+
   const initialItemsPerPage = args.pagination?.initialItemsPerPage || 10;
 
   const defaultValue: ActivePagination = {

@@ -1,4 +1,4 @@
-import { FeaturePersistenceArgs } from '../../types';
+import { CommonPersistenceArgs, TablePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 
 /**
@@ -22,7 +22,7 @@ export interface ActiveSort<TSortableColumnKey extends string> {
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface SortStateArgs<TSortableColumnKey extends string> {
+export interface SortStateArgs<TSortableColumnKey extends string> extends CommonPersistenceArgs {
   /**
    * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
    */
@@ -59,9 +59,11 @@ export interface SortState<TSortableColumnKey extends string> {
  * @see PersistTarget
  */
 export const useSortState = <TSortableColumnKey extends string, TPersistenceKeyPrefix extends string = string>(
-  args: { sort?: SortStateArgs<TSortableColumnKey> } & FeaturePersistenceArgs<TPersistenceKeyPrefix>
+  args: { sort?: SortStateArgs<TSortableColumnKey> } & TablePersistenceArgs<TPersistenceKeyPrefix>
 ): SortState<TSortableColumnKey> => {
-  const { persistTo = 'state', persistenceKeyPrefix } = args;
+  const { persistenceKeyPrefix } = args;
+  const persistTo = args.sort?.persistTo || args.persistTo || 'state';
+
   const sortableColumns = args.sort?.sortableColumns || [];
   const initialSort: ActiveSort<TSortableColumnKey> | null = sortableColumns[0]
     ? { columnKey: sortableColumns[0], direction: 'asc' }
