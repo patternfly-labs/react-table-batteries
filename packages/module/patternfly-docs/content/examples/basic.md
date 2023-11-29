@@ -68,7 +68,7 @@ For client-paginated tables, the only hook you need is `useClientTableBatteries`
 
 This simple example includes only the filtering, sorting and pagination features and excludes arguments and properties related to the other features (see [Features](#features)).
 
-All features are disabled by default. Features are enabled by passing a feature sub-object containing `isEnabled: true` and any feature-specific arguments. For example, to enable filtering in this example we pass `filter: { isEnabled: true, filterCategories: [...] }`. Some features have no feature-specific arguments; for example, to enable pagination we pass only `pagination: { isEnabled: true }`.
+All features are disabled by default. Features are enabled by passing a feature sub-object containing `isEnabled: true` and any feature-specific arguments. For example, to enable filtering in this example we pass `filter: { isEnabled: true, filterCategories: [...] }`. Some features have no required feature-specific arguments; for example, to enable pagination we pass only `pagination: { isEnabled: true }`.
 
 This example also shows a powerful optional capability of these hooks: the `persistTo` argument. This can be passed to either `useTableState` or `useClientTableBatteries` and it allows us to store the current pagination/sort/filter state in a custom location and use that as the source of truth. The supported `persistTo` values are `'state'` (default), `'urlParams'` (recommended), `'localStorage'` or `'sessionStorage'`. For more on each option see [Custom state persistence targets](#custom-state-persistence-targets).
 

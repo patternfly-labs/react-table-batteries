@@ -9,9 +9,7 @@ import { usePersistentState } from '../generic/usePersistentState';
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface ActiveItemStateArgs extends FeatureStateCommonArgs {
-  // Nothing here yet but we may need to add args for this feature in the future
-}
+export type ActiveItemStateArgs = FeatureStateCommonArgs;
 
 /**
  * The "source of truth" state for the active item feature.

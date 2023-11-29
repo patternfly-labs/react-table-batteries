@@ -19,5 +19,5 @@ export type MergedArgs<
   TIncludedFeatures extends TableFeature = TableFeature
 > = Omit<A, TableFeature> &
   Omit<B, TableFeature> & {
-    [key in TIncludedFeatures]: [A, B] extends [undefined, undefined] ? undefined : A[key] & B[key];
+    [key in TIncludedFeatures]: A[key] & B[key];
   };
