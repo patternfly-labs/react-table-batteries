@@ -131,6 +131,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
       description: 'Description'
     },
     filter: {
+      isEnabled: true,
       filterCategories: [
         {
           key: 'name',
@@ -147,10 +148,11 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
       ]
     },
     sort: {
+      isEnabled: true,
       sortableColumns: ['name', 'description'],
       initialSort: { columnKey: 'name', direction: 'asc' }
     },
-    pagination: {}
+    pagination: { isEnabled: true }
   });
 
   const { isLoadingMockData, mockFetchResponse } = useMemoizedMockDataFetch(tableState);

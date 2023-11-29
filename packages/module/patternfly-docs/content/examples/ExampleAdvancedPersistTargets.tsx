@@ -67,6 +67,7 @@ export const ExampleAdvancedPersistTargets: React.FunctionComponent = () => {
       description: 'Description'
     },
     filter: {
+      isEnabled: true,
       persistTo: 'localStorage', // Overrides the default 'urlParams' value above for this feature only.
       filterCategories: [
         {
@@ -85,6 +86,7 @@ export const ExampleAdvancedPersistTargets: React.FunctionComponent = () => {
       ]
     },
     sort: {
+      isEnabled: true,
       sortableColumns: ['name', 'description'],
       getSortValues: (thing) => ({
         name: thing.name || '',
@@ -93,6 +95,7 @@ export const ExampleAdvancedPersistTargets: React.FunctionComponent = () => {
       initialSort: { columnKey: 'name', direction: 'asc' }
     },
     pagination: {
+      isEnabled: true,
       persistTo: 'state' // Overrides the default 'urlParams' value above for this feature only.
     }
   });

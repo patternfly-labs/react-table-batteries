@@ -67,6 +67,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       description: 'Description'
     },
     filter: {
+      isEnabled: true,
       filterCategories: [
         {
           key: 'name',
@@ -85,6 +86,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       ]
     },
     sort: {
+      isEnabled: true,
       sortableColumns: ['name', 'description'],
       getSortValues: (thing) => ({
         name: thing.name || '',
@@ -92,7 +94,7 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       }),
       initialSort: { columnKey: 'name', direction: 'asc' }
     },
-    pagination: {} // TODO there has to be a better way here
+    pagination: { isEnabled: true }
   });
 
   // Here we destructure some of the properties from `batteries` for rendering.

@@ -78,6 +78,7 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       description: 'Description'
     },
     filter: {
+      isEnabled: true,
       filterCategories: [
         {
           key: 'name',
@@ -95,6 +96,7 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       ]
     },
     sort: {
+      isEnabled: true,
       sortableColumns: ['name', 'description'],
       getSortValues: (thing) => ({
         name: thing.name || '',
@@ -102,8 +104,9 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       }),
       initialSort: { columnKey: 'name', direction: 'asc' }
     },
-    pagination: {},
+    pagination: { isEnabled: true },
     selection: {
+      isEnabled: true,
       isItemSelectable: (item) => item.id !== 3 // Testing the non-selectable item behavior
     }
   });
