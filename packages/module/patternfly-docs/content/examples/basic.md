@@ -111,9 +111,9 @@ Passing one of these values as a string will set the persistence target for all 
 
 This example persists state for all features to URL parameters except filter state which is persisted in localStorage (resets only when clearing browsing data) and pagination state which is stored in React state (resets when reloading the page).
 
-<!-- ```js file="./ExampleAdvancedPersistTargets.tsx"
+```js file="./ExampleAdvancedPersistTargets.tsx"
 
-``` -->
+```
 
 ### Caching to prevent redundant data fetches
 
@@ -123,9 +123,9 @@ If we introduce a caching layer that reuses previous data when fetching with the
 
 The easiest way to achieve this caching behavior is to use a data fetching library with caching support built in. For example, when using react-query's `useQuery` hook, you can use the `tableState.cacheKey` as part of your `queryKey` value and you'll get these benefits for free. Here we implement our own cache instead (not recommended) for demonstration purposes.
 
-<!-- ```js file="./ExampleAdvancedCaching.tsx"
+```js file="./ExampleAdvancedCaching.tsx"
 
-``` -->
+```
 
 ### Bringing your own state
 
@@ -135,9 +135,9 @@ TODO don't use useTableState, but use useClientTableDerivedState
 
 TODO remark on how this may be helpful for incremental adoption
 
-<!-- ```js file="./ExampleAdvancedBYOState.tsx"
+```js file="./ExampleAdvancedBYOState.tsx"
 
-``` -->
+```
 
 ### Bringing your own client-side filtering/sorting/pagination logic
 
@@ -149,9 +149,9 @@ TODO remark on how this may be helpful for incremental adoption
 
 TODO remark on how it is similar to the [basic server-side example](#server-side-filteringsortingpagination) except performing the logic in the component instead of on a mock server.
 
-<!-- ```js file="./ExampleAdvancedBYOLogic.tsx"
+```js file="./ExampleAdvancedBYOLogic.tsx"
 
-``` -->
+```
 
 ### Bringing your own state and logic (use prop helpers only)
 
@@ -161,9 +161,9 @@ TODO remark on how all the state management and built-in logic provided by `useT
 
 TODO remark on how this may be helpful as the first step in incremental adoption, followed by adopting `useTableState` and then maybe `useClientTableDerivedState` or the full `useClientTableBatteries` (as in the [basic client-side example](#client-side-filteringsortingpagination)).
 
-<!-- ```js file="./ExampleAdvancedBYOStateAndLogic.tsx"
+```js file="./ExampleAdvancedBYOStateAndLogic.tsx"
 
-``` -->
+```
 
 ## Features
 
@@ -179,9 +179,9 @@ TODO add a version of the basic client table example with only filtering enabled
 
 TODO copy over and rework things from OLD_DOCS.md here
 
-<!-- ```js file="./ExampleFeatureFilter.tsx"
+```js file="./ExampleFeatureFilter.tsx"
 
-``` -->
+```
 
 ### Sorting
 
@@ -191,9 +191,9 @@ TODO add a version of the basic client table example with only sorting enabled
 
 TODO copy over and rework things from OLD_DOCS.md here
 
-<!-- ```js file="./ExampleFeatureSort.tsx"
+```js file="./ExampleFeatureSort.tsx"
 
-``` -->
+```
 
 ### Pagination
 
@@ -203,17 +203,17 @@ TODO add a version of the basic client table example with only pagination enable
 
 TODO copy over and rework things from OLD_DOCS.md here
 
-<!-- ```js file="./ExampleFeaturePagination.tsx"
+```js file="./ExampleFeaturePagination.tsx"
 
-``` -->
+```
 
 ### Selection
 
 TODO copy over and rework notes from OLD_DOCS.md here
 
-<!-- ```js file="./ExampleFeatureSelection.tsx"
+```js file="./ExampleFeatureSelection.tsx"
 
-``` -->
+```
 
 ### Expansion (single-expand variant)
 
@@ -223,9 +223,9 @@ TODO add a version of the basic client table example with only single-expand ena
 
 TODO copy over and rework things from OLD_DOCS.md here
 
-<!-- ```js file="./ExampleFeatureExpansionSingle.tsx"
+```js file="./ExampleFeatureExpansionSingle.tsx"
 
-``` -->
+```
 
 ### Expansion (compound-expand variant)
 
@@ -235,9 +235,9 @@ TODO add a version of the basic client table example with only compound-expand e
 
 TODO copy over and rework things from OLD_DOCS.md here
 
-<!-- ```js file="./ExampleFeatureExpansionCompound.tsx"
+```js file="./ExampleFeatureExpansionCompound.tsx"
 
-``` -->
+```
 
 ### Active Item
 
@@ -249,9 +249,9 @@ TODO should we copy over PageDrawer code? or just some text with the active item
 
 TODO copy over and rework things from OLD_DOCS.md here
 
-<!-- ```js file="./ExampleFeatureActiveItem.tsx"
+```js file="./ExampleFeatureActiveItem.tsx"
 
-``` -->
+```
 
 ### Kitchen sink example (all features enabled)
 
@@ -261,9 +261,9 @@ TODO add a version of the basic client table example with all of the above featu
 
 TODO copy over and rework things from OLD_DOCS.md here
 
-<!-- ```js file="./ExampleKitchenSink.tsx"
+```js file="./ExampleKitchenSink.tsx"
 
-``` -->
+```
 
 ## Usage notes
 
