@@ -82,6 +82,13 @@ export interface TablePersistenceArgs<TPersistenceKeyPrefix extends string> exte
   persistenceKeyPrefix?: DisallowCharacters<TPersistenceKeyPrefix, ':'>;
 }
 
+export interface FeatureStateCommonArgs extends CommonPersistenceArgs {
+  /**
+   * Whether to enable logic and rendering related to the feature
+   */
+  isEnabled: boolean;
+}
+
 /**
  * Feature-specific args for useTableState with all features enabled.
  * Separated from UseTableStateArgs for easier reference to the defined versions of these properties.

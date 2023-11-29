@@ -1,18 +1,22 @@
 import React from 'react';
 import { SelectionDerivedState } from './useSelectionDerivedState';
+import { SelectionStateArgs } from './useSelectionState';
 
 export interface UseSelectionEffectsArgs<TItem> {
-  selection?: SelectionDerivedState<TItem> & {
-    isItemSelectable?: (item: TItem) => boolean;
-  };
+  selection?: SelectionDerivedState<TItem> & Pick<SelectionStateArgs<TItem>, 'isEnabled' | 'isItemSelectable'>;
 }
 
 export const useSelectionEffects = <TItem>(args: UseSelectionEffectsArgs<TItem>) => {
-  const { isItemSelectable = () => true, selectedItems = [], setSelectedItems = () => {} } = args.selection ?? {};
+  const {
+    isEnabled,
+    isItemSelectable = () => true,
+    selectedItems = [],
+    setSelectedItems = () => {}
+  } = args.selection ?? {};
   // If isItemSelectable changes and a selected item is no longer selectable, deselect it
   React.useEffect(() => {
-    if (isItemSelectable && !selectedItems.every(isItemSelectable)) {
+    if (isEnabled && isItemSelectable && !selectedItems.every(isItemSelectable)) {
       setSelectedItems(selectedItems.filter(isItemSelectable));
     }
-  }, [isItemSelectable, selectedItems, setSelectedItems]);
+  }, [isEnabled, isItemSelectable, selectedItems, setSelectedItems]);
 };

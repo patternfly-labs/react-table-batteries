@@ -1,5 +1,5 @@
 import { FilterValues, FilterCategory } from '../../tackle2-ui-legacy/components/FilterToolbar';
-import { CommonPersistenceArgs, TablePersistenceArgs } from '../../types';
+import { FeatureStateCommonArgs, TablePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 import { serializeFilterUrlParams } from './helpers';
 import { deserializeFilterUrlParams } from './helpers';
@@ -10,7 +10,7 @@ import { deserializeFilterUrlParams } from './helpers';
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
  */
-export interface FilterStateArgs<TItem, TFilterCategoryKey extends string> extends CommonPersistenceArgs {
+export interface FilterStateArgs<TItem, TFilterCategoryKey extends string> extends FeatureStateCommonArgs {
   /**
    * Definitions of the filters to be used (must include `getItemValue` functions for each category when performing filtering locally)
    */
@@ -63,7 +63,7 @@ export const useFilterState = <TItem, TFilterCategoryKey extends string, TPersis
     TPersistenceKeyPrefix,
     'filters'
   >({
-    isEnabled: !!args.filter,
+    isEnabled: args.filter?.isEnabled || false,
     defaultValue: initialFilterValues,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused

@@ -1,4 +1,4 @@
-import { CommonPersistenceArgs, ItemId, TablePersistenceArgs } from '../../types';
+import { FeatureStateCommonArgs, ItemId, TablePersistenceArgs } from '../../types';
 import { parseMaybeNumericString } from '../../utils';
 import { usePersistentState } from '../generic/usePersistentState';
 
@@ -9,8 +9,9 @@ import { usePersistentState } from '../generic/usePersistentState';
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface ActiveItemStateArgs extends CommonPersistenceArgs {}
-// TODO this is another case where we'd benefit from the `activeItem: true` option if we can make that work.
+export interface ActiveItemStateArgs extends FeatureStateCommonArgs {
+  // Nothing here yet but we may need to add args for this feature in the future
+}
 
 /**
  * The "source of truth" state for the active item feature.
@@ -46,7 +47,7 @@ export const useActiveItemState = <TPersistenceKeyPrefix extends string = string
   // We won't need to pass the latter two type params here if TS adds support for partial inference.
   // See https://github.com/konveyor/tackle2-ui/issues/1456
   const [activeItemId, setActiveItemId] = usePersistentState<ItemId | null, TPersistenceKeyPrefix, 'activeItem'>({
-    isEnabled: !!args.activeItem,
+    isEnabled: args.activeItem?.isEnabled || false,
     defaultValue: null,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused

@@ -72,23 +72,23 @@ export const useTablePropHelpers = <
 
   const toolbarProps: PropHelpers['toolbarProps'] = {
     className: variant === 'compact' ? spacing.pt_0 : '',
-    ...(args.filter && filterPropsForToolbar)
+    ...(args.filter?.isEnabled && filterPropsForToolbar)
   };
 
   const tableProps: PropHelpers['tableProps'] = {
     variant,
-    isExpandable: !!args.expansion
+    isExpandable: args.expansion?.isEnabled
   };
 
   const getThProps: PropHelpers['getThProps'] = ({ columnKey }) => ({
-    ...(args.sort && getSortThProps({ columnKey: columnKey as TSortableColumnKey })),
+    ...(args.sort?.isEnabled && getSortThProps({ columnKey: columnKey as TSortableColumnKey })),
     children: columnNames[columnKey]
   });
 
   const getTrProps: PropHelpers['getTrProps'] = ({ item, onRowClick }) => {
     const activeItemTrProps = getActiveItemTrProps({ item });
     return {
-      ...(args.activeItem && activeItemTrProps),
+      ...(args.activeItem?.isEnabled && activeItemTrProps),
       onRowClick: (event) =>
         handlePropagatedRowClick(event, () => {
           activeItemTrProps.onRowClick?.(event);
@@ -101,7 +101,8 @@ export const useTablePropHelpers = <
     const { columnKey } = getTdPropsArgs;
     return {
       dataLabel: columnNames[columnKey],
-      ...(args.expansion?.variant === 'compound' &&
+      ...(args.expansion?.isEnabled &&
+        args.expansion?.variant === 'compound' &&
         getTdPropsArgs.isCompoundExpandToggle &&
         getCompoundExpandTdProps({
           columnKey,

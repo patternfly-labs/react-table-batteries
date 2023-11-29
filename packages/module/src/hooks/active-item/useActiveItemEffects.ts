@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ActiveItemDerivedState } from './useActiveItemDerivedState';
-import { ActiveItemState } from './useActiveItemState';
+import { ActiveItemState, ActiveItemStateArgs } from './useActiveItemState';
 
 /**
  * Args for useActiveItemEffects
@@ -13,9 +13,9 @@ export interface UseActiveItemEffectsArgs<TItem> {
    */
   isLoading?: boolean;
   /**
-   * Feature-specific args: A subset of the `TableState` object's `activeItem` property with state and derived state
+   * Feature-specific args: A subset of the `TableState` object's `activeItem` property with state, derived state and relevant state args
    */
-  activeItem?: ActiveItemState & ActiveItemDerivedState<TItem>;
+  activeItem?: ActiveItemState & ActiveItemDerivedState<TItem> & Pick<ActiveItemStateArgs, 'isEnabled'>;
 }
 
 /**
@@ -26,10 +26,10 @@ export interface UseActiveItemEffectsArgs<TItem> {
  */
 export const useActiveItemEffects = <TItem>(args: UseActiveItemEffectsArgs<TItem>) => {
   const { isLoading } = args;
-  const { activeItemId = null, activeItem = null, clearActiveItem } = args.activeItem ?? {};
+  const { isEnabled, activeItemId = null, activeItem = null, clearActiveItem } = args.activeItem ?? {};
   React.useEffect(() => {
-    if (!isLoading && activeItemId && !activeItem) {
+    if (isEnabled && !isLoading && activeItemId && !activeItem) {
       clearActiveItem?.();
     }
-  }, [activeItem, activeItemId, clearActiveItem, isLoading]);
+  }, [isEnabled, activeItem, activeItemId, clearActiveItem, isLoading]);
 };

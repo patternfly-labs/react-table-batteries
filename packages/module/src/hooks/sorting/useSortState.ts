@@ -1,4 +1,4 @@
-import { CommonPersistenceArgs, TablePersistenceArgs } from '../../types';
+import { FeatureStateCommonArgs, TablePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 
 /**
@@ -22,7 +22,7 @@ export interface ActiveSort<TSortableColumnKey extends string> {
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface SortStateArgs<TItem, TSortableColumnKey extends string> extends CommonPersistenceArgs {
+export interface SortStateArgs<TItem, TSortableColumnKey extends string> extends FeatureStateCommonArgs {
   /**
    * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
    */
@@ -85,7 +85,7 @@ export const useSortState = <TItem, TSortableColumnKey extends string, TPersiste
     TPersistenceKeyPrefix,
     'sortColumn' | 'sortDirection'
   >({
-    isEnabled: !!args.sort,
+    isEnabled: args.sort?.isEnabled || false,
     defaultValue: initialSort,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused

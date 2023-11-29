@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { PaginationState } from './usePaginationState';
+import { PaginationState, PaginationStateArgs } from './usePaginationState';
 
 /**
  * Args for usePaginationEffects
@@ -8,9 +8,9 @@ import { PaginationState } from './usePaginationState';
  */
 export interface UsePaginationEffectsArgs {
   /**
-   * A subset of the `TableState` object's `pagination` property - here we only need the state itself.
+   * A subset of the `TableState` object's `pagination` property with the state itself and relevant state args
    */
-  pagination?: PaginationState;
+  pagination?: PaginationState & Pick<PaginationStateArgs, 'isEnabled'>;
   /**
     The total number of items in the entire un-filtered, un-paginated table (the size of the entire API collection being tabulated).
    */
@@ -33,7 +33,7 @@ export const usePaginationEffects = (args: UsePaginationEffectsArgs) => {
   // When items are removed, make sure the current page still exists
   const lastPageNumber = Math.max(Math.ceil(totalItemCount / itemsPerPage), 1);
   React.useEffect(() => {
-    if (args.pagination && pageNumber > lastPageNumber && !isLoading) {
+    if (args.pagination?.isEnabled && pageNumber > lastPageNumber && !isLoading) {
       args.pagination?.setPageNumber(lastPageNumber);
     }
   }, [args.pagination, isLoading, lastPageNumber, pageNumber]);

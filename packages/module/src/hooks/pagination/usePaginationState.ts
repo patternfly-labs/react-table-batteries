@@ -1,4 +1,4 @@
-import { CommonPersistenceArgs, TablePersistenceArgs } from '../../types';
+import { FeatureStateCommonArgs, TablePersistenceArgs } from '../../types';
 import { usePersistentState } from '../generic/usePersistentState';
 
 /**
@@ -21,12 +21,11 @@ export interface ActivePagination {
  * - Properties here are included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
  * @see TableBatteries
  */
-export interface PaginationStateArgs extends CommonPersistenceArgs {
+export interface PaginationStateArgs extends FeatureStateCommonArgs {
   /**
    * The initial value of the "items per page" setting on the user's pagination controls (defaults to 10)
    */
   initialItemsPerPage?: number;
-  // TODO maybe make this required so we don't have the confusion of passing `pagination: {}` to enable pagination
 }
 
 /**
@@ -74,7 +73,7 @@ export const usePaginationState = <TPersistenceKeyPrefix extends string = string
     TPersistenceKeyPrefix,
     'pageNumber' | 'itemsPerPage'
   >({
-    isEnabled: !!args.pagination, // TODO do we really want to only enable it if we're passing an args object since we have no required args for pagination? Is it a problem if it's just always enabled?
+    isEnabled: args.pagination?.isEnabled || false,
     defaultValue,
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused

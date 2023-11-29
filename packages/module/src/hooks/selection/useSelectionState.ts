@@ -1,21 +1,20 @@
 import React from 'react';
-import { ItemId } from '../../types';
+import { FeatureStateCommonArgs, ItemId } from '../../types';
 
 /**
  * Feature-specific args for useSelectionState
  * - Used as the `selection` sub-object in args of both useSelectionState and useTableState as a whole
  * - Also included in the `TableBatteries` object returned by useTablePropHelpers and useClientTableBatteries.
+ * - Note that selection does not support the persistTo arg because it would break the derived state logic
+ *   (and because persisted checkbox selections are generally not desirable).
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface SelectionStateArgs<TItem> {
+export interface SelectionStateArgs<TItem> extends Omit<FeatureStateCommonArgs, 'persistTo'> {
   /**
    * Ids of items to have pre-selected on first render
    */
   initialSelectedItemIds?: ItemId[];
-  // TODO how do we avoid the confusion of passing `selection: {}` to enable selection?
-  // TODO it doesn't make sense to require initialSelectedItemIds. Maybe we do need an `enabled: true`?
-  // TODO or can we have `selection: true` as a possible way to pass it and still inherit things the way we want to?
   /**
    * Callback to determine if a given item is allowed to be selected. Blocks that item from being present in state.
    * Added here even though it's not used in useSelectionState so args can all be passed at once. Actually used only in useSelectionDerivedState.

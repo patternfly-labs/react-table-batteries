@@ -1,4 +1,4 @@
-import { CommonPersistenceArgs, TablePersistenceArgs } from '../../types';
+import { FeatureStateCommonArgs, TablePersistenceArgs } from '../../types';
 import { objectKeys } from '../../utils';
 import { usePersistentState } from '../generic/usePersistentState';
 
@@ -18,7 +18,7 @@ export type ExpandedCells<TColumnKey extends string> = Record<string, TColumnKey
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface ExpansionStateArgs extends CommonPersistenceArgs {
+export interface ExpansionStateArgs extends FeatureStateCommonArgs {
   /**
    * Whether to use single-expand or compound-expand behavior
    * - "single" for the entire row to be expandable with one toggle.
@@ -68,7 +68,7 @@ export const useExpansionState = <TColumnKey extends string, TPersistenceKeyPref
     TPersistenceKeyPrefix,
     'expandedCells'
   >({
-    isEnabled: !!args.expansion, // TODO do we really want to have to pass `expansion: {}`? can we have some `expansion: true` thing that works?
+    isEnabled: args.expansion?.isEnabled || false,
     defaultValue: {},
     persistenceKeyPrefix,
     // Note: For the discriminated union here to work without TypeScript getting confused
