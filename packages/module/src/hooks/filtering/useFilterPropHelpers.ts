@@ -1,4 +1,4 @@
-import { FilterToolbarProps, FilterValues } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { FilterToolbarProps } from '../../tackle2-ui-legacy/components/FilterToolbar';
 import { FilterState, FilterStateArgs } from './useFilterState';
 import { ToolbarProps } from '@patternfly/react-core';
 

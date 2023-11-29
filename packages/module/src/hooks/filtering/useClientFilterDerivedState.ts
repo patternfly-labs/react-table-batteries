@@ -1,4 +1,4 @@
-import { FilterValues, getFilterLogicOperator } from '../../tackle2-ui-legacy/components/FilterToolbar';
+import { getFilterLogicOperator } from '../../tackle2-ui-legacy/components/FilterToolbar';
 import { objectKeys } from '../../utils';
 import { FilterState, FilterStateArgs } from './useFilterState';
 
