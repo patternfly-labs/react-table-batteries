@@ -440,3 +440,8 @@ export type UseClientTableBatteriesArgs<
         keyof TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>[key]
       >;
     }>;
+
+// TODO can we simplify by going the other direction? Explicitly put the whole batteries object type here,
+// then pick from it for other places that need properties and partials from it.
+// perhaps assert that the full object and its combined parts are equal with a type equality guard
+// (see https://stackoverflow.com/a/73461648/22769581 for an example)
