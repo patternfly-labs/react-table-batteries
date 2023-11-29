@@ -16,7 +16,7 @@ export interface UseSortPropHelpersExternalArgs<
   /**
    * A subset of the `TableState` object's `sort` property with the state itself and relevant state args
    */
-  sort?: SortState<TSortableColumnKey> & Pick<SortStateArgs<TItem, TSortableColumnKey>, 'sortableColumns'>;
+  sort: SortState<TSortableColumnKey> & Pick<SortStateArgs<TItem, TSortableColumnKey>, 'sortableColumns'>;
 }
 
 /**
@@ -40,8 +40,10 @@ export const useSortPropHelpers = <TItem, TColumnKey extends string, TSortableCo
   args: UseSortPropHelpersExternalArgs<TItem, TColumnKey, TSortableColumnKey> &
     UseSortPropHelpersInternalArgs<TColumnKey>
 ) => {
-  const { columnKeys } = args;
-  const { activeSort = null, setActiveSort = () => {}, sortableColumns = [] } = args.sort ?? {};
+  const {
+    columnKeys,
+    sort: { activeSort, setActiveSort, sortableColumns }
+  } = args;
 
   /**
    * Returns props for the Th component for a column with sorting enabled.

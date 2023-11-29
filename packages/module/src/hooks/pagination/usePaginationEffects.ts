@@ -10,7 +10,7 @@ export interface UsePaginationEffectsArgs {
   /**
    * A subset of the `TableState` object's `pagination` property with the state itself and relevant state args
    */
-  pagination?: PaginationState & Pick<PaginationStateArgs, 'isEnabled'>;
+  pagination: PaginationState & Pick<PaginationStateArgs, 'isEnabled'>;
   /**
     The total number of items in the entire un-filtered, un-paginated table (the size of the entire API collection being tabulated).
    */
@@ -28,8 +28,11 @@ export interface UsePaginationEffectsArgs {
  *   (e.g. you were on page 11 and now the last page is 10), move to the last page of data.
  */
 export const usePaginationEffects = (args: UsePaginationEffectsArgs) => {
-  const { pageNumber = 1, itemsPerPage = 10 } = args.pagination ?? {};
-  const { totalItemCount, isLoading } = args;
+  const {
+    totalItemCount,
+    isLoading,
+    pagination: { pageNumber, itemsPerPage }
+  } = args;
   // When items are removed, make sure the current page still exists
   const lastPageNumber = Math.max(Math.ceil(totalItemCount / itemsPerPage), 1);
   React.useEffect(() => {

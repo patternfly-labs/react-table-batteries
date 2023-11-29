@@ -15,7 +15,7 @@ export interface UseClientPaginationDerivedStateArgs<TItem> {
   /**
    * Feature-specific args: A subset of the `TableState` object's `pagination` property with only the state itself
    */
-  pagination?: PaginationState;
+  pagination: PaginationState;
 }
 
 /**
@@ -24,8 +24,10 @@ export interface UseClientPaginationDerivedStateArgs<TItem> {
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const useClientPaginationDerivedState = <TItem>(args: UseClientPaginationDerivedStateArgs<TItem>) => {
-  const { items } = args;
-  const { pageNumber = 1, itemsPerPage = 10 } = args.pagination ?? {};
+  const {
+    items,
+    pagination: { pageNumber, itemsPerPage }
+  } = args;
   const pageStartIndex = (pageNumber - 1) * itemsPerPage;
   const currentPageItems = items.slice(pageStartIndex, pageStartIndex + itemsPerPage);
   return { currentPageItems: args.pagination ? currentPageItems : items };

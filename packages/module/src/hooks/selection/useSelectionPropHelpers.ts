@@ -19,7 +19,7 @@ import { MergedArgs } from '../../type-utils';
  */
 export type UseSelectionPropHelpersExternalArgs<TItem> = MergedArgs<
   UseSelectionDerivedStateArgs<TItem>,
-  { selection?: Omit<Required<UseSelectionEffectsArgs<TItem>>['selection'], keyof SelectionDerivedState<TItem>> },
+  { selection: Omit<UseSelectionEffectsArgs<TItem>['selection'], keyof SelectionDerivedState<TItem>> },
   'selection'
 >;
 
@@ -37,8 +37,12 @@ export interface UseSelectionPropHelpersInternalArgs {
 export const useSelectionPropHelpers = <TItem>(
   args: UseSelectionPropHelpersExternalArgs<TItem> & UseSelectionPropHelpersInternalArgs
 ) => {
-  const { paginationProps, currentPageItems, items } = args;
-  const { isItemSelectable = () => true } = args.selection ?? {};
+  const {
+    paginationProps,
+    currentPageItems,
+    items,
+    selection: { isItemSelectable = () => true }
+  } = args;
   const selectionDerivedState = useSelectionDerivedState(args);
   const { selectItem, selectItems, selectAll, selectNone, selectedItems, isItemSelected, allSelected } =
     selectionDerivedState;

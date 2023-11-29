@@ -13,7 +13,7 @@ export interface UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey exte
   /**
    * A subset of the `TableState` object's `filter` property with the state itself and relevant state args
    */
-  filter?: FilterState<TFilterCategoryKey> & Pick<FilterStateArgs<TItem, TFilterCategoryKey>, 'filterCategories'>;
+  filter: FilterState<TFilterCategoryKey> & Pick<FilterStateArgs<TItem, TFilterCategoryKey>, 'filterCategories'>;
 }
 
 /**
@@ -26,10 +26,8 @@ export const useFilterPropHelpers = <TItem, TFilterCategoryKey extends string>(
   args: UseFilterPropHelpersExternalArgs<TItem, TFilterCategoryKey>
 ) => {
   const {
-    filterValues = {} as FilterValues<TFilterCategoryKey>,
-    setFilterValues = () => {},
-    filterCategories = []
-  } = args.filter ?? {};
+    filter: { filterValues, setFilterValues, filterCategories }
+  } = args;
 
   /**
    * Filter-related props for the PF Toolbar component

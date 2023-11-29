@@ -15,7 +15,7 @@ export interface UseActiveItemEffectsArgs<TItem> {
   /**
    * Feature-specific args: A subset of the `TableState` object's `activeItem` property with state, derived state and relevant state args
    */
-  activeItem?: ActiveItemState & ActiveItemDerivedState<TItem> & Pick<ActiveItemStateArgs, 'isEnabled'>;
+  activeItem: ActiveItemState & ActiveItemDerivedState<TItem> & Pick<ActiveItemStateArgs, 'isEnabled'>;
 }
 
 /**
@@ -25,8 +25,10 @@ export interface UseActiveItemEffectsArgs<TItem> {
  *   remove its id from state so the drawer won't automatically reopen if the item comes back.
  */
 export const useActiveItemEffects = <TItem>(args: UseActiveItemEffectsArgs<TItem>) => {
-  const { isLoading } = args;
-  const { isEnabled, activeItemId = null, activeItem = null, clearActiveItem } = args.activeItem ?? {};
+  const {
+    isLoading,
+    activeItem: { isEnabled, activeItemId, activeItem, clearActiveItem }
+  } = args;
   React.useEffect(() => {
     if (isEnabled && !isLoading && activeItemId && !activeItem) {
       clearActiveItem?.();

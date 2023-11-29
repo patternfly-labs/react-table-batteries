@@ -21,7 +21,7 @@ export interface UseActiveItemDerivedStateArgs<TItem> {
   /**
    * A subset of the `TableState` object's `activeItem` property - here we only need the state itself.
    */
-  activeItem?: ActiveItemState;
+  activeItem: ActiveItemState;
 }
 
 /**
@@ -60,8 +60,11 @@ export interface ActiveItemDerivedState<TItem> {
 export const useActiveItemDerivedState = <TItem>(
   args: UseActiveItemDerivedStateArgs<TItem>
 ): ActiveItemDerivedState<TItem> => {
-  const { currentPageItems, idProperty } = args;
-  const { activeItemId = null, setActiveItemId = () => {} } = args.activeItem ?? {};
+  const {
+    currentPageItems,
+    idProperty,
+    activeItem: { activeItemId, setActiveItemId }
+  } = args;
   return {
     activeItem: currentPageItems.find((item) => item[idProperty] === activeItemId) || null,
     setActiveItem: (item: TItem | null) => {

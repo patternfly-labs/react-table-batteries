@@ -25,7 +25,7 @@ export interface UseExpansionPropHelpersExternalArgs<TItem, TColumnKey extends s
   /**
    * A subset of the `TableState` object's `expansion` property - here we only need the state itself.
    */
-  expansion?: ExpansionState<TColumnKey>;
+  expansion: ExpansionState<TColumnKey>;
 }
 
 /**
@@ -54,8 +54,13 @@ export interface UseExpansionPropHelpersInternalArgs<TColumnKey extends string> 
 export const useExpansionPropHelpers = <TItem, TColumnKey extends string>(
   args: UseExpansionPropHelpersExternalArgs<TItem, TColumnKey> & UseExpansionPropHelpersInternalArgs<TColumnKey>
 ) => {
-  const { columnNames, idProperty, columnKeys, numRenderedColumns } = args;
-  const { expandedCells = {} } = args.expansion ?? {};
+  const {
+    columnNames,
+    idProperty,
+    columnKeys,
+    numRenderedColumns,
+    expansion: { expandedCells }
+  } = args;
 
   const expansionDerivedState = useExpansionDerivedState(args);
   const { isCellExpanded, setCellExpanded } = expansionDerivedState;

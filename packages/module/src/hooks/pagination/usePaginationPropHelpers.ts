@@ -22,8 +22,10 @@ export type UsePaginationPropHelpersExternalArgs = UsePaginationEffectsArgs & {
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
 export const usePaginationPropHelpers = (args: UsePaginationPropHelpersExternalArgs) => {
-  const { totalItemCount } = args;
-  const { pageNumber = 1, itemsPerPage = 10, setPageNumber, setItemsPerPage } = args.pagination ?? {};
+  const {
+    totalItemCount,
+    pagination: { pageNumber, itemsPerPage, setPageNumber, setItemsPerPage }
+  } = args;
 
   usePaginationEffects(args);
 

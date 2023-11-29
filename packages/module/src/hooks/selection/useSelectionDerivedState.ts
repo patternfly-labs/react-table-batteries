@@ -30,7 +30,7 @@ export interface UseSelectionDerivedStateArgs<TItem> {
   /**
    * Feature-specific args: A subset of the `TableState` object's `selection` property with the state itself and relevant state args
    */
-  selection?: SelectionState & Pick<SelectionStateArgs<TItem>, 'isItemSelectable'>;
+  selection: SelectionState & Pick<SelectionStateArgs<TItem>, 'isItemSelectable'>;
 }
 
 /**
@@ -96,8 +96,13 @@ export interface SelectionDerivedState<TItem> {
 export const useSelectionDerivedState = <TItem>(
   args: UseSelectionDerivedStateArgs<TItem>
 ): SelectionDerivedState<TItem> => {
-  const { idProperty, currentPageItems, totalItemCount, items } = args;
-  const { selectedItemIds = [], setSelectedItemIds = () => {}, isItemSelectable = () => true } = args.selection ?? {};
+  const {
+    idProperty,
+    currentPageItems,
+    totalItemCount,
+    items,
+    selection: { selectedItemIds, setSelectedItemIds, isItemSelectable = () => true }
+  } = args;
   // We memoize any item objects we've seen that match selectedItemIds, even if they are no longer in currentPageItems.
   const selectedItemCacheRef = React.useRef<Record<ItemId, TItem>>({});
   const selectedItems: TItem[] = React.useMemo(() => {

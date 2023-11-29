@@ -15,7 +15,7 @@ export interface UseClientSortDerivedStateArgs<TItem, TSortableColumnKey extends
   /**
    * Feature-specific args: A subset of the `TableState` object's `sort` property with the state itself and relevant state args
    */
-  sort?: SortState<TSortableColumnKey> & Pick<SortStateArgs<TItem, TSortableColumnKey>, 'getSortValues'>;
+  sort: SortState<TSortableColumnKey> & Pick<SortStateArgs<TItem, TSortableColumnKey>, 'getSortValues'>;
 }
 
 /**
@@ -26,8 +26,11 @@ export interface UseClientSortDerivedStateArgs<TItem, TSortableColumnKey extends
 export const useClientSortDerivedState = <TItem, TSortableColumnKey extends string>(
   args: UseClientSortDerivedStateArgs<TItem, TSortableColumnKey>
 ) => {
-  const { items } = args;
-  const { getSortValues, activeSort } = args?.sort ?? {};
+  const {
+    items,
+    sort: { getSortValues, activeSort }
+  } = args;
+
   if (!getSortValues || !activeSort) {
     return { sortedItems: items };
   }

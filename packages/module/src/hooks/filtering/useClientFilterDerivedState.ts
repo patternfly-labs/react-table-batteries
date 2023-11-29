@@ -17,7 +17,7 @@ export interface UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey exten
   /**
    * Feature-specific args: A subset of the `TableState` object's `filter` property with the state itself and relevant state args
    */
-  filter?: FilterState<TFilterCategoryKey> & Pick<FilterStateArgs<TItem, TFilterCategoryKey>, 'filterCategories'>;
+  filter: FilterState<TFilterCategoryKey> & Pick<FilterStateArgs<TItem, TFilterCategoryKey>, 'filterCategories'>;
 }
 
 /**
@@ -28,8 +28,10 @@ export interface UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey exten
 export const useClientFilterDerivedState = <TItem, TFilterCategoryKey extends string>(
   args: UseClientFilterDerivedStateArgs<TItem, TFilterCategoryKey>
 ) => {
-  const { items } = args;
-  const { filterCategories = [], filterValues = {} as FilterValues<TFilterCategoryKey> } = args.filter ?? {};
+  const {
+    items,
+    filter: { filterCategories, filterValues }
+  } = args;
   const filteredItems = items.filter((item) =>
     objectKeys(filterValues).every((categoryKey) => {
       const values = filterValues[categoryKey];
