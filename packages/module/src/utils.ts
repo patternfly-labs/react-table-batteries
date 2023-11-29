@@ -1,5 +1,6 @@
 import React from 'react';
 import { TABLE_FEATURES, TableBatteries, TableFeature } from './types';
+import { MergedArgs } from './type-utils';
 
 /**
  * Works around problems caused by event propagation when handling a clickable element that contains other clickable elements.
@@ -38,20 +39,21 @@ export const parseMaybeNumericString = (numOrStr: string | undefined | null): st
   return isNaN(num) ? numOrStr : num;
 };
 
-export const mergeFeatureSubObjects = <
+export const mergeArgs = <
   A extends Partial<Record<TableFeature, object>>,
-  B extends Partial<Record<TableFeature, object>>
+  B extends Partial<Record<TableFeature, object>>,
+  TIncludedFeatures extends TableFeature
 >(
   a: A,
   b: B
-): Omit<A, TableFeature> & Omit<B, TableFeature> & Partial<{ [key in TableFeature]: A[key] & B[key] }> => {
+): MergedArgs<A, B, TIncludedFeatures> => {
   const merged = { ...a, ...b };
   TABLE_FEATURES.forEach((feature) => {
     if (b[feature]) {
       merged[feature] = { ...a[feature], ...b[feature] };
     }
   });
-  return merged;
+  return merged as MergedArgs<A, B, TIncludedFeatures>;
 };
 
 // TODO finish this

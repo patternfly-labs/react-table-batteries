@@ -2,9 +2,10 @@ import * as React from 'react';
 import { PaginationProps } from '@patternfly/react-core';
 import { ToolbarBulkSelectorProps } from '../../tackle2-ui-legacy/components/ToolbarBulkSelector';
 import { UseSelectionDerivedStateArgs, useSelectionDerivedState } from './useSelectionDerivedState';
-import { useSelectionEffects } from './useSelectionEffects';
+import { UseSelectionEffectsArgs, useSelectionEffects } from './useSelectionEffects';
 import { TdProps } from '@patternfly/react-table';
-import { mergeFeatureSubObjects } from '../../utils';
+import { mergeArgs } from '../../utils';
+import { MergedArgs } from '../../type-utils';
 /**
  * Args for useSelectionPropHelpers that come from outside useTablePropHelpers
  * - Partially satisfied by the object returned by useTableState (TableState)
@@ -12,7 +13,11 @@ import { mergeFeatureSubObjects } from '../../utils';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export type UseSelectionPropHelpersExternalArgs<TItem> = UseSelectionDerivedStateArgs<TItem>;
+export type UseSelectionPropHelpersExternalArgs<TItem> = MergedArgs<
+  UseSelectionDerivedStateArgs<TItem>,
+  UseSelectionEffectsArgs<TItem>,
+  'selection'
+>;
 
 /**
  * Additional args for useSelectionPropHelpers that come from logic inside useTablePropHelpers
@@ -34,7 +39,7 @@ export const useSelectionPropHelpers = <TItem>(
   const { selectItem, selectItems, selectAll, selectNone, selectedItems, isItemSelected, allSelected } =
     selectionDerivedState;
 
-  useSelectionEffects(mergeFeatureSubObjects(args, { selection: selectionDerivedState }));
+  useSelectionEffects(mergeArgs(args, { selection: selectionDerivedState }));
 
   // State for shift+click multi-select behavior
   const [lastSelectedRowIndex, setLastSelectedRowIndex] = React.useState<number | null>(null);

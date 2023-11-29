@@ -7,7 +7,7 @@ import { usePaginationPropHelpers } from './pagination';
 import { useSelectionPropHelpers } from './selection';
 import { useExpansionPropHelpers } from './expansion';
 import { useActiveItemPropHelpers } from './active-item';
-import { handlePropagatedRowClick, mergeFeatureSubObjects, objectKeys } from '../utils';
+import { handlePropagatedRowClick, mergeArgs, objectKeys } from '../utils';
 
 /**
  * Returns derived state and prop helpers for all features. Used to make rendering the table components easier.
@@ -113,7 +113,7 @@ export const useTablePropHelpers = <
   };
 
   return {
-    ...mergeFeatureSubObjects(args, {
+    ...mergeArgs(args, {
       selection: selectionDerivedState,
       expansion: expansionDerivedState,
       activeItem: activeItemDerivedState

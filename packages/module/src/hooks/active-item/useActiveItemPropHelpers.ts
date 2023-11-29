@@ -1,7 +1,8 @@
 import { TrProps } from '@patternfly/react-table';
 import { UseActiveItemDerivedStateArgs, useActiveItemDerivedState } from './useActiveItemDerivedState';
-import { useActiveItemEffects } from './useActiveItemEffects';
-import { mergeFeatureSubObjects } from '../../utils';
+import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
+import { mergeArgs } from '../../utils';
+import { MergedArgs } from '../../type-utils';
 
 /**
  * Args for useActiveItemPropHelpers that come from outside useTablePropHelpers
@@ -10,7 +11,11 @@ import { mergeFeatureSubObjects } from '../../utils';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export type UseActiveItemPropHelpersExternalArgs<TItem> = UseActiveItemDerivedStateArgs<TItem>;
+export type UseActiveItemPropHelpersExternalArgs<TItem> = MergedArgs<
+  UseActiveItemDerivedStateArgs<TItem>,
+  UseActiveItemEffectsArgs<TItem>,
+  'activeItem'
+>;
 
 /**
  * Given "source of truth" state for the active item feature, returns derived state and `propHelpers`.
@@ -23,7 +28,7 @@ export const useActiveItemPropHelpers = <TItem>(args: UseActiveItemPropHelpersEx
   const activeItemDerivedState = useActiveItemDerivedState(args);
   const { isActiveItem, setActiveItem, clearActiveItem } = activeItemDerivedState;
 
-  useActiveItemEffects(mergeFeatureSubObjects(args, { activeItem: activeItemDerivedState }));
+  useActiveItemEffects(mergeArgs(args, { activeItem: activeItemDerivedState }));
 
   /**
    * Returns props for a clickable Tr in a table with the active item feature enabled. Sets or clears the active item when clicked.

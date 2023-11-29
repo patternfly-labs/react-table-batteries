@@ -1,5 +1,4 @@
 import { PaginationProps, ToolbarItemProps } from '@patternfly/react-core';
-import { PaginationState } from './usePaginationState';
 import { UsePaginationEffectsArgs, usePaginationEffects } from './usePaginationEffects';
 
 /**
@@ -10,10 +9,6 @@ import { UsePaginationEffectsArgs, usePaginationEffects } from './usePaginationE
  * @see UseTablePropHelpersArgs
  */
 export type UsePaginationPropHelpersExternalArgs = UsePaginationEffectsArgs & {
-  /**
-   * A subset of the `TableState` object's `pagination` property - here we only need the state itself.
-   */
-  pagination?: PaginationState;
   /**
     The total number of items in the entire un-filtered, un-paginated table (the size of the entire API collection being tabulated).
    */

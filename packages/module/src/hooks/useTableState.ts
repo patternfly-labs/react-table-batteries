@@ -5,7 +5,7 @@ import { usePaginationState } from './pagination';
 import { useActiveItemState } from './active-item';
 import { useExpansionState } from './expansion';
 import { useSelectionState } from './selection';
-import { mergeFeatureSubObjects } from '../utils';
+import { mergeArgs } from '../utils';
 
 /**
  * Provides the "source of truth" state for all table features.
@@ -39,5 +39,5 @@ export const useTableState = <
     pagination: { pageNumber, itemsPerPage }
   } = state;
   const cacheKey = JSON.stringify({ filterValues, activeSort, pageNumber, itemsPerPage });
-  return { ...mergeFeatureSubObjects(args, state), cacheKey };
+  return { ...mergeArgs(args, state), cacheKey };
 };
