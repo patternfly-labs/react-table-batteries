@@ -39,6 +39,13 @@ export const parseMaybeNumericString = (numOrStr: string | undefined | null): st
   return isNaN(num) ? numOrStr : num;
 };
 
+/**
+ * mergeArgs takes two objects which may or may not include feature sub-objects
+ * (any two pieces of the partially-constructed TableBatteries object)
+ * and combines them, deeply merging the properties in the feature objects.
+ * This is used in hooks to combine args, state and derived state to construct the batteries object.
+ * @see MergedArgs
+ */
 export const mergeArgs = <
   A extends Partial<Record<TableFeature, object>>,
   B extends Partial<Record<TableFeature, object>>,
