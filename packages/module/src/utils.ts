@@ -42,7 +42,7 @@ export const parseMaybeNumericString = (numOrStr: string | undefined | null): st
 export const mergeArgs = <
   A extends Partial<Record<TableFeature, object>>,
   B extends Partial<Record<TableFeature, object>>,
-  TIncludedFeatures extends TableFeature
+  TIncludedFeatures extends TableFeature = TableFeature
 >(
   a: A,
   b: B

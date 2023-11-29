@@ -1,5 +1,9 @@
 import { TrProps } from '@patternfly/react-table';
-import { UseActiveItemDerivedStateArgs, useActiveItemDerivedState } from './useActiveItemDerivedState';
+import {
+  ActiveItemDerivedState,
+  UseActiveItemDerivedStateArgs,
+  useActiveItemDerivedState
+} from './useActiveItemDerivedState';
 import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
 import { mergeArgs } from '../../utils';
 import { MergedArgs } from '../../type-utils';
@@ -13,7 +17,9 @@ import { MergedArgs } from '../../type-utils';
  */
 export type UseActiveItemPropHelpersExternalArgs<TItem> = MergedArgs<
   UseActiveItemDerivedStateArgs<TItem>,
-  UseActiveItemEffectsArgs<TItem>,
+  Omit<UseActiveItemEffectsArgs<TItem>, 'activeItem'> & {
+    activeItem?: Omit<Required<UseActiveItemEffectsArgs<TItem>>['activeItem'], keyof ActiveItemDerivedState<TItem>>;
+  },
   'activeItem'
 >;
 

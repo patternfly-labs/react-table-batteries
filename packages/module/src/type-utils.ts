@@ -16,7 +16,7 @@ export type DiscriminatedArgs<TBoolDiscriminatorKey extends string, TArgs> =
 export type MergedArgs<
   A extends Partial<Record<TableFeature, object>>,
   B extends Partial<Record<TableFeature, object>>,
-  TIncludedFeatures extends TableFeature
+  TIncludedFeatures extends TableFeature = TableFeature
 > = Omit<A, TableFeature> &
   Omit<B, TableFeature> &
   Partial<{

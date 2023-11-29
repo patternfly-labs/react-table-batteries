@@ -1,7 +1,11 @@
 import * as React from 'react';
 import { PaginationProps } from '@patternfly/react-core';
 import { ToolbarBulkSelectorProps } from '../../tackle2-ui-legacy/components/ToolbarBulkSelector';
-import { UseSelectionDerivedStateArgs, useSelectionDerivedState } from './useSelectionDerivedState';
+import {
+  SelectionDerivedState,
+  UseSelectionDerivedStateArgs,
+  useSelectionDerivedState
+} from './useSelectionDerivedState';
 import { UseSelectionEffectsArgs, useSelectionEffects } from './useSelectionEffects';
 import { TdProps } from '@patternfly/react-table';
 import { mergeArgs } from '../../utils';
@@ -15,7 +19,7 @@ import { MergedArgs } from '../../type-utils';
  */
 export type UseSelectionPropHelpersExternalArgs<TItem> = MergedArgs<
   UseSelectionDerivedStateArgs<TItem>,
-  UseSelectionEffectsArgs<TItem>,
+  { selection?: Omit<Required<UseSelectionEffectsArgs<TItem>>['selection'], keyof SelectionDerivedState<TItem>> },
   'selection'
 >;
 
