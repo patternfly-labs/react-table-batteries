@@ -55,10 +55,12 @@ export interface PaginationState extends ActivePagination {
  * @see PersistTarget
  */
 export const usePaginationState = <TPersistenceKeyPrefix extends string = string>(
-  args: { pagination?: PaginationStateArgs | boolean } & TablePersistenceArgs<TPersistenceKeyPrefix>
+  args: { pagination?: PaginationStateArgs } & TablePersistenceArgs<TPersistenceKeyPrefix>
 ): PaginationState => {
   const { persistenceKeyPrefix } = args;
-  const { persistTo, initialItemsPerPage = 10 } = typeof args.pagination === 'object' ? args.pagination : {};
+  const persistTo = args.pagination?.persistTo || args.persistTo || 'state';
+
+  const initialItemsPerPage = args.pagination?.initialItemsPerPage || 10;
 
   const defaultValue: ActivePagination = {
     pageNumber: 1,

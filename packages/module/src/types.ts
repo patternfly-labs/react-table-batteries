@@ -103,26 +103,20 @@ export interface TableFeatureStateArgs<
   sort: SortStateArgs<TItem, TSortableColumnKey>;
   /**
    * State arguments for the pagination feature.
-   * - Pagination has no required args. In order to avoid passing `pagination: {}` to enable it with no args passed,
-   *   We allow a boolean to be passed instead for simply enabling the feature with default args.
    */
-  pagination: PaginationStateArgs | boolean;
+  pagination: PaginationStateArgs;
   /**
    * State arguments for the selection feature.
-   * - Selection has no required args. In order to avoid passing `selection: {}` to enable it with no args passed,
-   *   We allow a boolean to be passed instead for simply enabling the feature with default args.
    */
-  selection: SelectionStateArgs<TItem> | boolean;
+  selection: SelectionStateArgs<TItem>;
   /**
    * State arguments for the expansion feature.
    */
   expansion: ExpansionStateArgs;
   /**
    * State arguments for the active item feature.
-   * - Active item has no required args. In order to avoid passing `activeItem: {}` to enable it with no args passed,
-   *   We allow a boolean to be passed instead for simply enabling the feature with default args.
    */
-  activeItem: ActiveItemStateArgs | boolean;
+  activeItem: ActiveItemStateArgs;
 }
 
 /**
