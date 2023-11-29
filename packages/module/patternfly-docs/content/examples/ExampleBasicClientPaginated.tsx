@@ -119,9 +119,6 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
     }
   } = batteries;
 
-  // eslint-disable-next-line no-console
-  console.log('BASIC CLIENT EXAMPLE BATTERIES', batteries);
-
   return (
     <>
       <Toolbar {...toolbarProps}>
