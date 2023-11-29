@@ -56,7 +56,6 @@ export const mergeArgs = <
   return merged as MergedArgs<A, B, TIncludedFeatures>;
 };
 
-// TODO finish this
 export const getFeatureDefaults = <
   TItem,
   TColumnKey extends string,
@@ -64,25 +63,83 @@ export const getFeatureDefaults = <
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
 >(): {
-  [key in TableFeature]: Partial<
-    TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>[key]
+  [key in TableFeature]: Omit<
+    Required<TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>>[key],
+    'isEnabled' | 'persistTo'
   >;
 } => ({
   filter: {
-    filterCategories: []
+    filterCategories: [],
+    filterValues: {},
+    setFilterValues: () => {}
   },
-  sort: {},
-  pagination: {},
-  selection: {},
-  expansion: {},
-  activeItem: {}
+  sort: {
+    sortableColumns: [],
+    activeSort: null,
+    setActiveSort: () => {}
+  },
+  pagination: {
+    pageNumber: 1,
+    setPageNumber: () => {},
+    itemsPerPage: 10,
+    setItemsPerPage: () => {}
+  },
+  selection: {
+    isItemSelectable: () => false,
+    selectedItemIds: [],
+    setSelectedItemIds: () => {},
+    selectedItems: [],
+    isItemSelected: () => false,
+    allSelected: false,
+    pageSelected: false,
+    selectItem: () => {},
+    selectItems: () => {},
+    selectAll: () => {},
+    selectPage: () => {},
+    selectNone: () => {},
+    setSelectedItems: () => {}
+  },
+  expansion: {
+    variant: 'single',
+    expandedCells: {},
+    setExpandedCells: () => {},
+    isCellExpanded: () => false,
+    setCellExpanded: () => {}
+  },
+  activeItem: {
+    activeItemId: null,
+    setActiveItemId: () => {},
+    activeItem: null,
+    setActiveItem: () => {},
+    clearActiveItem: () => {},
+    isActiveItem: () => false
+  }
 });
 
-// TODO fill in defaults for a full batteries object here
-// TODO this could probably be a loop over TABLE_FEATURES using the defaults object above
+type BatteriesWithDefaults<
+  TItem,
+  TColumnKey extends string,
+  TSortableColumnKey extends TColumnKey,
+  TFilterCategoryKey extends string = string,
+  TPersistenceKeyPrefix extends string = string
+> = Omit<
+  TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
+  TableFeature
+> &
+  Required<
+    Pick<TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>, TableFeature>
+  >;
+
 export const withFeatureDefaults = <
   TPartialBatteries extends Partial<
-    TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
+    Omit<
+      TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
+      TableFeature
+    > & {
+      [key in TableFeature]: Partial<
+        Required<TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>>[key]
+      >;
+    }
   >,
   TItem,
   TColumnKey extends string,
@@ -91,15 +148,27 @@ export const withFeatureDefaults = <
   TPersistenceKeyPrefix extends string = string
 >(
   partialBatteries: TPartialBatteries
-): TPartialBatteries & Required<Pick<TPartialBatteries, TableFeature>> => ({
-  ...partialBatteries,
-  filter: {
-    filterCategories: [],
-    ...partialBatteries.filter
-  },
-  sort: {},
-  pagination: {},
-  selection: {},
-  expansion: {},
-  activeItem: {}
-});
+): BatteriesWithDefaults<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
+  const batteriesWithDefaults = { ...partialBatteries };
+  const defaults = getFeatureDefaults<
+    TItem,
+    TColumnKey,
+    TSortableColumnKey,
+    TFilterCategoryKey,
+    TPersistenceKeyPrefix
+  >();
+  TABLE_FEATURES.forEach((feature) => {
+    batteriesWithDefaults[feature] = {
+      isEnabled: partialBatteries[feature]?.isEnabled || false,
+      ...defaults[feature],
+      ...partialBatteries[feature]
+    };
+  });
+  return batteriesWithDefaults as BatteriesWithDefaults<
+    TItem,
+    TColumnKey,
+    TSortableColumnKey,
+    TFilterCategoryKey,
+    TPersistenceKeyPrefix
+  >;
+};
