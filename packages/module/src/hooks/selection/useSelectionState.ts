@@ -8,7 +8,7 @@ import { ItemId } from '../../types';
  * @see UseTableStateArgs
  * @see TableBatteries
  */
-export interface SelectionStateArgs {
+export interface SelectionStateArgs<TItem> {
   /**
    * Ids of items to have pre-selected on first render
    */
@@ -16,6 +16,11 @@ export interface SelectionStateArgs {
   // TODO how do we avoid the confusion of passing `selection: {}` to enable selection?
   // TODO it doesn't make sense to require initialSelectedItemIds. Maybe we do need an `enabled: true`?
   // TODO or can we have `selection: true` as a possible way to pass it and still inherit things the way we want to?
+  /**
+   * Callback to determine if a given item is allowed to be selected. Blocks that item from being present in state.
+   * Added here even though it's not used in useSelectionState so args can all be passed at once. Actually used only in useSelectionDerivedState.
+   */
+  isItemSelectable?: (item: TItem) => boolean;
 }
 
 /**
@@ -48,7 +53,7 @@ export interface SelectionState {
  *   always have those item objects cached.
  * @see PersistTarget
  */
-export const useSelectionState = (args: { selection?: SelectionStateArgs }): SelectionState => {
+export const useSelectionState = <TItem>(args: { selection?: SelectionStateArgs<TItem> }): SelectionState => {
   const initialSelectedItemIds = args.selection?.initialSelectedItemIds || [];
   const [selectedItemIds, setSelectedItemIds] = React.useState<ItemId[]>(initialSelectedItemIds);
   return { selectedItemIds, setSelectedItemIds };

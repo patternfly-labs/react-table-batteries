@@ -95,8 +95,8 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
     pagination: {} // TODO there has to be a better way here
   });
 
-  // Here we destructure some of the properties from `tableBatteries` for rendering.
-  // Later we also spread the entire `tableBatteries` object onto components whose props include subsets of it.
+  // Here we destructure some of the properties from `batteries` for rendering.
+  // Later we also spread the entire `batteries` object onto components whose props include subsets of it.
   const {
     currentPageItems, // These items have already been paginated.
     // `numRenderedColumns` is based on the number of columnNames and additional columns needed for

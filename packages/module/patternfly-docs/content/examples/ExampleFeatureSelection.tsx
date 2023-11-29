@@ -65,50 +65,51 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
     });
   }, []);
 
-  const tableBatteries = useClientTableBatteries({
+  const batteries = useClientTableBatteries({
     persistTo: 'urlParams',
     persistenceKeyPrefix: 't1', // The first Things table on this page.
     idProperty: 'id', // The name of a unique string or number property on the data items.
     items: mockApiResponse.data, // The generic type `TItem` is inferred from the items passed here.
+    isLoading: isLoadingMockData,
+    variant: 'compact',
     columnNames: {
       // The keys of this object define the inferred generic type `TColumnKey`. See "Unique Identifiers".
       name: 'Name',
       description: 'Description'
     },
-    isFilterEnabled: true,
-    isSortEnabled: true,
-    isPaginationEnabled: true,
-    isSelectionEnabled: true,
-    // Because isFilterEnabled is true, TypeScript will require these filterCategories:
-    filterCategories: [
-      {
-        key: 'name',
-        title: 'Name',
-        type: FilterType.search,
-        placeholderText: 'Filter by name...',
-        getItemValue: (thing) => thing.name || ''
-      },
-      {
-        key: 'description',
-        title: 'Description',
-        type: FilterType.search,
-        placeholderText: 'Filter by description...'
-      }
-    ],
-    // Because isSortEnabled is true, TypeScript will require these sort-related properties:
-    sortableColumns: ['name', 'description'],
-    getSortValues: (thing) => ({
-      name: thing.name || '',
-      description: thing.description || ''
-    }),
-    initialSort: { columnKey: 'name', direction: 'asc' },
-    isItemSelectable: (item) => item.id !== 3, // Testing the non-selectable item behavior
-    isLoading: isLoadingMockData,
-    variant: 'compact'
+    filter: {
+      filterCategories: [
+        {
+          key: 'name',
+          title: 'Name',
+          type: FilterType.search,
+          placeholderText: 'Filter by name...',
+          getItemValue: (thing) => thing.name || ''
+        },
+        {
+          key: 'description',
+          title: 'Description',
+          type: FilterType.search,
+          placeholderText: 'Filter by description...'
+        }
+      ]
+    },
+    sort: {
+      sortableColumns: ['name', 'description'],
+      getSortValues: (thing) => ({
+        name: thing.name || '',
+        description: thing.description || ''
+      }),
+      initialSort: { columnKey: 'name', direction: 'asc' }
+    },
+    pagination: {},
+    selection: {
+      isItemSelectable: (item) => item.id !== 3 // Testing the non-selectable item behavior
+    }
   });
 
-  // Here we destructure some of the properties from `tableBatteries` for rendering.
-  // Later we also spread the entire `tableBatteries` object onto components whose props include subsets of it.
+  // Here we destructure some of the properties from `batteries` for rendering.
+  // Later we also spread the entire `batteries` object onto components whose props include subsets of it.
   const {
     currentPageItems, // These items have already been paginated.
     // `numRenderedColumns` is based on the number of columnNames and additional columns needed for
@@ -129,7 +130,7 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       getTdProps
     },
     selectionDerivedState: { selectedItems }
-  } = tableBatteries;
+  } = batteries;
 
   // eslint-disable-next-line no-console
   console.log('Do something with selected items:', selectedItems);
@@ -149,7 +150,7 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       <Table {...tableProps} aria-label="Example things table">
         <Thead>
           <Tr>
-            <TableHeaderContentWithBatteries {...tableBatteries}>
+            <TableHeaderContentWithBatteries {...batteries}>
               <Th {...getThProps({ columnKey: 'name' })} />
               <Th {...getThProps({ columnKey: 'description' })} />
             </TableHeaderContentWithBatteries>
@@ -171,7 +172,7 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithBatteries {...tableBatteries} item={thing} rowIndex={rowIndex}>
+                <TableRowContentWithBatteries {...batteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} {...getTdProps({ columnKey: 'name' })}>
                     {thing.name}
                   </Td>

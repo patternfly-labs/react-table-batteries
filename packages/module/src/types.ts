@@ -108,7 +108,7 @@ export interface TableFeatureStateArgs<
   /**
    * State arguments for the selection feature.
    */
-  selection: SelectionStateArgs;
+  selection: SelectionStateArgs<TItem>;
   /**
    * State arguments for the expansion feature.
    */

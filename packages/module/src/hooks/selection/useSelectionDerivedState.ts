@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { KeyWithValueType } from '../../type-utils';
 import { ItemId } from '../../types';
-import { SelectionState } from './useSelectionState';
+import { SelectionState, SelectionStateArgs } from './useSelectionState';
 
 /**
  * Args for useSelectionDerivedState
@@ -30,12 +30,7 @@ export interface UseSelectionDerivedStateArgs<TItem> {
   /**
    * Feature-specific args: A subset of the `TableState` object's `selection` property with the state itself and relevant state args
    */
-  selection?: SelectionState & {
-    /**
-     * Callback to determine if a given item is allowed to be selected. Blocks that item from being present in state.
-     */
-    isItemSelectable?: (item: TItem) => boolean;
-  };
+  selection?: SelectionState & Pick<SelectionStateArgs<TItem>, 'isItemSelectable'>;
 }
 
 /**
