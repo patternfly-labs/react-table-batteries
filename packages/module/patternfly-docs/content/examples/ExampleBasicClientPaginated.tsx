@@ -97,9 +97,6 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
     pagination: { isEnabled: true }
   });
 
-  // eslint-disable-next-line no-console
-  console.log('BATTERIES!', batteries);
-
   // Here we destructure some of the properties from `batteries` for rendering.
   // Later we also spread the entire `batteries` object onto components whose props include subsets of it.
   const {
