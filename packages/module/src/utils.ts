@@ -56,7 +56,7 @@ export const mergeArgs = <
   return merged as MergedArgs<A, B, TIncludedFeatures>;
 };
 
-export const getFeatureDefaults = <
+export const getTableBatteryDefaults = <
   TItem,
   TColumnKey extends string,
   TSortableColumnKey extends TColumnKey,
@@ -115,60 +115,3 @@ export const getFeatureDefaults = <
     isActiveItem: () => false
   }
 });
-
-type BatteriesWithDefaults<
-  TItem,
-  TColumnKey extends string,
-  TSortableColumnKey extends TColumnKey,
-  TFilterCategoryKey extends string = string,
-  TPersistenceKeyPrefix extends string = string
-> = Omit<
-  TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
-  TableFeature
-> &
-  Required<
-    Pick<TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>, TableFeature>
-  >;
-
-export const withFeatureDefaults = <
-  TPartialBatteries extends Partial<
-    Omit<
-      TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
-      TableFeature
-    > & {
-      [key in TableFeature]: Partial<
-        Required<TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>>[key]
-      >;
-    }
-  >,
-  TItem,
-  TColumnKey extends string,
-  TSortableColumnKey extends TColumnKey,
-  TFilterCategoryKey extends string = string,
-  TPersistenceKeyPrefix extends string = string
->(
-  partialBatteries: TPartialBatteries
-): BatteriesWithDefaults<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
-  const batteriesWithDefaults = { ...partialBatteries };
-  const defaults = getFeatureDefaults<
-    TItem,
-    TColumnKey,
-    TSortableColumnKey,
-    TFilterCategoryKey,
-    TPersistenceKeyPrefix
-  >();
-  TABLE_FEATURES.forEach((feature) => {
-    batteriesWithDefaults[feature] = {
-      isEnabled: partialBatteries[feature]?.isEnabled || false,
-      ...defaults[feature],
-      ...partialBatteries[feature]
-    };
-  });
-  return batteriesWithDefaults as BatteriesWithDefaults<
-    TItem,
-    TColumnKey,
-    TSortableColumnKey,
-    TFilterCategoryKey,
-    TPersistenceKeyPrefix
-  >;
-};

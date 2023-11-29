@@ -20,9 +20,7 @@ import {
   TableHeaderContentWithBatteries,
   TableRowContentWithBatteries,
   useTablePropHelpers,
-  useTableState,
-  withFeatureDefaults,
-  TableState
+  useTableState
 } from '@patternfly-labs/react-table-batteries';
 
 // This example table's rows represent Thing objects in our fake API.
@@ -116,8 +114,6 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
     },
     pagination: { isEnabled: true }
   });
-
-  const {} = withFeatureDefaults(tableState);
 
   const { filterValues = {} } = tableState.filter ?? {};
   const { activeSort = null } = tableState.sort ?? {};
