@@ -1,5 +1,5 @@
 import React from 'react';
-import { TABLE_FEATURES, TableBatteries, TableFeature } from './types';
+import { TABLE_FEATURES, TableFeature } from './types';
 import { MergedArgs } from './type-utils';
 
 /**
