@@ -18,7 +18,6 @@ export type MergedArgs<
   B extends Partial<Record<TableFeature, object>>,
   TIncludedFeatures extends TableFeature = TableFeature
 > = Omit<A, TableFeature> &
-  Omit<B, TableFeature> &
-  Partial<{
+  Omit<B, TableFeature> & {
     [key in TIncludedFeatures]: [A, B] extends [undefined, undefined] ? undefined : A[key] & B[key];
-  }>;
+  };

@@ -24,7 +24,7 @@ export const useTableState = <
   TPersistenceKeyPrefix extends string = string
 >(
   args: UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>
-) => {
+): TableState<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix> => {
   const state = {
     filter: useFilterState<TItem, TFilterCategoryKey, TPersistenceKeyPrefix>(args),
     sort: useSortState<TItem, TSortableColumnKey, TPersistenceKeyPrefix>(args),
@@ -39,11 +39,5 @@ export const useTableState = <
     pagination: { pageNumber, itemsPerPage }
   } = state;
   const cacheKey = JSON.stringify({ filterValues, activeSort, pageNumber, itemsPerPage });
-  return { ...mergeArgs(args, state), cacheKey } satisfies TableState<
-    TItem,
-    TColumnKey,
-    TSortableColumnKey,
-    TFilterCategoryKey,
-    TPersistenceKeyPrefix
-  >;
+  return { ...mergeArgs(args, state), cacheKey };
 };

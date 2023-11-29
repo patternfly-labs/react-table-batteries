@@ -115,9 +115,12 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
     pagination: { isEnabled: true }
   });
 
-  const { filterValues = {} } = tableState.filter ?? {};
-  const { activeSort = null } = tableState.sort ?? {};
-  const { pageNumber = 1, itemsPerPage = 10 } = tableState.pagination ?? {};
+  const {
+    filter: { filterValues },
+    sort: { activeSort },
+    pagination: { pageNumber, itemsPerPage },
+    cacheKey
+  } = tableState;
 
   // In a real table we'd use a real API fetch here, perhaps using a library like react-query.
   const [mockApiResponse, setMockApiResponse] = React.useState<MockAPIResponse>({ data: [], totalItemCount: 0 });
@@ -129,7 +132,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       setIsLoadingMockData(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableState.cacheKey]);
+  }, [cacheKey]);
   // The cacheKey string above changes when filtering, sorting or pagination state change and the API data should be refetched.
 
   const batteries = useTablePropHelpers({

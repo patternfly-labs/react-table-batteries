@@ -191,15 +191,10 @@ export interface TableState<
   TSortableColumnKey extends TColumnKey,
   TFilterCategoryKey extends string = string,
   TPersistenceKeyPrefix extends string = string
-> extends Omit<
-      UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
-      TableFeature // Extend the top-level args without the feature sub-objects
-    >,
-    // Include optional properties that combine arg and state sub-objects for each feature
-    Partial<{
-      [key in TableFeature]: TableFeatureStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key] &
-        TableFeatureState<TColumnKey, TSortableColumnKey, TFilterCategoryKey>[key];
-    }> {
+> extends MergedArgs<
+    UseTableStateArgs<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
+    TableFeatureState<TColumnKey, TSortableColumnKey, TFilterCategoryKey>
+  > {
   /**
    * A string that changes whenever state changes that should result in a data refetch if this is a server-filtered/sorted/paginated table.
    * For use as a useEffect dependency, react-query key, or other value that will trigger an API refetch when it changes.

@@ -131,10 +131,9 @@ export const ExampleFeatureSelection: React.FunctionComponent = () => {
       getThProps,
       getTrProps,
       getTdProps
-    }
+    },
+    selection: { selectedItems }
   } = batteries;
-
-  const { selectedItems = [] } = batteries.selection ?? {};
 
   // eslint-disable-next-line no-console
   console.log('Do something with selected items:', selectedItems);

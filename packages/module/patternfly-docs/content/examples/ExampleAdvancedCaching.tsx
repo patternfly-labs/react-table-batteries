@@ -88,18 +88,20 @@ const fetchMockData = (apiParams: {
 // Here's a mock hook using state to store a map of cacheKeys to cached API responses.
 // In a real implementation, you would likely use a library like react-query with a built-in cache instead.
 const useMemoizedMockDataFetch = (tableState: {
-  filter?: FilterState<'name' | 'description'>;
-  sort?: SortState<'name' | 'description'>;
-  pagination?: PaginationState;
+  filter: FilterState<'name' | 'description'>;
+  sort: SortState<'name' | 'description'>;
+  pagination: PaginationState;
   cacheKey: string;
 }): { isLoadingMockData: boolean; mockFetchResponse: MockAPIResponse | undefined } => {
   const [cache, updateCache] = React.useState<Record<string, MockAPIResponse>>({});
   const lastMockFetchResponseRef = React.useRef<MockAPIResponse | undefined>();
 
-  const { filterValues = {} } = tableState.filter ?? {};
-  const { activeSort = null } = tableState.sort ?? {};
-  const { pageNumber = 1, itemsPerPage = 10 } = tableState.pagination ?? {};
-  const { cacheKey } = tableState;
+  const {
+    filter: { filterValues },
+    sort: { activeSort },
+    pagination: { pageNumber, itemsPerPage },
+    cacheKey
+  } = tableState;
 
   React.useEffect(() => {
     if (!cache[cacheKey]) {
