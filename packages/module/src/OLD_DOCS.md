@@ -11,10 +11,10 @@ Here's an example of another server-computed table with all of the table-control
 New features added here in addition to filtering, sorting and pagination are:
 
 - Expansion - Each row has an expand toggle button to the left of its data (automatically injected by the `TableRowContentWithBatteries` component), which opens additional detail below the row. (this is the "single" expand variant, compound expansion is also supported). The `expandableVariant` option is required because `isExpansionEnabled` is true.
-  - This makes the `getExpandedContentTdProps` propHelper and the `expansionDerivedState` object available on the `tableBatteries` object.
+  - This makes the `getExpandedContentTdProps` propHelper and the `expansionDerivedState` object available on the `batteries` object.
   - Each row is now contained in a `<Tbody>` component which pairs the existing `<Tr>` with another `<Tr>` containing that row's `<ExpandableRowContent>`.
 - Active item - Rows have hover styles and are clickable (handled automatically by `getTrProps`). Clicking a row marks that row's item as "active", which can be used to open a drawer or whatever else is needed on the page. This is enabled by `isActiveItemEnabled`, which does not require any additional options.
-  - This makes the `activeItemDerivedState` object available on the `tableBatteries` object.
+  - This makes the `activeItemDerivedState` object available on the `batteries` object.
 
 > ⚠️ TECH DEBT NOTE: The selection feature is currently not enabled in this example because it is about to significantly change with a refactor. Currently to use selection you have to use the outdated `useSelectionState` from lib-ui and pass its return values to `useTablePropHelpers`. Once selection is moved into table-controls, it will be configurable alongside the other features in `useTableState` and added to this example.
 
@@ -62,7 +62,7 @@ const hubRequestParams = getHubRequestParams({
 const { data, totalItemCount, isLoading, isError } =
   useFetchThings(hubRequestParams);
 
-const tableBatteries = useTablePropHelpers({
+const batteries = useTablePropHelpers({
   ...tableState,
   idProperty: "id",
   currentPageItems: data,
@@ -86,7 +86,7 @@ const {
   },
   activeItemDerivedState: { activeItem, clearActiveItem },
   expansionDerivedState: { isCellExpanded },
-} = tableBatteries;
+} = batteries;
 
 return (
   <>
@@ -105,7 +105,7 @@ return (
     <Table {...tableProps} aria-label="Example things table">
       <Thead>
         <Tr>
-          <TableHeaderContentWithBatteries {...tableBatteries}>
+          <TableHeaderContentWithBatteries {...batteries}>
             <Th {...getThProps({ columnKey: "name" })} />
             <Th {...getThProps({ columnKey: "description" })} />
           </TableHeaderContentWithBatteries>
@@ -130,7 +130,7 @@ return (
             <Tbody key={thing.id} isExpanded={isCellExpanded(thing)}>
               <Tr {...getTrProps({ item: thing })}>
                 <TableRowContentWithBatteries
-                  {...tableBatteries}
+                  {...batteries}
                   item={thing}
                   rowIndex={rowIndex}
                 >

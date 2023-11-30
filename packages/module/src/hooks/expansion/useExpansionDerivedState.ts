@@ -15,9 +15,9 @@ export interface UseExpansionDerivedStateArgs<TItem, TColumnKey extends string> 
    */
   idProperty: KeyWithValueType<TItem, ItemId>;
   /**
-   * The "source of truth" state for the expansion feature (returned by useExpansionState)
+   * A subset of the `TableState` object's `expansion` property - here we only need the state itself.
    */
-  expansionState: ExpansionState<TColumnKey>;
+  expansion: ExpansionState<TColumnKey>;
 }
 
 /**
@@ -48,10 +48,14 @@ export interface ExpansionDerivedState<TItem, TColumnKey extends string> {
  * is always local/client-computed, and it is still used when working with server-computed tables
  * (it's not specific to client-only-computed tables like the other `useClient*DerivedState` functions are).
  */
-export const useExpansionDerivedState = <TItem, TColumnKey extends string>({
-  idProperty,
-  expansionState: { expandedCells, setExpandedCells }
-}: UseExpansionDerivedStateArgs<TItem, TColumnKey>): ExpansionDerivedState<TItem, TColumnKey> => {
+export const useExpansionDerivedState = <TItem, TColumnKey extends string>(
+  args: UseExpansionDerivedStateArgs<TItem, TColumnKey>
+): ExpansionDerivedState<TItem, TColumnKey> => {
+  const {
+    idProperty,
+    expansion: { expandedCells, setExpandedCells }
+  } = args;
+
   const isCellExpanded = (item: TItem, columnKey?: TColumnKey) =>
     columnKey ? expandedCells[String(item[idProperty])] === columnKey : !!expandedCells[String(item[idProperty])];
 

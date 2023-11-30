@@ -1,4 +1,4 @@
-import { SortState } from './useSortState';
+import { SortState, SortStateArgs } from './useSortState';
 
 /**
  * Args for useClientSortDerivedState
@@ -13,19 +13,9 @@ export interface UseClientSortDerivedStateArgs<TItem, TSortableColumnKey extends
    */
   items: TItem[];
   /**
-   * A callback function to return, for a given API data item, a record of sortable primitives for that item's sortable columns
-   * - The record maps:
-   *   - from `columnKey` values (the keys of the `columnNames` object passed to useTableState)
-   *   - to easily sorted primitive values (string | number | boolean) for this item's value in that column
+   * Feature-specific args: A subset of the `TableState` object's `sort` property with the state itself and relevant state args
    */
-  getSortValues?: (
-    // TODO can we require this as non-optional in types that extend this when we know we're configuring a client-computed table?
-    item: TItem
-  ) => Record<TSortableColumnKey, string | number | boolean>;
-  /**
-   * The "source of truth" state for the sort feature (returned by useSortState)
-   */
-  sortState: SortState<TSortableColumnKey>;
+  sort: SortState<TSortableColumnKey> & Pick<SortStateArgs<TItem, TSortableColumnKey>, 'getSortValues'>;
 }
 
 /**
@@ -33,11 +23,14 @@ export interface UseClientSortDerivedStateArgs<TItem, TSortableColumnKey extends
  * - For local/client-computed tables only. Performs the actual sorting logic, which is done on the server for server-computed tables.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const useClientSortDerivedState = <TItem, TSortableColumnKey extends string>({
-  items,
-  getSortValues,
-  sortState: { activeSort }
-}: UseClientSortDerivedStateArgs<TItem, TSortableColumnKey>) => {
+export const useClientSortDerivedState = <TItem, TSortableColumnKey extends string>(
+  args: UseClientSortDerivedStateArgs<TItem, TSortableColumnKey>
+) => {
+  const {
+    items,
+    sort: { getSortValues, activeSort }
+  } = args;
+
   if (!getSortValues || !activeSort) {
     return { sortedItems: items };
   }

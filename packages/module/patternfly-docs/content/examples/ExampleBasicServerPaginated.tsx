@@ -90,31 +90,36 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       name: 'Name',
       description: 'Description'
     },
-    isFilterEnabled: true,
-    isSortEnabled: true,
-    isPaginationEnabled: true,
-    filterCategories: [
-      {
-        key: 'name',
-        title: 'Name',
-        type: FilterType.search,
-        placeholderText: 'Filter by name...'
-      },
-      {
-        key: 'description',
-        title: 'Description',
-        type: FilterType.search,
-        placeholderText: 'Filter by description...'
-      }
-    ],
-    sortableColumns: ['name', 'description'],
-    initialSort: { columnKey: 'name', direction: 'asc' }
+    filter: {
+      isEnabled: true,
+      filterCategories: [
+        {
+          key: 'name',
+          title: 'Name',
+          type: FilterType.search,
+          placeholderText: 'Filter by name...'
+        },
+        {
+          key: 'description',
+          title: 'Description',
+          type: FilterType.search,
+          placeholderText: 'Filter by description...'
+        }
+      ]
+    },
+    sort: {
+      isEnabled: true,
+      sortableColumns: ['name', 'description'],
+      initialSort: { columnKey: 'name', direction: 'asc' }
+    },
+    pagination: { isEnabled: true }
   });
 
   const {
-    filterState: { filterValues },
-    sortState: { activeSort },
-    paginationState: { pageNumber, itemsPerPage }
+    filter: { filterValues },
+    sort: { activeSort },
+    pagination: { pageNumber, itemsPerPage },
+    cacheKey
   } = tableState;
 
   // In a real table we'd use a real API fetch here, perhaps using a library like react-query.
@@ -127,10 +132,10 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       setIsLoadingMockData(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [tableState.cacheKey]);
+  }, [cacheKey]);
   // The cacheKey string above changes when filtering, sorting or pagination state change and the API data should be refetched.
 
-  const tableBatteries = useTablePropHelpers({
+  const batteries = useTablePropHelpers({
     ...tableState,
     idProperty: 'id',
     isLoading: isLoadingMockData,
@@ -159,7 +164,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       getTrProps,
       getTdProps
     }
-  } = tableBatteries;
+  } = batteries;
 
   return (
     <>
@@ -175,7 +180,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       <Table {...tableProps} aria-label="Example things table">
         <Thead>
           <Tr>
-            <TableHeaderContentWithBatteries {...tableBatteries}>
+            <TableHeaderContentWithBatteries {...batteries}>
               <Th {...getThProps({ columnKey: 'name' })} />
               <Th {...getThProps({ columnKey: 'description' })} />
             </TableHeaderContentWithBatteries>
@@ -197,7 +202,7 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithBatteries {...tableBatteries} item={thing} rowIndex={rowIndex}>
+                <TableRowContentWithBatteries {...batteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} {...getTdProps({ columnKey: 'name' })}>
                     {thing.name}
                   </Td>

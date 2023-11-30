@@ -1,5 +1,5 @@
 import { ThProps } from '@patternfly/react-table';
-import { SortState } from './useSortState';
+import { SortState, SortStateArgs } from './useSortState';
 
 /**
  * Args for useSortPropHelpers that come from outside useTablePropHelpers
@@ -8,15 +8,15 @@ import { SortState } from './useSortState';
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export interface UseSortPropHelpersExternalArgs<TColumnKey extends string, TSortableColumnKey extends TColumnKey> {
+export interface UseSortPropHelpersExternalArgs<
+  TItem,
+  TColumnKey extends string,
+  TSortableColumnKey extends TColumnKey
+> {
   /**
-   * The "source of truth" state for the sort feature (returned by useSortState)
+   * A subset of the `TableState` object's `sort` property with the state itself and relevant state args
    */
-  sortState: SortState<TSortableColumnKey>;
-  /**
-   * The `columnKey` values (keys of the `columnNames` object passed to useTableState) corresponding to columns with sorting enabled
-   */
-  sortableColumns?: TSortableColumnKey[];
+  sort: SortState<TSortableColumnKey> & Pick<SortStateArgs<TItem, TSortableColumnKey>, 'sortableColumns'>;
 }
 
 /**
@@ -36,13 +36,13 @@ export interface UseSortPropHelpersInternalArgs<TColumnKey extends string> {
  * - "Derived state" here refers to values and convenience functions derived at render time.
  * - "source of truth" (persisted) state and "derived state" are kept separate to prevent out-of-sync duplicated state.
  */
-export const useSortPropHelpers = <TColumnKey extends string, TSortableColumnKey extends TColumnKey>(
-  args: UseSortPropHelpersExternalArgs<TColumnKey, TSortableColumnKey> & UseSortPropHelpersInternalArgs<TColumnKey>
+export const useSortPropHelpers = <TItem, TColumnKey extends string, TSortableColumnKey extends TColumnKey>(
+  args: UseSortPropHelpersExternalArgs<TItem, TColumnKey, TSortableColumnKey> &
+    UseSortPropHelpersInternalArgs<TColumnKey>
 ) => {
   const {
-    sortState: { activeSort, setActiveSort },
-    sortableColumns = [],
-    columnKeys
+    columnKeys,
+    sort: { activeSort, setActiveSort, sortableColumns }
   } = args;
 
   /**

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { ActiveItemDerivedState } from './useActiveItemDerivedState';
-import { ActiveItemState } from './useActiveItemState';
+import { ActiveItemState, ActiveItemStateArgs } from './useActiveItemState';
 
 /**
  * Args for useActiveItemEffects
@@ -13,13 +13,9 @@ export interface UseActiveItemEffectsArgs<TItem> {
    */
   isLoading?: boolean;
   /**
-   * The "source of truth" state for the active item feature (returned by useActiveItemState)
+   * Feature-specific args: A subset of the `TableState` object's `activeItem` property with state, derived state and relevant state args
    */
-  activeItemState: ActiveItemState;
-  /**
-   * The "derived state" for the active item feature (returned by useActiveItemDerivedState)
-   */
-  activeItemDerivedState: ActiveItemDerivedState<TItem>;
+  activeItem: ActiveItemState & ActiveItemDerivedState<TItem> & Pick<ActiveItemStateArgs, 'isEnabled'>;
 }
 
 /**
@@ -28,14 +24,14 @@ export interface UseActiveItemEffectsArgs<TItem> {
  * - The effect: If some state change (e.g. refetch, pagination interaction) causes the active item to disappear,
  *   remove its id from state so the drawer won't automatically reopen if the item comes back.
  */
-export const useActiveItemEffects = <TItem>({
-  isLoading,
-  activeItemState: { activeItemId },
-  activeItemDerivedState: { activeItem, clearActiveItem }
-}: UseActiveItemEffectsArgs<TItem>) => {
+export const useActiveItemEffects = <TItem>(args: UseActiveItemEffectsArgs<TItem>) => {
+  const {
+    isLoading,
+    activeItem: { isEnabled, activeItemId, activeItem, clearActiveItem }
+  } = args;
   React.useEffect(() => {
-    if (!isLoading && activeItemId && !activeItem) {
-      clearActiveItem();
+    if (isEnabled && !isLoading && activeItemId && !activeItem) {
+      clearActiveItem?.();
     }
-  }, [isLoading, activeItemId, activeItem]); // TODO fix the exhaustive-deps lint warning here without affecting behavior
+  }, [isEnabled, activeItem, activeItemId, clearActiveItem, isLoading]);
 };

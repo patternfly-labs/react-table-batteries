@@ -1,4 +1,6 @@
 import React from 'react';
+import { TABLE_FEATURES, TableFeature } from './types';
+import { MergedArgs } from './type-utils';
 
 /**
  * Works around problems caused by event propagation when handling a clickable element that contains other clickable elements.
@@ -35,4 +37,28 @@ export const parseMaybeNumericString = (numOrStr: string | undefined | null): st
   }
   const num = Number(numOrStr);
   return isNaN(num) ? numOrStr : num;
+};
+
+/**
+ * mergeArgs takes two objects which may or may not include feature sub-objects
+ * (any two pieces of the partially-constructed TableBatteries object)
+ * and combines them, deeply merging the properties in the feature objects.
+ * This is used in hooks to combine args, state and derived state to construct the batteries object.
+ * @see MergedArgs
+ */
+export const mergeArgs = <
+  A extends Partial<Record<TableFeature, object>>,
+  B extends Partial<Record<TableFeature, object>>,
+  TIncludedFeatures extends TableFeature = TableFeature
+>(
+  a: A,
+  b: B
+): MergedArgs<A, B, TIncludedFeatures> => {
+  const merged = { ...a, ...b };
+  TABLE_FEATURES.forEach((feature) => {
+    if (b[feature]) {
+      merged[feature] = { ...a[feature], ...b[feature] };
+    }
+  });
+  return merged as MergedArgs<A, B, TIncludedFeatures>;
 };

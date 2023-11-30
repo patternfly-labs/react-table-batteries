@@ -64,11 +64,11 @@ This pattern makes tables easier to build, maintain and enhance. Your code will 
 
 ### Client-side filtering/sorting/pagination
 
-For client-paginated tables, the only hook you need is `useClientTableBatteries`. All arguments can be passed to it in one object, and the `tableBatteries` object returned by it contains everything you need to render the composable table. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need).
+For client-paginated tables, the only hook you need is `useClientTableBatteries`. All arguments can be passed to it in one object, and the `batteries` object returned by it contains everything you need to render the composable table. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need).
 
 This simple example includes only the filtering, sorting and pagination features and excludes arguments and properties related to the other features (see [Features](#features)).
 
-Features are enabled by passing `is[Feature]Enabled` boolean arguments. Required arguments for the enabled features will be enforced by TypeScript based on which features are enabled. All features are disabled by default; for this basic example with filtering, sorting and pagination, we must pass true values for `isFilterEnabled`, `isSortEnabled` and `isPaginationEnabled`.
+All features are disabled by default. Features are enabled by passing a feature sub-object containing `isEnabled: true` and any feature-specific arguments. For example, to enable filtering in this example we pass `filter: { isEnabled: true, filterCategories: [...] }`. Some features have no required feature-specific arguments; for example, to enable pagination we pass only `pagination: { isEnabled: true }`.
 
 This example also shows a powerful optional capability of these hooks: the `persistTo` argument. This can be passed to either `useTableState` or `useClientTableBatteries` and it allows us to store the current pagination/sort/filter state in a custom location and use that as the source of truth. The supported `persistTo` values are `'state'` (default), `'urlParams'` (recommended), `'localStorage'` or `'sessionStorage'`. For more on each option see [Custom state persistence targets](#custom-state-persistence-targets).
 
@@ -84,11 +84,11 @@ Note that the filtering/sorting/pagination business logic in this example happen
 
 ### Server-side filtering/sorting/pagination
 
-The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useClientTableBatteries` into two separate objects passed to `useTableState` and `useTablePropHelpers` based on when they are needed. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need) Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableState` and `useTablePropHelpers` as well as the return values from both are included in the `tableBatteries` object returned by `useTablePropHelpers` (and by `useClientTableBatteries` used in the [client-side example above](#client-side-filteringsortingpagination)). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
+The usage is similar here, but some client-specific arguments are no longer required (like `getSortValues` and the `getItemValue` property of the filter category) and we break up the arguments object passed to `useClientTableBatteries` into two separate objects passed to `useTableState` and `useTablePropHelpers` based on when they are needed. See [Which hooks/functions do I need?](#which-hooksfunctions-do-i-need) Note that the object passed to the latter contains all the properties of the object returned by the former in addition to things derived from the fetched API data. All of the arguments passed to both `useTableState` and `useTablePropHelpers` as well as the return values from both are included in the `batteries` object returned by `useTablePropHelpers` (and by `useClientTableBatteries` used in the [client-side example above](#client-side-filteringsortingpagination)). This way, we have one big object we can pass around to any components or functions that need any of the configuration, state, derived state, or props present on it, and we can destructure/reference them from a central place no matter where they came from.
 
 It's important to note that because filtering/sorting/pagination are being done on the server, you must refetch your data from the server when the user changes their filter, sort or pagination parameters. The `tableState` object returned by `useTableState` has a string property called `cacheKey` for this purpose. In this example, we use the `cacheKey` as a dependency of the `useEffect` that fetches our data. When the user interacts with table controls, the `cacheKey` will change which triggers the data to be refetched based on the new state. The `cacheKey` can also be used to cache data views we've already seen and avoid unnecessary network calls (see the advanced example [Caching to prevent redundant data fetches](#caching-to-prevent-redundant-data-fetches)).
 
-Note also: the destructuring of `tableBatteries` and returned JSX in this example **_is identical to the [client-side example above](#client-side-filteringsortingpagination)_**. The only differences between client-paginated and server-paginated tables are in the hook calls; the `tableBatteries` object and its usage are always the same.
+Note also: the destructuring of `batteries` and returned JSX in this example **_is identical to the [client-side example above](#client-side-filteringsortingpagination)_**. The only differences between client-paginated and server-paginated tables are in the hook calls; the `batteries` object and its usage are always the same.
 
 ```js file="./ExampleBasicServerPaginated.tsx"
 
@@ -107,7 +107,7 @@ As described in [the first example](#client-side-filteringsortingpagination) abo
 - `'localStorage'` - Browser localStorage API. Persists semi-permanently and is shared across all tabs/windows. Resets only when the user clears their browsing data.
 - `'sessionStorage'` - Browser sessionStorage API. Persists on page/history navigation/reload. Resets when the tab/window is closed.
 
-Passing one of these values as a string will set the persistence target for all features (as is done in the [Basic examples](#basic-examples) examples above). If you want to persist the state for some features in different storage than others, you can instead pass an object with features as keys and one of the above strings as each feature's value. The `default` key can be used to set the persistence target for any features not included in your object, and the keys for features are `'filter' | 'sort' | 'pagination' | 'selection' | 'expansion' | 'activeItem'`.
+Passing one of these values for `persistTo` at the top level will set the default behavior for all features that support persistence. If you want to persist the state for some features in different storage than others, you can pass another `persistTo` value within a feature sub-object to override it for that feature only.
 
 This example persists state for all features to URL parameters except filter state which is persisted in localStorage (resets only when clearing browsing data) and pagination state which is stored in React state (resets when reloading the page).
 
@@ -267,7 +267,7 @@ TODO copy over and rework things from OLD_DOCS.md here
 
 ## Usage notes
 
-### The `tableBatteries` object
+### The `batteries` object
 
 TODO details here about everything that is on the object with references to the types file
 
@@ -283,15 +283,15 @@ In most cases, you'll only need to use these higher-level hooks and helpers to b
 
 - For client-paginated tables: `useClientTableBatteries` is all you need.
   - Internally it uses `useTableState`, `useTablePropHelpers` and the `useClientTableDerivedState` helper. The config arguments object is a combination of the arguments required by `useTableState` and `useTablePropHelpers`.
-  - The return value (an object we generally name `tableBatteries`) has everything you need to render your table. Give it a `console.log` to see what is available.
-- For server-paginated tables: `useTableState`, `getHubRequestParams`, and `useTablePropHelpers`.
+  - The return value (an object we generally name `batteries`) has everything you need to render your table. Give it a `console.log` to see what is available.
+- For server-paginated tables: `useTableState` and `useTablePropHelpers`.
   - Choose whether you want to use React state (default), URL params (recommended), localStorage or sessionStorage as the source of truth, and call `useTableState` with the appropriate `persistTo` option and optional `persistenceKeyPrefix` (to namespace persisted state for multiple tables on the same page).
     - `persistTo` can be `'state' | 'urlParams' | 'localStorage' | 'sessionStorage'`, and defaults to `'state'` if omitted (falls back to regular React state).
-    - You can also use a different type of storage for the state of each feature by passing an object for `persistTo`. See [Custom state persistence targets](#custom-state-persistence-targets).
-  - Take the object returned by that hook (generally named `tableState`) and pull out the parameters you need for your API fetch from the `filterState`, `sortState` and `paginationState` properties. Fetch your filtered/sorted/paginated API data using these values.
+    - You can also use a different type of storage for the state of each feature by passing additional `persistTo` arguments in the sub-object for each feature. See [Custom state persistence targets](#custom-state-persistence-targets).
+  - Take the object returned by that hook (generally named `tableState`) and pull out the parameters you need for your API fetch from the `filter`, `sort` and `pagination` properties. Fetch your filtered/sorted/paginated API data using these values.
   - Set up your API client to refetch data when the `tableState.cacheKey` string changes. This will ensure that when the user interacts with filter, sort or pagination controls the data will update accordingly. If your data fetching implementation supports caching by key (for example, the `queryKey` option in react-query) you can use this `cacheKey` value as part of that key to prevent re-fetching data for a filter/sort/pagination view you've already fetched. See the advanced example [Caching to prevent redundant data fetches](#caching-to-prevent-redundant-data-fetches).
   - Call `useTablePropHelpers` and pass it an object spreading all properties from `tableState` along with additional config arguments. Some of these arguments will be derived from your API data fetch, such as `currentPageItems`, `totalItemCount` and `isLoading`. Others are simply passed here rather than above because they are used only for rendering and not required for state management.
-  - The return value (the same `tableBatteries` object returned by `useClientTableBatteries`) has everything you need to render your table. Give it a `console.log` to see what is available or reference [the `TableBatteries` type in the `types.ts` file](https://github.com/mturley/react-table-batteries/blob/main/packages/module/src/types.ts#L263).
+  - The return value (the same `batteries` object returned by `useClientTableBatteries`) has everything you need to render your table. Give it a `console.log` to see what is available or reference [the `TableBatteries` type in the `types.ts` file](https://github.com/mturley/react-table-batteries/blob/main/packages/module/src/types.ts#L263).
 
 ### Incremental adoption
 

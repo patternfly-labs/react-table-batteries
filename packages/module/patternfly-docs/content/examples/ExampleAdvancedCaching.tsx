@@ -88,18 +88,18 @@ const fetchMockData = (apiParams: {
 // Here's a mock hook using state to store a map of cacheKeys to cached API responses.
 // In a real implementation, you would likely use a library like react-query with a built-in cache instead.
 const useMemoizedMockDataFetch = (tableState: {
-  filterState: FilterState<'name' | 'description'>;
-  sortState: SortState<'name' | 'description'>;
-  paginationState: PaginationState;
+  filter: FilterState<'name' | 'description'>;
+  sort: SortState<'name' | 'description'>;
+  pagination: PaginationState;
   cacheKey: string;
 }): { isLoadingMockData: boolean; mockFetchResponse: MockAPIResponse | undefined } => {
   const [cache, updateCache] = React.useState<Record<string, MockAPIResponse>>({});
   const lastMockFetchResponseRef = React.useRef<MockAPIResponse | undefined>();
 
   const {
-    filterState: { filterValues },
-    sortState: { activeSort },
-    paginationState: { pageNumber, itemsPerPage },
+    filter: { filterValues },
+    sort: { activeSort },
+    pagination: { pageNumber, itemsPerPage },
     cacheKey
   } = tableState;
 
@@ -132,30 +132,34 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
       name: 'Name',
       description: 'Description'
     },
-    isFilterEnabled: true,
-    isSortEnabled: true,
-    isPaginationEnabled: true,
-    filterCategories: [
-      {
-        key: 'name',
-        title: 'Name',
-        type: FilterType.search,
-        placeholderText: 'Filter by name...'
-      },
-      {
-        key: 'description',
-        title: 'Description',
-        type: FilterType.search,
-        placeholderText: 'Filter by description...'
-      }
-    ],
-    sortableColumns: ['name', 'description'],
-    initialSort: { columnKey: 'name', direction: 'asc' }
+    filter: {
+      isEnabled: true,
+      filterCategories: [
+        {
+          key: 'name',
+          title: 'Name',
+          type: FilterType.search,
+          placeholderText: 'Filter by name...'
+        },
+        {
+          key: 'description',
+          title: 'Description',
+          type: FilterType.search,
+          placeholderText: 'Filter by description...'
+        }
+      ]
+    },
+    sort: {
+      isEnabled: true,
+      sortableColumns: ['name', 'description'],
+      initialSort: { columnKey: 'name', direction: 'asc' }
+    },
+    pagination: { isEnabled: true }
   });
 
   const { isLoadingMockData, mockFetchResponse } = useMemoizedMockDataFetch(tableState);
 
-  const tableBatteries = useTablePropHelpers({
+  const batteries = useTablePropHelpers({
     ...tableState,
     idProperty: 'id',
     isLoading: isLoadingMockData,
@@ -184,7 +188,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
       getTrProps,
       getTdProps
     }
-  } = tableBatteries;
+  } = batteries;
 
   return (
     <>
@@ -200,7 +204,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
       <Table {...tableProps} aria-label="Example things table">
         <Thead>
           <Tr>
-            <TableHeaderContentWithBatteries {...tableBatteries}>
+            <TableHeaderContentWithBatteries {...batteries}>
               <Th {...getThProps({ columnKey: 'name' })} />
               <Th {...getThProps({ columnKey: 'description' })} />
             </TableHeaderContentWithBatteries>
@@ -222,7 +226,7 @@ export const ExampleAdvancedCaching: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithBatteries {...tableBatteries} item={thing} rowIndex={rowIndex}>
+                <TableRowContentWithBatteries {...batteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} {...getTdProps({ columnKey: 'name' })}>
                     {thing.name}
                   </Td>

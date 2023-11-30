@@ -1,7 +1,12 @@
 import { TrProps } from '@patternfly/react-table';
-import { UseActiveItemDerivedStateArgs, useActiveItemDerivedState } from './useActiveItemDerivedState';
-import { ActiveItemState } from './useActiveItemState';
+import {
+  ActiveItemDerivedState,
+  UseActiveItemDerivedStateArgs,
+  useActiveItemDerivedState
+} from './useActiveItemDerivedState';
 import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemEffects';
+import { mergeArgs } from '../../utils';
+import { MergedArgs } from '../../type-utils';
 
 /**
  * Args for useActiveItemPropHelpers that come from outside useTablePropHelpers
@@ -10,17 +15,13 @@ import { UseActiveItemEffectsArgs, useActiveItemEffects } from './useActiveItemE
  * @see TableState
  * @see UseTablePropHelpersArgs
  */
-export type UseActiveItemPropHelpersExternalArgs<TItem> = UseActiveItemDerivedStateArgs<TItem> &
-  Omit<UseActiveItemEffectsArgs<TItem>, 'activeItemDerivedState'> & {
-    /**
-     * Whether the table data is loading
-     */
-    isLoading?: boolean;
-    /**
-     * The "source of truth" state for the active item feature (returned by useActiveItemState)
-     */
-    activeItemState: ActiveItemState;
-  };
+export type UseActiveItemPropHelpersExternalArgs<TItem> = MergedArgs<
+  UseActiveItemDerivedStateArgs<TItem>,
+  Omit<UseActiveItemEffectsArgs<TItem>, 'activeItem'> & {
+    activeItem?: Omit<Required<UseActiveItemEffectsArgs<TItem>>['activeItem'], keyof ActiveItemDerivedState<TItem>>;
+  },
+  'activeItem'
+>;
 
 /**
  * Given "source of truth" state for the active item feature, returns derived state and `propHelpers`.
@@ -33,7 +34,7 @@ export const useActiveItemPropHelpers = <TItem>(args: UseActiveItemPropHelpersEx
   const activeItemDerivedState = useActiveItemDerivedState(args);
   const { isActiveItem, setActiveItem, clearActiveItem } = activeItemDerivedState;
 
-  useActiveItemEffects({ ...args, activeItemDerivedState });
+  useActiveItemEffects(mergeArgs(args, { activeItem: activeItemDerivedState }));
 
   /**
    * Returns props for a clickable Tr in a table with the active item feature enabled. Sets or clears the active item when clicked.

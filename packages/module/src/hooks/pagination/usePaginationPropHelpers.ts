@@ -1,5 +1,4 @@
 import { PaginationProps, ToolbarItemProps } from '@patternfly/react-core';
-import { PaginationState } from './usePaginationState';
 import { UsePaginationEffectsArgs, usePaginationEffects } from './usePaginationEffects';
 
 /**
@@ -10,10 +9,6 @@ import { UsePaginationEffectsArgs, usePaginationEffects } from './usePaginationE
  * @see UseTablePropHelpersArgs
  */
 export type UsePaginationPropHelpersExternalArgs = UsePaginationEffectsArgs & {
-  /**
-   * The "source of truth" state for the pagination feature (returned by usePaginationState)
-   */
-  paginationState: PaginationState;
   /**
     The total number of items in the entire un-filtered, un-paginated table (the size of the entire API collection being tabulated).
    */
@@ -29,7 +24,7 @@ export type UsePaginationPropHelpersExternalArgs = UsePaginationEffectsArgs & {
 export const usePaginationPropHelpers = (args: UsePaginationPropHelpersExternalArgs) => {
   const {
     totalItemCount,
-    paginationState: { itemsPerPage, pageNumber, setPageNumber, setItemsPerPage }
+    pagination: { pageNumber, itemsPerPage, setPageNumber, setItemsPerPage }
   } = args;
 
   usePaginationEffects(args);
@@ -41,10 +36,10 @@ export const usePaginationPropHelpers = (args: UsePaginationPropHelpersExternalA
     itemCount: totalItemCount,
     perPage: itemsPerPage,
     page: pageNumber,
-    onSetPage: (_event, pageNumber) => setPageNumber(pageNumber),
+    onSetPage: (_event, pageNumber) => setPageNumber?.(pageNumber),
     onPerPageSelect: (_event, perPage) => {
-      setPageNumber(1);
-      setItemsPerPage(perPage);
+      setPageNumber?.(1);
+      setItemsPerPage?.(perPage);
     }
   };
 
