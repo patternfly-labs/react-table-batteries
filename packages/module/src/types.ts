@@ -358,8 +358,9 @@ export type TableBatteries<
       /**
        * Returns props for the Tr component for a specific data item.
        * Includes props related to the active-item feature.
+       * The item arg is optional here because getTrProps is also used on the table header row where there is no item.
        */
-      getTrProps: (args: { item: TItem; onRowClick?: TrProps['onRowClick'] }) => Omit<TrProps, 'ref'>;
+      getTrProps: (args: { item?: TItem; onRowClick?: TrProps['onRowClick'] }) => Omit<TrProps, 'ref'>;
       /**
        * Returns props for the Td component for a specific column.
        * Includes default `dataLabel` (column name) and props related to compound expansion.
