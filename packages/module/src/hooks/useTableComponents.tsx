@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDeepCompareMemo } from 'use-deep-compare';
 import { Table, TableProps, Tbody, Td, TdProps, Th, ThProps, Thead, Tr, TrProps } from '@patternfly/react-table';
 import {
   Pagination,
@@ -69,77 +70,107 @@ export const useTableComponents = <
     'components'
   >
 ): TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>['components'] => {
-  // TODO memoize this declaration? might have to useMemo on tableProps to get the correct narrowed deps
-  const TableWithBatteries = React.forwardRef((props: Omit<TableProps, 'ref'>, ref: React.Ref<HTMLTableElement>) => (
-    <Table
-      {...batteries.propHelpers.tableProps}
-      innerRef={ref as React.MutableRefObject<HTMLTableElement>}
-      {...props}
-    />
-  ));
+  const TableWithBatteries = useDeepCompareMemo(
+    () =>
+      React.forwardRef((props: Omit<TableProps, 'ref'>, ref: React.Ref<HTMLTableElement>) => (
+        <Table
+          {...batteries.propHelpers.tableProps}
+          innerRef={ref as React.MutableRefObject<HTMLTableElement>}
+          {...props}
+        />
+      )),
+    [batteries.propHelpers.tableProps]
+  );
   TableWithBatteries.displayName = 'TableWithBatteries';
 
-  // TODO memoize this declaration? might have to useCallback on getTrProps to get the correct narrowed deps
-  const TrWithBatteries = React.forwardRef(
-    ({ item, onRowClick, ...props }: Omit<TrWithBatteriesProps<TItem>, 'ref'>, ref: React.Ref<HTMLTableRowElement>) => (
-      <Tr
-        {...batteries.propHelpers.getTrProps({ item, onRowClick })}
-        innerRef={ref as React.MutableRefObject<HTMLTableRowElement>}
-        {...props}
-      />
-    )
+  const TrWithBatteries = useDeepCompareMemo(
+    () =>
+      React.forwardRef(
+        (
+          { item, onRowClick, ...props }: Omit<TrWithBatteriesProps<TItem>, 'ref'>,
+          ref: React.Ref<HTMLTableRowElement>
+        ) => (
+          <Tr
+            {...batteries.propHelpers.getTrProps({ item, onRowClick })}
+            innerRef={ref as React.MutableRefObject<HTMLTableRowElement>}
+            {...props}
+          />
+        )
+      ),
+    [batteries.activeItem.isEnabled, batteries.activeItem.activeItemId]
   );
   TrWithBatteries.displayName = 'TrWithBatteries';
 
-  // TODO memoize this declaration? might have to useCallback on getThProps to get the correct narrowed deps
-  const ThWithBatteries = React.forwardRef(
-    ({ columnKey, ...props }: Omit<ThWithBatteriesProps<TColumnKey>, 'ref'>, ref: React.Ref<HTMLTableCellElement>) => (
-      <Th
-        {...batteries.propHelpers.getThProps({ columnKey })}
-        innerRef={ref as React.MutableRefObject<HTMLTableCellElement>}
-        {...props}
-      />
-    )
+  const ThWithBatteries = useDeepCompareMemo(
+    () =>
+      React.forwardRef(
+        (
+          { columnKey, ...props }: Omit<ThWithBatteriesProps<TColumnKey>, 'ref'>,
+          ref: React.Ref<HTMLTableCellElement>
+        ) => (
+          <Th
+            {...batteries.propHelpers.getThProps({ columnKey })}
+            innerRef={ref as React.MutableRefObject<HTMLTableCellElement>}
+            {...props}
+          />
+        )
+      ),
+    [batteries.sort?.isEnabled, batteries.sort?.activeSort, batteries.sort?.sortableColumns]
   );
   ThWithBatteries.displayName = 'ThWithBatteries';
 
-  // TODO memoize this declaration? might have to useCallback on getTdProps to get the correct narrowed deps
-  const TdWithBatteries = React.forwardRef(
-    ({ columnKey, ...props }: Omit<TdWithBatteriesProps<TColumnKey>, 'ref'>, ref: React.Ref<HTMLTableCellElement>) => (
-      <Td
-        {...batteries.propHelpers.getTdProps({ columnKey })}
-        innerRef={ref as React.MutableRefObject<HTMLTableCellElement>}
-        {...props}
-      />
-    )
+  const TdWithBatteries = useDeepCompareMemo(
+    () =>
+      React.forwardRef(
+        (
+          { columnKey, ...props }: Omit<TdWithBatteriesProps<TColumnKey>, 'ref'>,
+          ref: React.Ref<HTMLTableCellElement>
+        ) => (
+          <Td
+            {...batteries.propHelpers.getTdProps({ columnKey })}
+            innerRef={ref as React.MutableRefObject<HTMLTableCellElement>}
+            {...props}
+          />
+        )
+      ),
+    [
+      batteries.expansion.isEnabled,
+      batteries.expansion.variant,
+      batteries.expansion.expandedCells,
+      batteries.idProperty,
+      batteries.numRenderedColumns
+    ]
   );
   TdWithBatteries.displayName = 'TdWithBatteries';
 
-  // TODO memoize this declaration? might have to useMemo on toolbarProps to get the correct narrowed deps
   // Note: Toolbar probably should also be a forwardRef, but the Toolbar PF component does not pass down a ref
   //       even though it accepts one in its props (via extending props for HTMLDivElement).
-  const ToolbarWithBatteries: React.FC<Omit<ToolbarProps, 'ref'>> = (props) => (
-    <Toolbar {...batteries.propHelpers.toolbarProps} {...props} />
+  const ToolbarWithBatteries: React.FC<Omit<ToolbarProps, 'ref'>> = useDeepCompareMemo(
+    () => (props) => <Toolbar {...batteries.propHelpers.toolbarProps} {...props} />,
+    [batteries.propHelpers.toolbarProps]
   );
 
-  // TODO memoize this declaration? might have to useMemo on toolbarBulkSelectorProps to get the correct narrowed deps
-  const ToolbarBulkSelectorWithBatteries: React.FC<ToolbarBulkSelectorWithBatteriesProps<TItem>> = (props) => (
-    <ToolbarBulkSelector {...batteries.propHelpers.toolbarBulkSelectorProps} {...props} />
+  const ToolbarBulkSelectorWithBatteries: React.FC<ToolbarBulkSelectorWithBatteriesProps<TItem>> = useDeepCompareMemo(
+    () => (props) => <ToolbarBulkSelector {...batteries.propHelpers.toolbarBulkSelectorProps} {...props} />,
+    [batteries.propHelpers.toolbarBulkSelectorProps]
   );
 
-  // TODO memoize this declaration? might have to useMemo on filterToolbarProps to get the correct narrowed deps
   // TODO FilterToolbar needs to be rewritten, but for now we'll wrap it too so we don't need any propHelpers in the consumer code.
-  const FilterToolbarWithBatteries: React.FC<FilterToolbarWithBatteriesProps<TItem, TFilterCategoryKey>> = (props) =>
-    batteries.filter.isEnabled ? <FilterToolbar {...batteries.propHelpers.filterToolbarProps} {...props} /> : null;
+  const FilterToolbarWithBatteries: React.FC<FilterToolbarWithBatteriesProps<TItem, TFilterCategoryKey>> =
+    useDeepCompareMemo(
+      () => (props) =>
+        batteries.filter.isEnabled ? <FilterToolbar {...batteries.propHelpers.filterToolbarProps} {...props} /> : null,
+      [batteries.filter.isEnabled, batteries.propHelpers.filterToolbarProps]
+    );
 
-  // TODO memoize this declaration? might have to useMemo on paginationToolbarItemProps to get the correct narrowed deps
-  const PaginationToolbarItemWithBatteries: React.FC<ToolbarItemProps> = (props) => (
-    <ToolbarItem {...batteries.propHelpers.paginationToolbarItemProps} {...props} />
+  const PaginationToolbarItemWithBatteries: React.FC<ToolbarItemProps> = useDeepCompareMemo(
+    () => (props) => <ToolbarItem {...batteries.propHelpers.paginationToolbarItemProps} {...props} />,
+    [batteries.propHelpers.paginationToolbarItemProps]
   );
 
-  // TODO memoize this declaration? might have to useMemo on paginationProps to get the correct narrowed deps
-  const PaginationWithBatteries: React.FC<PaginationProps> = (props) => (
-    <Pagination {...batteries.propHelpers.paginationProps} {...props} />
+  const PaginationWithBatteries: React.FC<PaginationProps> = useDeepCompareMemo(
+    () => (props) => <Pagination {...batteries.propHelpers.paginationProps} {...props} />,
+    [batteries.propHelpers.paginationProps]
   );
 
   return {
