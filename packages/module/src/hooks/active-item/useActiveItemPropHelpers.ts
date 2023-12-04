@@ -39,12 +39,12 @@ export const useActiveItemPropHelpers = <TItem>(args: UseActiveItemPropHelpersEx
   /**
    * Returns props for a clickable Tr in a table with the active item feature enabled. Sets or clears the active item when clicked.
    */
-  const getActiveItemTrProps = ({ item }: { item: TItem }): Omit<TrProps, 'ref'> => ({
+  const getActiveItemTrProps = ({ item }: { item?: TItem }): Omit<TrProps, 'ref'> => ({
     isSelectable: true,
     isClickable: true,
     isRowSelected: item && isActiveItem(item),
     onRowClick: () => {
-      if (!isActiveItem(item)) {
+      if (item && !isActiveItem(item)) {
         setActiveItem(item);
       } else {
         clearActiveItem();

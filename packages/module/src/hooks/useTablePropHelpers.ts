@@ -8,6 +8,7 @@ import { useSelectionPropHelpers } from './selection';
 import { useExpansionPropHelpers } from './expansion';
 import { useActiveItemPropHelpers } from './active-item';
 import { handlePropagatedRowClick, mergeArgs, objectKeys } from '../utils';
+import { useTableComponents } from './useTableComponents';
 
 /**
  * Returns derived state and prop helpers for all features. Used to make rendering the table components easier.
@@ -112,7 +113,10 @@ export const useTablePropHelpers = <
     };
   };
 
-  return {
+  const batteriesWithoutComponents: Omit<
+    TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
+    'components'
+  > = {
     ...mergeArgs(args, {
       selection: selectionDerivedState,
       expansion: expansionDerivedState,
@@ -135,5 +139,10 @@ export const useTablePropHelpers = <
       getSingleExpandButtonTdProps,
       getExpandedContentTdProps
     }
+  };
+
+  return {
+    ...batteriesWithoutComponents,
+    components: useTableComponents(batteriesWithoutComponents)
   };
 };

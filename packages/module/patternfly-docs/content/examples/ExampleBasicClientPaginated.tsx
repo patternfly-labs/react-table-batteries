@@ -6,10 +6,7 @@ import {
   TableHeaderContentWithBatteries,
   ConditionalTableBody,
   TableRowContentWithBatteries,
-  FilterType,
-  TableBatteriesProvider,
-  UnknownTableBatteries,
-  TableComponentsWithBatteries
+  FilterType
 } from '@patternfly-labs/react-table-batteries';
 
 // This example table's rows represent Thing objects in our fake API.
@@ -97,17 +94,13 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
     // `numRenderedColumns` is based on the number of columnNames and additional columns needed for
     // rendering controls related to features like selection, expansion, etc.
     // It is used as the colSpan when rendering a full-table-wide cell.
-    numRenderedColumns
+    numRenderedColumns,
+    // The components provided here wrap the PF components with built-in props based on table state.
+    components: { Table, Thead, Tr, Th, Tbody, Td, Toolbar, FilterToolbar, PaginationToolbarItem, Pagination }
   } = batteries;
 
-  // The components provided by TableComponentsWithBatteries have built-in props derived from the batteries object,
-  // which they consume via context provided by TableBatteriesProvider.
-  const { Table, Thead, Tr, Th, Tbody, Td, Toolbar, FilterToolbar, PaginationToolbarItem, Pagination } =
-    TableComponentsWithBatteries;
-
   return (
-    // TODO FIXME we have to assert UnknownTableBatteries here because TS doesn't like passing our object with known generics here.
-    <TableBatteriesProvider batteries={batteries as UnknownTableBatteries}>
+    <>
       <Toolbar>
         <ToolbarContent>
           <FilterToolbar id="client-paginated-example-filters" />
@@ -127,8 +120,8 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
               so we should probably also provide a `disableBuiltInControls` prop or something.
             */}
             <TableHeaderContentWithBatteries {...batteries}>
-              <Th columnKey="name" /* TODO FIXME this isn't getting checked against TColumnKey */ />
-              <Th columnKey="description" /* TODO FIXME this isn't getting checked against TColumnKey */ />
+              <Th columnKey="name" />
+              <Th columnKey="description" />
             </TableHeaderContentWithBatteries>
           </Tr>
         </Thead>
@@ -155,10 +148,10 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
                   so we should probably also provide a `disableBuiltInControls` prop or something.
                 */}
                 <TableRowContentWithBatteries {...batteries} item={thing} rowIndex={rowIndex}>
-                  <Td width={30} columnKey="name" /* TODO FIXME this isn't getting checked against TColumnKey */>
+                  <Td width={30} columnKey="name">
                     {thing.name}
                   </Td>
-                  <Td width={70} columnKey="description" /* TODO FIXME this isn't getting checked against TColumnKey */>
+                  <Td width={70} columnKey="description">
                     {thing.description}
                   </Td>
                 </TableRowContentWithBatteries>
@@ -168,6 +161,6 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
         </ConditionalTableBody>
       </Table>
       <Pagination variant="bottom" isCompact widgetId="client-paginated-example-pagination" />
-    </TableBatteriesProvider>
+    </>
   );
 };

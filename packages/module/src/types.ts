@@ -1,4 +1,5 @@
-import { TableProps, TdProps, ThProps, TrProps } from '@patternfly/react-table';
+import React from 'react';
+import { TableProps, TbodyProps, TdProps, ThProps, TheadProps, TrProps } from '@patternfly/react-table';
 import {
   UseClientFilterDerivedStateArgs,
   UseFilterPropHelpersExternalArgs,
@@ -35,6 +36,12 @@ import { UseExpansionPropHelpersExternalArgs } from './hooks/expansion/useExpans
 import { DisallowCharacters, DiscriminatedArgs, MergedArgs } from './type-utils';
 import { FilterToolbarProps } from './tackle2-ui-legacy/components/FilterToolbar';
 import { ToolbarBulkSelectorProps } from './tackle2-ui-legacy/components/ToolbarBulkSelector';
+import {
+  TrWithBatteriesProps,
+  ThWithBatteriesProps,
+  TdWithBatteriesProps,
+  ToolbarBulkSelectorWithBatteriesProps
+} from './hooks/useTableComponents';
 
 // Generic type params used here:
 //   TItem - The actual API objects represented by rows in the table. Can be any object.
@@ -372,6 +379,8 @@ export type TableBatteries<
       ) => Omit<TdProps, 'ref'>;
       /**
        * Props for the FilterToolbar component. Omits the id prop so you must pass it by hand when rendering FilterToolbar.
+       * @deprecated see the deprecation notice in FilterToolbar
+       * @see FilterToolbar
        */
       filterToolbarProps: Omit<FilterToolbarProps<TItem, TFilterCategoryKey>, 'id'>;
       /**
@@ -400,6 +409,72 @@ export type TableBatteries<
        * The two Trs for the expandable row and expanded content row should be contained in a Tbody with no other Tr components.
        */
       getExpandedContentTdProps: (args: { item: TItem }) => Omit<TdProps, 'ref'>;
+    };
+    components: {
+      /**
+       * A wrapper for the PF Table component which automatically injects props from batteries.propHelpers.tableProps
+       * Takes the same props as the normal PF Table with no additional batteries-specific props.
+       */
+      Table: React.ForwardRefExoticComponent<Omit<TableProps, 'ref'>>;
+      /**
+       * A direct reference to the PF Thead component, included here with the other components for convenience.
+       * No injected props are currently necessary for Thead. If that changes in the future,
+       * Consumers shouldn't need to change their usage if they use this instead of importing Thead from PF.
+       */
+      Thead: React.ForwardRefExoticComponent<Omit<TheadProps, 'ref'>>;
+      /**
+       * A wrapper for the PF Tr component which automatically injects props from batteries.propHelpers.getTrProps
+       * Takes the same props as the normal PF Tr plus an `item` prop: the item represented by this row.
+       * @see TrWithBatteriesProps
+       */
+      Tr: React.ForwardRefExoticComponent<Omit<TrWithBatteriesProps<TItem>, 'ref'>>;
+      /**
+       * A wrapper for the PF Th component which automatically injects props from batteries.propHelpers.getThProps
+       * Takes the same props as the normal PF Th plus a `columnKey` prop: the column associated with this cell.
+       * @see ThWithBatteriesProps
+       */
+      Th: React.ForwardRefExoticComponent<Omit<ThWithBatteriesProps<TColumnKey>, 'ref'>>;
+      /**
+       * A direct reference to the PF Tbody component, included here with the other components for convenience.
+       * No injected props are currently necessary for Tbody. If that changes in the future,
+       * Consumers shouldn't need to change their usage if they use this instead of importing Tbody from PF.
+       */
+      Tbody: React.ForwardRefExoticComponent<Omit<TbodyProps, 'ref'>>;
+      /**
+       * A wrapper for the PF Td component which automatically injects props from batteries.propHelpers.getTdProps
+       * Takes the same props as the normal PF Td plus a `columnKey` prop: the column associated with this cell.
+       * @see TdWithBatteriesProps
+       */
+      Td: React.ForwardRefExoticComponent<Omit<TdWithBatteriesProps<TColumnKey>, 'ref'>>;
+      /**
+       * A wrapper for the PF Toolbar component which automatically injects props from batteries.propHelpers.toolbarProps
+       * Takes the same props as the normal PF Toolbar with no additional batteries-specific props.
+       */
+      Toolbar: React.FC<ToolbarProps>;
+      /**
+       * A wrapper for the ToolbarBulkSelector component which automatically injects props from batteries.propHelpers.toolbarBulkSelectorProps
+       * Takes the same props as the normal ToolbarBulkSelector with no additional batteries-specific props.
+       * However, all props are made optional because defaults for them are provided by propHelpers.
+       */
+      ToolbarBulkSelector: React.FC<ToolbarBulkSelectorWithBatteriesProps<TItem>>;
+      /**
+       * A wrapper for the deprecated FilterToolbar component which automatically injects props from batteries.propHelpers.filterToolbarProps
+       * Takes the same props as the normal FilterToolbar with no additional batteries-specific props.
+       * However, all props are made optional except `id` because defaults for them are provided by propHelpers.
+       * @deprecated see the deprecation notice in FilterToolbar
+       * @see FilterToolbar
+       */
+      FilterToolbar: React.FC<Pick<FilterToolbarProps<TItem, TFilterCategoryKey>, 'id'>>;
+      /**
+       * A wrapper for the PF ToolbarItem component which automatically injects props from batteries.propHelpers.paginationToolbarItemProps
+       * Takes the same props as the normal PF ToolbarItem with no additional batteries-specific props.
+       */
+      PaginationToolbarItem: React.FC<ToolbarItemProps>;
+      /**
+       * A wrapper for the PF Pagination component which automatically injects props from batteries.propHelpers.paginationProps
+       * Takes the same props as the normal PF Pagination with no additional batteries-specific props.
+       */
+      Pagination: React.FC<PaginationProps>;
     };
   };
 
