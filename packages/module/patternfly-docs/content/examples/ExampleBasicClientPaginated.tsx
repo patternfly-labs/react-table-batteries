@@ -120,6 +120,12 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       <Table aria-label="Example things table">
         <Thead>
           <Tr>
+            {/*
+              TODO we should also get rid of TableHeaderContentWithBatteries and fold it into the wrapped Tr.
+              (we'd need an `isHeaderRow` boolean prop on it, but that's useful anyway).
+              But if we do this, the consumer will have no way to opt out of using its extra rendered cells,
+              so we should probably also provide a `disableBuiltInControls` prop or something.
+            */}
             <TableHeaderContentWithBatteries {...batteries}>
               <Th columnKey="name" /* TODO FIXME this isn't getting checked against TColumnKey */ />
               <Th columnKey="description" /* TODO FIXME this isn't getting checked against TColumnKey */ />
@@ -142,6 +148,12 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
               <Tr key={thing.id} item={thing}>
+                {/*
+                  TODO we should also get rid of TableRowContentWithBatteries and fold it into the wrapped Tr.
+                  (we'd need an `isHeaderRow` boolean prop on it, but that's useful anyway).
+                  But if we do this, the consumer will have no way to opt out of using its extra rendered cells,
+                  so we should probably also provide a `disableBuiltInControls` prop or something.
+                */}
                 <TableRowContentWithBatteries {...batteries} item={thing} rowIndex={rowIndex}>
                   <Td width={30} columnKey="name" /* TODO FIXME this isn't getting checked against TColumnKey */>
                     {thing.name}
