@@ -1,13 +1,7 @@
 import React from 'react';
 import { ToolbarContent, EmptyState, EmptyStateIcon, Title } from '@patternfly/react-core';
 import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
-import {
-  useClientTableBatteries,
-  TableHeaderContentWithBatteries,
-  ConditionalTableBody,
-  TableRowContentWithBatteries,
-  FilterType
-} from '@patternfly-labs/react-table-batteries';
+import { useClientTableBatteries, ConditionalTableBody, FilterType } from '@patternfly-labs/react-table-batteries';
 
 // This example table's rows represent Thing objects in our fake API.
 interface Thing {
@@ -112,17 +106,9 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
       </Toolbar>
       <Table aria-label="Example things table">
         <Thead>
-          <Tr>
-            {/*
-              TODO we should also get rid of TableHeaderContentWithBatteries and fold it into the wrapped Tr.
-              (we'd need an `isHeaderRow` boolean prop on it, but that's useful anyway).
-              But if we do this, the consumer will have no way to opt out of using its extra rendered cells,
-              so we should probably also provide a `disableBuiltInControls` prop or something.
-            */}
-            <TableHeaderContentWithBatteries {...batteries}>
-              <Th columnKey="name" />
-              <Th columnKey="description" />
-            </TableHeaderContentWithBatteries>
+          <Tr isHeaderRow>
+            <Th columnKey="name" />
+            <Th columnKey="description" />
           </Tr>
         </Thead>
         <ConditionalTableBody
@@ -140,21 +126,13 @@ export const ExampleBasicClientPaginated: React.FunctionComponent = () => {
         >
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
-              <Tr key={thing.id} item={thing}>
-                {/*
-                  TODO we should also get rid of TableRowContentWithBatteries and fold it into the wrapped Tr.
-                  (we'd need an `isHeaderRow` boolean prop on it, but that's useful anyway).
-                  But if we do this, the consumer will have no way to opt out of using its extra rendered cells,
-                  so we should probably also provide a `disableBuiltInControls` prop or something.
-                */}
-                <TableRowContentWithBatteries {...batteries} item={thing} rowIndex={rowIndex}>
-                  <Td width={30} columnKey="name">
-                    {thing.name}
-                  </Td>
-                  <Td width={70} columnKey="description">
-                    {thing.description}
-                  </Td>
-                </TableRowContentWithBatteries>
+              <Tr key={thing.id} item={thing} rowIndex={rowIndex}>
+                <Td width={30} columnKey="name">
+                  {thing.name}
+                </Td>
+                <Td width={70} columnKey="description">
+                  {thing.description}
+                </Td>
               </Tr>
             ))}
           </Tbody>

@@ -40,7 +40,8 @@ import {
   TdWithBatteriesProps,
   ThWithBatteriesProps,
   ToolbarBulkSelectorWithBatteriesProps,
-  TrWithBatteriesProps
+  TrWithBatteriesBodyRowProps,
+  TrWithBatteriesHeaderRowProps
 } from './components';
 
 // Generic type params used here:
@@ -427,7 +428,9 @@ export type TableBatteries<
        * Takes the same props as the normal PF Tr plus an `item` prop: the item represented by this row.
        * @see TrWithBatteriesProps
        */
-      Tr: React.ForwardRefExoticComponent<Omit<TrWithBatteriesProps<TItem>, 'ref'>>;
+      Tr: React.ForwardRefExoticComponent<
+        Omit<TrWithBatteriesHeaderRowProps, 'ref'> | Omit<TrWithBatteriesBodyRowProps<TItem>, 'ref'>
+      >;
       /**
        * A wrapper for the PF Th component which automatically injects props from batteries.propHelpers.getThProps
        * Takes the same props as the normal PF Th plus a `columnKey` prop: the column associated with this cell.

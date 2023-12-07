@@ -7,8 +7,6 @@ import {
   FilterType,
   FilterValue,
   ActiveSort,
-  TableHeaderContentWithBatteries,
-  TableRowContentWithBatteries,
   useTablePropHelpers,
   useTableState
 } from '@patternfly-labs/react-table-batteries';
@@ -159,11 +157,9 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
       </Toolbar>
       <Table aria-label="Example things table">
         <Thead>
-          <Tr>
-            <TableHeaderContentWithBatteries {...batteries}>
-              <Th columnKey="name" />
-              <Th columnKey="description" />
-            </TableHeaderContentWithBatteries>
+          <Tr isHeaderRow>
+            <Th columnKey="name" />
+            <Th columnKey="description" />
           </Tr>
         </Thead>
         <ConditionalTableBody
@@ -181,15 +177,13 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
         >
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
-              <Tr key={thing.id} item={thing}>
-                <TableRowContentWithBatteries {...batteries} item={thing} rowIndex={rowIndex}>
-                  <Td width={30} columnKey="name">
-                    {thing.name}
-                  </Td>
-                  <Td width={70} columnKey="description">
-                    {thing.description}
-                  </Td>
-                </TableRowContentWithBatteries>
+              <Tr key={thing.id} item={thing} rowIndex={rowIndex}>
+                <Td width={30} columnKey="name">
+                  {thing.name}
+                </Td>
+                <Td width={70} columnKey="description">
+                  {thing.description}
+                </Td>
               </Tr>
             ))}
           </Tbody>
