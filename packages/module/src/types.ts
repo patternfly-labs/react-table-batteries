@@ -37,11 +37,11 @@ import { DisallowCharacters, DiscriminatedArgs, MergedArgs } from './type-utils'
 import { FilterToolbarProps } from './tackle2-ui-legacy/components/FilterToolbar';
 import { ToolbarBulkSelectorProps } from './tackle2-ui-legacy/components/ToolbarBulkSelector';
 import {
-  TrWithBatteriesProps,
-  ThWithBatteriesProps,
   TdWithBatteriesProps,
-  ToolbarBulkSelectorWithBatteriesProps
-} from './hooks/useTableComponents';
+  ThWithBatteriesProps,
+  ToolbarBulkSelectorWithBatteriesProps,
+  TrWithBatteriesProps
+} from './components';
 
 // Generic type params used here:
 //   TItem - The actual API objects represented by rows in the table. Can be any object.

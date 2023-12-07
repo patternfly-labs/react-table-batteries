@@ -87,6 +87,9 @@ export const useTablePropHelpers = <
   });
 
   const getTrProps: PropHelpers['getTrProps'] = ({ item, onRowClick }) => {
+    if (!item) {
+      return {};
+    }
     const activeItemTrProps = getActiveItemTrProps({ item });
     return {
       ...(args.activeItem?.isEnabled && activeItemTrProps),
