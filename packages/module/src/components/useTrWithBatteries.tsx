@@ -63,39 +63,44 @@ export const useTrWithBatteries = <
           const { isHeaderRow, onRowClick, builtInControls = true, children, ...otherProps } = props;
           const { item, rowIndex } = props as Partial<TrWithBatteriesBodyRowProps<TItem>>;
 
+          // eslint-disable-next-line no-console
+          console.log({ isHeaderRow, item, numColumnsBeforeData, numColumnsAfterData });
+
           return (
             <Tr
               {...propHelpers.getTrProps({ item, onRowClick })}
               innerRef={ref as React.MutableRefObject<HTMLTableRowElement>}
               {...otherProps}
             >
-              {builtInControls && item ? (
-                isHeaderRow ? (
-                  <>
-                    {Array(numColumnsBeforeData)
-                      .fill(null)
-                      .map((_, i) => (
-                        <Th key={i} />
-                      ))}
-                    {children}
-                    {Array(numColumnsAfterData)
-                      .fill(null)
-                      .map((_, i) => (
-                        <Th key={i} />
-                      ))}
-                  </>
-                ) : (
-                  <>
-                    {expansion.isEnabled && expansion.variant === 'single' && rowIndex !== undefined && (
-                      <Td {...propHelpers.getSingleExpandButtonTdProps({ item, rowIndex })} />
-                    )}
-                    {selection.isEnabled && rowIndex !== undefined && (
-                      <Td {...propHelpers.getSelectCheckboxTdProps({ item, rowIndex })} />
-                    )}
-                    {children}
-                  </>
-                )
-              ) : null}
+              {!builtInControls ? (
+                children
+              ) : isHeaderRow ? (
+                <>
+                  {Array(numColumnsBeforeData)
+                    .fill(null)
+                    .map((_, i) => (
+                      <Th key={i} />
+                    ))}
+                  {children}
+                  {Array(numColumnsAfterData)
+                    .fill(null)
+                    .map((_, i) => (
+                      <Th key={i} />
+                    ))}
+                </>
+              ) : item ? (
+                <>
+                  {expansion.isEnabled && expansion.variant === 'single' && rowIndex !== undefined && (
+                    <Td {...propHelpers.getSingleExpandButtonTdProps({ item, rowIndex })} />
+                  )}
+                  {selection.isEnabled && rowIndex !== undefined && (
+                    <Td {...propHelpers.getSelectCheckboxTdProps({ item, rowIndex })} />
+                  )}
+                  {children}
+                </>
+              ) : (
+                children
+              )}
             </Tr>
           );
         }

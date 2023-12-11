@@ -49,10 +49,10 @@ export const useTablePropHelpers = <
   // We need to account for those when dealing with props based on column index and colSpan.
   let numColumnsBeforeData = 0;
   let numColumnsAfterData = 0;
-  if (args.selection) {
+  if (args.selection.isEnabled) {
     numColumnsBeforeData++;
   }
-  if (args.expansion?.variant === 'single') {
+  if (args.expansion.isEnabled && args.expansion.variant === 'single') {
     numColumnsBeforeData++;
   }
   if (hasActionsColumn) {
