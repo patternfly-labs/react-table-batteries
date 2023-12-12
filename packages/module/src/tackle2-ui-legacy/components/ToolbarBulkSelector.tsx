@@ -26,6 +26,9 @@ export interface ToolbarBulkSelectorProps<T> {
   isExpandable?: boolean;
 }
 
+/**
+ * @deprecated this component comes from tackle2-ui legacy code and should probably be moved somewhere else like PF component groups
+ */
 export const ToolbarBulkSelector = <T,>({
   currentPageItems,
   areAllSelected,

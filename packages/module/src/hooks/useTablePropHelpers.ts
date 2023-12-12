@@ -8,6 +8,7 @@ import { useSelectionPropHelpers } from './selection';
 import { useExpansionPropHelpers } from './expansion';
 import { useActiveItemPropHelpers } from './active-item';
 import { handlePropagatedRowClick, mergeArgs, objectKeys } from '../utils';
+import { useTableComponents } from './useTableComponents';
 
 /**
  * Returns derived state and prop helpers for all features. Used to make rendering the table components easier.
@@ -48,10 +49,10 @@ export const useTablePropHelpers = <
   // We need to account for those when dealing with props based on column index and colSpan.
   let numColumnsBeforeData = 0;
   let numColumnsAfterData = 0;
-  if (args.selection) {
+  if (args.selection.isEnabled) {
     numColumnsBeforeData++;
   }
-  if (args.expansion?.variant === 'single') {
+  if (args.expansion.isEnabled && args.expansion.variant === 'single') {
     numColumnsBeforeData++;
   }
   if (hasActionsColumn) {
@@ -86,6 +87,9 @@ export const useTablePropHelpers = <
   });
 
   const getTrProps: PropHelpers['getTrProps'] = ({ item, onRowClick }) => {
+    if (!item) {
+      return {};
+    }
     const activeItemTrProps = getActiveItemTrProps({ item });
     return {
       ...(args.activeItem?.isEnabled && activeItemTrProps),
@@ -112,7 +116,10 @@ export const useTablePropHelpers = <
     };
   };
 
-  return {
+  const batteriesWithoutComponents: Omit<
+    TableBatteries<TItem, TColumnKey, TSortableColumnKey, TFilterCategoryKey, TPersistenceKeyPrefix>,
+    'components'
+  > = {
     ...mergeArgs(args, {
       selection: selectionDerivedState,
       expansion: expansionDerivedState,
@@ -135,5 +142,10 @@ export const useTablePropHelpers = <
       getSingleExpandButtonTdProps,
       getExpandedContentTdProps
     }
+  };
+
+  return {
+    ...batteriesWithoutComponents,
+    components: useTableComponents(batteriesWithoutComponents)
   };
 };

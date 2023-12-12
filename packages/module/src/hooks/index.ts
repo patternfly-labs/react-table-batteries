@@ -1,5 +1,6 @@
 export * from './useTableState';
 export * from './useTablePropHelpers';
+export * from './useTableComponents';
 export * from './useClientTableDerivedState';
 export * from './useClientTableBatteries';
 export * from './generic';

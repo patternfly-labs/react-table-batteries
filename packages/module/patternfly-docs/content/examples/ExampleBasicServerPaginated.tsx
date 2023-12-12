@@ -1,24 +1,12 @@
 /* eslint-disable no-console */
 import React from 'react';
-import {
-  Toolbar,
-  ToolbarContent,
-  ToolbarItem,
-  Pagination,
-  EmptyState,
-  EmptyStateIcon,
-  Title
-} from '@patternfly/react-core';
+import { ToolbarContent, EmptyState, EmptyStateIcon, Title } from '@patternfly/react-core';
 import CubesIcon from '@patternfly/react-icons/dist/esm/icons/cubes-icon';
-import { Table, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import {
   ConditionalTableBody,
-  FilterToolbar,
   FilterType,
   FilterValue,
   ActiveSort,
-  TableHeaderContentWithBatteries,
-  TableRowContentWithBatteries,
   useTablePropHelpers,
   useTableState
 } from '@patternfly-labs/react-table-batteries';
@@ -152,38 +140,26 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
     // rendering controls related to features like selection, expansion, etc.
     // It is used as the colSpan when rendering a full-table-wide cell.
     numRenderedColumns,
-    // The objects and functions in `propHelpers` correspond to the props needed for specific PatternFly or Tackle
-    // components and are provided to reduce prop-drilling and make the rendering code as short as possible.
-    propHelpers: {
-      toolbarProps,
-      filterToolbarProps,
-      paginationToolbarItemProps,
-      paginationProps,
-      tableProps,
-      getThProps,
-      getTrProps,
-      getTdProps
-    }
+    // The components provided here wrap the PF components with built-in props based on table state.
+    components: { Table, Thead, Tr, Th, Tbody, Td, Toolbar, FilterToolbar, PaginationToolbarItem, Pagination }
   } = batteries;
 
   return (
     <>
-      <Toolbar {...toolbarProps}>
+      <Toolbar>
         <ToolbarContent>
-          <FilterToolbar {...filterToolbarProps} id="server-paginated-example-filters" />
+          <FilterToolbar id="server-paginated-example-filters" />
           {/* You can render whatever other custom toolbar items you may need here! */}
-          <ToolbarItem {...paginationToolbarItemProps}>
-            <Pagination variant="top" isCompact {...paginationProps} widgetId="server-paginated-example-pagination" />
-          </ToolbarItem>
+          <PaginationToolbarItem>
+            <Pagination variant="top" isCompact widgetId="server-paginated-example-pagination" />
+          </PaginationToolbarItem>
         </ToolbarContent>
       </Toolbar>
-      <Table {...tableProps} aria-label="Example things table">
+      <Table aria-label="Example things table">
         <Thead>
-          <Tr>
-            <TableHeaderContentWithBatteries {...batteries}>
-              <Th {...getThProps({ columnKey: 'name' })} />
-              <Th {...getThProps({ columnKey: 'description' })} />
-            </TableHeaderContentWithBatteries>
+          <Tr isHeaderRow>
+            <Th columnKey="name" />
+            <Th columnKey="description" />
           </Tr>
         </Thead>
         <ConditionalTableBody
@@ -201,21 +177,19 @@ export const ExampleBasicServerPaginated: React.FunctionComponent = () => {
         >
           <Tbody>
             {currentPageItems?.map((thing, rowIndex) => (
-              <Tr key={thing.id} {...getTrProps({ item: thing })}>
-                <TableRowContentWithBatteries {...batteries} item={thing} rowIndex={rowIndex}>
-                  <Td width={30} {...getTdProps({ columnKey: 'name' })}>
-                    {thing.name}
-                  </Td>
-                  <Td width={70} {...getTdProps({ columnKey: 'description' })}>
-                    {thing.description}
-                  </Td>
-                </TableRowContentWithBatteries>
+              <Tr key={thing.id} item={thing} rowIndex={rowIndex}>
+                <Td width={30} columnKey="name">
+                  {thing.name}
+                </Td>
+                <Td width={70} columnKey="description">
+                  {thing.description}
+                </Td>
               </Tr>
             ))}
           </Tbody>
         </ConditionalTableBody>
       </Table>
-      <Pagination variant="bottom" isCompact {...paginationProps} widgetId="server-paginated-example-pagination" />
+      <Pagination variant="bottom" isCompact widgetId="server-paginated-example-pagination" />
     </>
   );
 };
