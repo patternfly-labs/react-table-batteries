@@ -33,7 +33,7 @@ export const useClientTableDerivedState = <
     items: sortedItems
   });
   return {
-    totalItemCount: items.length,
+    totalItemCount: filteredItems.length,
     currentPageItems
   };
 };
