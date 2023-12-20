@@ -63,9 +63,6 @@ export const useTrWithBatteries = <
           const { isHeaderRow, onRowClick, builtInControls = true, children, ...otherProps } = props;
           const { item, rowIndex } = props as Partial<TrWithBatteriesBodyRowProps<TItem>>;
 
-          // eslint-disable-next-line no-console
-          console.log({ isHeaderRow, item, numColumnsBeforeData, numColumnsAfterData });
-
           return (
             <Tr
               {...propHelpers.getTrProps({ item, onRowClick })}
@@ -105,7 +102,14 @@ export const useTrWithBatteries = <
           );
         }
       ),
-    [activeItem.isEnabled, activeItem.activeItemId]
+    [
+      activeItem.isEnabled,
+      activeItem.activeItemId,
+      selection.isEnabled,
+      selection.selectedItemIds,
+      expansion.isEnabled,
+      expansion.expandedCells
+    ]
   );
   TrWithBatteries.displayName = 'TrWithBatteries';
   return TrWithBatteries;
