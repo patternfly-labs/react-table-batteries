@@ -1,6 +1,8 @@
 # PatternFly React Table Batteries
 
-Hooks and components that make it easier to build, maintain and enhance featureful and composable PatternFly tables
+Hooks and components that make it easier to build, maintain and enhance featureful and composable PatternFly tables.
+
+The current draft of the docs is published at https://react-table-batteries-staging.surge.sh/.
 
 ---
 
